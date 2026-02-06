@@ -14,9 +14,7 @@ public class Revolver : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"EnhancedInput", 
-			"CommonUI",
-			"CommonInput"
+			"EnhancedInput"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
