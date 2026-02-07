@@ -11,7 +11,7 @@ class UOverlay;
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UBaseMenuButton : public UCommonBoundActionButton
 {
 	GENERATED_UCLASS_BODY()
@@ -25,6 +25,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UOverlay> ButtonOverlay;
 	
-	UPROPERTY(EditAnywhere,Category = "Button",meta = (BindWidget, AllowPrivateAccess))
+	UPROPERTY(EditAnywhere,Category = "Button",meta = (AllowPrivateAccess))
 	FText ButtonText;
+	
+	UPROPERTY(EditAnywhere, Category = Button, meta = (AllowPrivateAccess))
+	TEnumAsByte<EHorizontalAlignment> OverrideHorizontalAllignment = HAlign_Left;
 };

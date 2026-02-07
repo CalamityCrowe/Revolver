@@ -4,13 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "CommonActivatableWidget.h"
+#include "MenuDelegates.h"
 #include "BaseMenuSelector.generated.h"
+
 
 class UVerticalBox;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UBaseMenuSelector : public UCommonActivatableWidget
 {
 	GENERATED_UCLASS_BODY()

@@ -7,7 +7,7 @@
 #include "BaseMenuHUD.generated.h"
 
 class UBaseMenuWidget; 
-
+class UCommonActivatableWidgetStack;
 /**
  * 
  */
@@ -20,11 +20,15 @@ public:
 	ABaseMenuHUD(); 
 	
 	virtual void BeginPlay() override;
+
 	
 private: 
 	
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
 	TSubclassOf<UBaseMenuWidget> MenuWidgetClass;
 	
+	UCommonActivatableWidgetStack* MenuStack; 
+	
+	UPROPERTY()
 	UBaseMenuWidget* MenuWidget;
 };

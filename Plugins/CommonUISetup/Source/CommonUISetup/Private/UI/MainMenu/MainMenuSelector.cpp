@@ -11,6 +11,13 @@ UMainMenuSelector::UMainMenuSelector(const FObjectInitializer& ObjectInitializer
 	
 }
 
+void UMainMenuSelector::NativeConstruct()
+{
+	Super::NativeConstruct();
+	WB_Settings->OnClicked().AddUObject(this, &UMainMenuSelector::OnSettingsButtonPressed); 
+	WB_Quit->OnClicked().AddUObject(this, &UMainMenuSelector::OnQuitButtonPressed);
+}
+
 UWidget* UMainMenuSelector::NativeGetDesiredFocusTarget() const
 {
 	
@@ -37,4 +44,28 @@ FReply UMainMenuSelector::NativeOnFocusReceived(const FGeometry& InGeometry, con
 	}
 	
 	return Super::NativeOnFocusReceived(InGeometry, InFocusEvent);
+}
+
+void UMainMenuSelector::OnNewGameButtonPressed() const
+{
+	if (OnNewGamePressed.IsBound())
+	{
+		OnNewGamePressed.Execute();
+	}
+}
+
+void UMainMenuSelector::OnSettingsButtonPressed() const
+{
+	if (OnSettingsPressed.IsBound())
+	{
+		OnSettingsPressed.Execute();
+	}
+}
+
+void UMainMenuSelector::OnQuitButtonPressed() const
+{
+	if (OnQuitPressed.IsBound())
+	{
+		OnQuitPressed.Execute();
+	}
 }

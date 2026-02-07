@@ -17,7 +17,7 @@ class UCommonBorder;
 /**
  * 
  */
-UCLASS(meta = (HideFromSelection))
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UConfirmationDialogueWidget : public UCommonUserWidget
 {
 	GENERATED_UCLASS_BODY()

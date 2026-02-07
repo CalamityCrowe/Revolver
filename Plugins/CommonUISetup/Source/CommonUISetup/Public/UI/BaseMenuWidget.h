@@ -11,18 +11,20 @@ class UCommonActivatableWidgetSwitcher;
 /**
  * 
  */
-UCLASS(meta = (HideFromSelection = true))
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UBaseMenuWidget : public UCommonActivatableWidget
 {
 	GENERATED_UCLASS_BODY()
 public: 
 	UBaseMenuWidget(); 
 
+	virtual void NativeOnActivated() override;
+	
 protected: 
 	 
 	virtual void ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switcher, UWidget* InWidget);
 
-	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override; 
+    virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 private: 
 	
 };

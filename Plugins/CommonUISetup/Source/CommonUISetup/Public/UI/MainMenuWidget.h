@@ -6,8 +6,10 @@
 #include "UI/BaseMenuWidget.h"
 #include "MainMenuWidget.generated.h"
 
+class UOptionsPanel;
 class UConfirmationDialogueWidget;
-class UBaseMenuSelector;
+class UMainMenuSelector;
+class USettingsMenuSelector;
 class UBaseMenuButton;
 class UVerticalBox; 
 
@@ -30,11 +32,18 @@ private:
 	
 	//TODO: Implement the actual widgets correctly in the blueprints and assign them in there
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UBaseMenuSelector> WM_MainMenu; 
+	TObjectPtr<UMainMenuSelector> WM_MainMenu; 
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UBaseMenuSelector> WM_Settings;
+	TObjectPtr<USettingsMenuSelector> WM_Settings;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOptionsPanel> WM_AudioOptions;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOptionsPanel> WM_VideoOptions;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UOptionsPanel> WM_ControlsOptions;
+	
 
 	UPROPERTY(EditDefaultsOnly,meta = (AllowPrivateAccess), Category = "Quit Widget")
 	TSubclassOf<UConfirmationDialogueWidget> QuitWidgetClass; 
@@ -44,11 +53,31 @@ private:
 	
 private: 
 	
+	UFUNCTION()
 	void OnSettingsPressed();
 	
+	UFUNCTION()
 	void OnQuitPressed();
 	
 	UFUNCTION()
-	void QuitConfirmation(bool Confirm);
+	void OnAudioOptionsPressed();
+	UFUNCTION()
+	void OnVideoOptionsPressed();
 	
+	UFUNCTION()
+	void OnControlsOptionsPressed();
+	
+	UFUNCTION()
+	void BackToMainMenuPressed();
+	
+	UFUNCTION()
+	void BackToSettingsPressed();
+	
+	UFUNCTION()
+	void QuitConfirmation(bool Confirm);
+
+	
+private: 
+	
+	bool AllPagesSet()const {return (WM_MainMenu && WM_Settings && WM_AudioOptions && WM_VideoOptions && WM_ControlsOptions);}
 };

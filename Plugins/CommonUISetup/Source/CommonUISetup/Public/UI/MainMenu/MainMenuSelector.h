@@ -10,19 +10,19 @@ class UBaseMenuButton;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UMainMenuSelector : public UBaseMenuSelector
 {
 	GENERATED_UCLASS_BODY()
 public: 
 	UMainMenuSelector(); 
 	
-	UBaseMenuButton* GetNewGameButton() const {return WB_NewGame; }
+	FOnButtonPressed OnNewGamePressed;
+	FOnButtonPressed OnSettingsPressed;
+	FOnButtonPressed OnQuitPressed;
 	
-	UBaseMenuButton* GetSettingsButton() const {return WB_Settings; };
+	virtual void NativeConstruct() override;
 	
-	UBaseMenuButton* GetQuitButton() const {return WB_Quit; }
-
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	
 	virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
@@ -34,4 +34,8 @@ private:
 	TObjectPtr<UBaseMenuButton> WB_Settings;
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Quit;
+	
+	void OnNewGameButtonPressed() const;
+	void OnSettingsButtonPressed() const;
+	void OnQuitButtonPressed() const;
 };

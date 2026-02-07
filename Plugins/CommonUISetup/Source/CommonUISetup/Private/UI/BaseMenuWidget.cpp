@@ -10,6 +10,13 @@ UBaseMenuWidget::UBaseMenuWidget(const FObjectInitializer& ObjectInitializer) : 
 	
 }
 
+void UBaseMenuWidget::NativeOnActivated()
+{
+	Super::NativeOnActivated();
+	
+	
+}
+
 void UBaseMenuWidget::ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switcher, UWidget* InWidget)
 {
 	if (Switcher && InWidget)
@@ -29,6 +36,8 @@ void UBaseMenuWidget::ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switch
 
 TOptional<FUIInputConfig> UBaseMenuWidget::GetDesiredInputConfig() const
 {
+	UE_LOG(LogTemp, Warning, TEXT("GetDesiredInputConfig called!"));
+
 	FUIInputConfig config = FUIInputConfig(ECommonInputMode::Menu,EMouseCaptureMode::CapturePermanently,false);
 	config.bIgnoreLookInput = true;
 	config.bIgnoreMoveInput = true;

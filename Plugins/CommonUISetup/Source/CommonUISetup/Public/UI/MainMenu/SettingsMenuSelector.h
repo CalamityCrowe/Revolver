@@ -11,7 +11,7 @@ class UBaseMenuButton;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API USettingsMenuSelector : public UBaseMenuSelector
 {
 	GENERATED_UCLASS_BODY()
@@ -19,10 +19,13 @@ class COMMONUISETUP_API USettingsMenuSelector : public UBaseMenuSelector
 public: 
 	USettingsMenuSelector(); 
 	
-	UBaseMenuButton* GetAudioButton() const {return WB_Audio;}
-	UBaseMenuButton* GetVideoButton() const {return WB_Video;}
-	UBaseMenuButton* GetControlsButton() const {return WB_Controls;}
-	UBaseMenuButton* GetBackButton() const {return WB_Back;}
+	FOnButtonPressed OnAudioPressed;
+	FOnButtonPressed OnVideoPressed;
+	FOnButtonPressed OnControlsPressed;
+	FOnButtonPressed OnBackPressed;
+	
+	virtual void NativeConstruct() override;
+	
 	
 private: 
 	
@@ -35,4 +38,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Back;
 	
+	
+	void OnAudioButtonPressed(); 
+	void OnVideoButtonPressed();
+	void OnControlsButtonPressed();
+	void OnBackButtonPressed();
 };
