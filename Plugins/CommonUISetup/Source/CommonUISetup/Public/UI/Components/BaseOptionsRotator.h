@@ -15,4 +15,7 @@ class COMMONUISETUP_API UBaseOptionsRotator : public UCommonRotator
 	GENERATED_UCLASS_BODY()
 public: 
 	UBaseOptionsRotator(); 
+	
+	
+	
 };
