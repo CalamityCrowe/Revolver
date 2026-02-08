@@ -19,12 +19,10 @@ UCLASS()
 class COMMONUISETUP_API UOptionsCycler : public UCommonUserWidget
 {
 	GENERATED_UCLASS_BODY()
-public: 
-	
-	UOptionsCycler(); 
-	
+public:
 	virtual void NativePreConstruct() override;
 	
+	void InitializeOption(const FText& CurrentOptionText, const TArray<FText>& CurrentOptionArray, int CurrentDefaultIndex);
 	
 protected: 
 	UPROPERTY(meta = (BindWidget))
@@ -51,6 +49,7 @@ protected:
 	int32 DefaultSelectedIndex;
 	
 private: 
+	void SetupWidgetDisplay();
 	void OnPreviousButtonClicked();
 	void OnNextButtonClicked();
 };

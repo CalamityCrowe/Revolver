@@ -4,6 +4,7 @@
 #include "UI/Pages/OptionsPanel.h"
 
 #include "CommonTextBlock.h"
+#include "Components/ScrollBox.h"
 #include "UI/Components/BaseMenuButton.h"
 
 UOptionsPanel::UOptionsPanel(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
@@ -18,6 +19,9 @@ void UOptionsPanel::NativePreConstruct()
 	{
 		CT_MenuText->SetText(MenuTextLabel); 
 	}
+	
+	InitializeOptions();
+	
 }
 
 void UOptionsPanel::NativeConstruct()
@@ -25,6 +29,11 @@ void UOptionsPanel::NativeConstruct()
 	Super::NativeConstruct();
 	
 	WB_Back->OnClicked().AddUObject(this, &UOptionsPanel::OnBackButtonPressed); 
+}
+
+void UOptionsPanel::InitializeOptions()
+{
+	SB_OptionsScroll->ClearChildren(); 
 }
 
 void UOptionsPanel::OnBackButtonPressed()

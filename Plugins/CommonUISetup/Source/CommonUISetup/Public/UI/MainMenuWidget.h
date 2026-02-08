@@ -21,7 +21,7 @@ class COMMONUISETUP_API UMainMenuWidget : public UBaseMenuWidget
 {
 	GENERATED_UCLASS_BODY()
 public: 
-	UMainMenuWidget();
+
 	
 	virtual void NativeConstruct() override;
 

@@ -16,7 +16,7 @@ class COMMONUISETUP_API UBaseMenuButton : public UCommonBoundActionButton
 {
 	GENERATED_UCLASS_BODY()
 public:
-	UBaseMenuButton(); 
+
 	
 	virtual void NativePreConstruct() override;	
 	

@@ -16,7 +16,6 @@ class COMMONUISETUP_API UBaseMenuWidget : public UCommonActivatableWidget
 {
 	GENERATED_UCLASS_BODY()
 public: 
-	UBaseMenuWidget(); 
 
 	virtual void NativeOnActivated() override;
 	

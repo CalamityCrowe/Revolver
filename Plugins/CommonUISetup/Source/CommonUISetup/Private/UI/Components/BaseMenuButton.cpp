@@ -5,9 +5,9 @@
 #include "CommonTextBlock.h"
 #include "Components/OverlaySlot.h"
 
-UBaseMenuButton::UBaseMenuButton(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+UBaseMenuButton::UBaseMenuButton(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer), ButtonText(FText::FromString("Main Menu Button"))
 {
-	ButtonText = FText::FromString("Main Menu Button");
+
 }
 
 void UBaseMenuButton::NativePreConstruct()

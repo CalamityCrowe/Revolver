@@ -17,7 +17,6 @@ class COMMONUISETUP_API USettingsMenuSelector : public UBaseMenuSelector
 	GENERATED_UCLASS_BODY()
 	
 public: 
-	USettingsMenuSelector(); 
 	
 	FOnButtonPressed OnAudioPressed;
 	FOnButtonPressed OnVideoPressed;

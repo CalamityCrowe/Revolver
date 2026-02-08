@@ -12,20 +12,33 @@ UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Supe
 	OptionLabelText = FText::FromString("Option");
 }
 
+
+
 void UOptionsCycler::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+	
+	WB_NextButton->OnClicked().AddUObject(this,&UOptionsCycler::OnNextButtonClicked); 
+	WB_PreviousButton->OnClicked().AddUObject(this,&UOptionsCycler::OnPreviousButtonClicked);
+}
+
+void UOptionsCycler::InitializeOption(const FText& CurrentOptionText, const TArray<FText>& CurrentOptionArray,
+	const int CurrentDefaultIndex)
+{
+	OptionLabelText = CurrentOptionText;
+	OptionsArray = CurrentOptionArray;
+	DefaultSelectedIndex = CurrentDefaultIndex;
+	SetupWidgetDisplay();
+}
+void UOptionsCycler::SetupWidgetDisplay()
+{
 	CT_OptionName->SetText(OptionLabelText); 
 	if (WR_OptionRotator)
 	{
 		WR_OptionRotator->PopulateTextLabels(OptionsArray); 
 		WR_OptionRotator->SetSelectedItem(DefaultSelectedIndex); 
 	}
-	
-	WB_NextButton->OnClicked().AddUObject(this,&UOptionsCycler::OnNextButtonClicked); 
-	WB_PreviousButton->OnClicked().AddUObject(this,&UOptionsCycler::OnPreviousButtonClicked);
 }
-
 void UOptionsCycler::OnPreviousButtonClicked()
 {
 	WR_OptionRotator->ShiftTextLeft(); 

@@ -12,6 +12,7 @@
  * 
  */
 
+class UOptionsCycler;
 class UBaseMenuButton;
 class UCommonBorder; 
 class UCommonTextBlock;
@@ -26,12 +27,13 @@ class COMMONUISETUP_API UOptionsPanel : public UCommonUserWidget
 {
 	GENERATED_UCLASS_BODY()
 public: 
-	UOptionsPanel(); 
 	
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	
 	FOnButtonPressed OnBackPressed; 
+	
+	
 	
 protected:
 	
@@ -39,7 +41,7 @@ protected:
 	TObjectPtr<USizeBox> WB_SizeBox;
 	
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UVerticalBox> VB_Selection;
+	TObjectPtr<UVerticalBox> VB_MenuLayout;
 	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UScrollBox> SB_OptionsScroll;
@@ -47,9 +49,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonTextBlock> CT_MenuText;
 	
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UCommonBorder> CB_SettingsBorder;
-	
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonBorder> CB_ButtonsBorder;
 	
@@ -66,8 +66,18 @@ protected:
 	TObjectPtr<UBaseMenuButton> WB_Back; 
 	
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Options Panel")
 	FText MenuTextLabel;
+	
+	UPROPERTY(EditAnywhere, Category = "Options Panel|Data Table")
+	TObjectPtr<UDataTable> OptionsTable; 
+	
+	UPROPERTY(EditAnywhere, Category = "Options Panel|Data Table")
+	TSubclassOf<UOptionsCycler> OptionsCycleClass;
+	
+protected: 
+	
+	virtual void InitializeOptions(); 
 	
 private: 
 	void OnBackButtonPressed(); 

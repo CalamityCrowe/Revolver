@@ -15,7 +15,6 @@ class COMMONUISETUP_API UMainMenuSelector : public UBaseMenuSelector
 {
 	GENERATED_UCLASS_BODY()
 public: 
-	UMainMenuSelector(); 
 	
 	FOnButtonPressed OnNewGamePressed;
 	FOnButtonPressed OnSettingsPressed;
