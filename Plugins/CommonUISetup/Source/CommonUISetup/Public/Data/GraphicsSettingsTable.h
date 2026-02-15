@@ -22,7 +22,7 @@ public:
 	TMap<int, FText> Options;
 	UPROPERTY(EditAnywhere)
 	int DefaultOption; 
-	FGraphicsConfig():GraphicsOptionType(EGraphicsOptions::Overall)
+	FGraphicsConfig():GraphicsOptionType(EGraphicsOptions::Overall), DefaultOption(0)
 	{
 		Options.Add(0, FText::FromString(TEXT("Low")));
 		Options.Add(1, FText::FromString(TEXT("Medium")));

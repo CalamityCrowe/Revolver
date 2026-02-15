@@ -2,10 +2,10 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "Common UI Setup",
-	"Description": "Reusable Common UI menu system template",
-	"Category": "UI",
-	"CreatedBy": "",
+	"FriendlyName": "EnhancedGameplayAbilitySystem",
+	"Description": "This is my own framework for starting up a project that will further expand the Gameplay Ability System. ",
+	"Category": "Other",
+	"CreatedBy": "kyrie",
 	"CreatedByURL": "",
 	"DocsURL": "",
 	"MarketplaceURL": "",
@@ -16,18 +16,22 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "CommonUISetup",
+			"Name": "EnhancedGameplayAbilitySystem",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
 		{
-			"Name": "CommonUI",
+			"Name": "GameplayAbilities",
 			"Enabled": true
 		},
 		{
 			"Name": "EnhancedInput",
+			"Enabled": true
+		},
+		{
+			"Name": "TargetingSystem",
 			"Enabled": true
 		}
 	]

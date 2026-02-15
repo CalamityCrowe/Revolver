@@ -2,10 +2,10 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "Common UI Setup",
-	"Description": "Reusable Common UI menu system template",
-	"Category": "UI",
-	"CreatedBy": "",
+	"FriendlyName": "CustomAnimNotifies",
+	"Description": "This will be a library of pre-defined anim notifies that can be brought into a project to handle similar features across multiple projects",
+	"Category": "Other",
+	"CreatedBy": "Kyrie",
 	"CreatedByURL": "",
 	"DocsURL": "",
 	"MarketplaceURL": "",
@@ -16,19 +16,9 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "CommonUISetup",
+			"Name": "CustomAnimNotifies",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "CommonUI",
-			"Enabled": true
-		},
-		{
-			"Name": "EnhancedInput",
-			"Enabled": true
 		}
 	]
 }

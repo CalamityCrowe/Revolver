@@ -3,7 +3,11 @@
 
 #include "Characters/CharacterBase.h"
 
+//engine
 #include "Components/CapsuleComponent.h"
+
+// enhanced ability plugin
+#include "GAS/EnhancedAbilitySystemComponent.h"
 
 
 ACharacterBase::ACharacterBase()
@@ -13,14 +17,7 @@ ACharacterBase::ACharacterBase()
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f); 
 }
 
-UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
-{
-	/*if (ASC.Get())
-	{
-		return ASC.Get(); 
-	}*/
-	return nullptr; 
-}
+
 
 void ACharacterBase::BeginPlay()
 {
@@ -31,19 +28,26 @@ void ACharacterBase::BeginPlay()
 void ACharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	/*if (ASC.Get())
+	if (ASC.Get())
 	{
 		ASC->InitAbilityActorInfo(this, this); 
-	}*/
+	}
 }
 
 void ACharacterBase::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	/*if (ASC.Get())
+	if (ASC.Get())
 	{
 		ASC->InitAbilityActorInfo(this, this); 
-	}*/
+	}
 }
-
+UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
+{
+	if (ASC.Get())
+	{
+		return ASC.Get();
+	}
+	return nullptr; 
+}
 

@@ -7,6 +7,9 @@
 #include "AbilitySystemInterface.h"
 #include "CharacterBase.generated.h"
 
+class UEnhancedAbilitySystemComponent;
+class UEnhancedAttributeSet;
+
 UCLASS()
 class REVOLVER_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
 {
@@ -25,11 +28,12 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	
 	virtual void OnRep_PlayerState() override;
-private: 
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess))
+
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess))
 	TWeakObjectPtr<UEnhancedAbilitySystemComponent> ASC;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess))
-	TWeakObjectPtr<UEnhancedAttributeSet> AttributeSet; */
+	TWeakObjectPtr<UEnhancedAttributeSet> AttributeSet; 
 	
 };

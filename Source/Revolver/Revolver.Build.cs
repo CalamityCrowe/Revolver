@@ -21,6 +21,7 @@ public class Revolver : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
+			"EnhancedGameplayAbilitySystem", 
 			"Slate",
 			"SlateCore"
 			

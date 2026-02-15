@@ -28,6 +28,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "EnhancedGameplayAbilitySystem",
+			"Enabled": true
+		},
+		{
 			"Name": "CommonUISetup",
 			"Enabled": true
 		},
