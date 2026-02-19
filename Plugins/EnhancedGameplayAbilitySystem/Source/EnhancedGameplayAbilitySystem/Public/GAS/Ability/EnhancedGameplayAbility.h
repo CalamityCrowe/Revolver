@@ -10,6 +10,8 @@
  * 
  */
 
+class ACharacter;
+
 UENUM(BlueprintType)
 enum class EEnhancedActivationPolicy:uint8
 {
@@ -26,6 +28,9 @@ public:
 	
 	UEnhancedGameplayAbility(); 
 	EEnhancedActivationPolicy GetActivationPolicy() const{return ActivationPolicy; };
+	
+	UFUNCTION(BlueprintCallable,Category = "GAS|Ability")
+	ACharacter* GetCharacterFromActorInfo() const; 
 	
 protected: 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")

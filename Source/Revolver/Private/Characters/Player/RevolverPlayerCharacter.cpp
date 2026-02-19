@@ -29,6 +29,8 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom,CameraBoom->SocketName); 
+	
+	bUseControllerRotationYaw = false; 
 }
 
 void ARevolverPlayerCharacter::BeginPlay()
