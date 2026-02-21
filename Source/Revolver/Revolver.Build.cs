@@ -23,8 +23,8 @@ public class Revolver : ModuleRules
 			"GameplayTasks",
 			"EnhancedGameplayAbilitySystem", 
 			"Slate",
-			"SlateCore"
-			
+			"SlateCore",
+			"UMG"
 		});
 
 		// Uncomment if you are using Slate UI

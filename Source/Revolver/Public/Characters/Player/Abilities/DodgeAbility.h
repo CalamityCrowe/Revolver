@@ -31,7 +31,7 @@ private:
 	
 	void GetDirection(FVector& OutLastMovement) const; 
 
-	//UAnimMontage* SelectDodgeMontage(FVector Movement);
+	UAnimMontage* SelectDodgeMontage(FVector Movement);
 	
 	
 	UFUNCTION()

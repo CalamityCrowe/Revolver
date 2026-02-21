@@ -3,6 +3,8 @@
 
 #include "Characters/Player/Abilities/DodgeAbility.h"
 
+#include <string>
+
 #include "GameFramework/Character.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
@@ -17,19 +19,20 @@ void UDodgeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-	UAnimMontage* SelectedAnim = ForwardDodgeAnim; 
-			
-	FVector MovementVector;
+FVector MovementVector;
 	
 	GetDirection(MovementVector); 
 	
+	UAnimMontage* SelectedAnim = SelectDodgeMontage(MovementVector); 
+	
+		
 	if (MovementVector.IsNearlyZero())
 	{
-		CancelAbility(Handle,ActorInfo,ActivationInfo,false); 
+		CancelAbility(Handle,ActorInfo,ActivationInfo,true); 
 	}
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
-		
+		CancelAbility(Handle,ActorInfo,ActivationInfo,true);
 	}
 	
 	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
@@ -54,10 +57,30 @@ void UDodgeAbility::GetDirection(FVector& OutLastMovement) const
 	}
 }
 
-/*UAnimMontage* UDodgeAbility::SelectDodgeMontage(FVector Movement)
+UAnimMontage* UDodgeAbility::SelectDodgeMontage(FVector Movement)
 {
+	UAnimMontage* SelectedAnim = ForwardDodgeAnim;
+
+	Movement = Movement.GetSafeNormal();
+	FVector ActorFowardVector = GetCharacterFromActorInfo()->GetActorForwardVector();
+	FVector ActorRightVector = GetCharacterFromActorInfo()->GetActorRightVector();
+
+	float ForwardDot = FVector::DotProduct(ActorFowardVector, Movement);
+	float RightDot = FVector::DotProduct(ActorRightVector, Movement);
 	
-}*/
+	GEngine->AddOnScreenDebugMessage(-1, 1, FColor::Red, FString::Printf(TEXT("Forward: %.f,  Right: %.f"), ForwardDot, RightDot));
+
+	if (FMath::Abs(ForwardDot) >= FMath::Abs(RightDot))
+	{
+		SelectedAnim = (ForwardDot >= 0.0f)? ForwardDodgeAnim : BackwardDodgeAnim;
+	}
+	else
+	{
+		SelectedAnim = (RightDot >= 0.0f)? RightDodgeAnim : LeftDodgeAnim;
+	}
+	return SelectedAnim;
+	
+}
 
 void UDodgeAbility::OnMontageCompleted()
 {
