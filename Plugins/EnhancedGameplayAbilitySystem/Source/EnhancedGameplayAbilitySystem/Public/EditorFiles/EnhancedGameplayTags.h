@@ -15,10 +15,13 @@ public:
 	// Native inputs
 	FGameplayTag Input_Move; 
 	FGameplayTag Input_Aim;
-
+	FGameplayTag Input_EquipSword;
+	
 	
 	// Ability Inputs
 	FGameplayTag Input_Dash; 
+	FGameplayTag Input_MeleeAttack; 
+	
 	
 	// blocking movement tags
 	

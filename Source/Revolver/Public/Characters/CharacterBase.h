@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayAbilitySpec.h"
 #include "CharacterBase.generated.h"
 
 class UEnhancedAbilitySystemComponent;
@@ -21,6 +22,9 @@ public:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
+	void RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove); 
+	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -29,6 +33,9 @@ protected:
 	
 	virtual void OnRep_PlayerState() override;
 
+	UFUNCTION(BlueprintCallable, Category = "GAS|Event Functions")
+	void SendGameplayEventToSelf(const FGameplayEventData& EventData);
+	
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess))
 	TWeakObjectPtr<UEnhancedAbilitySystemComponent> ASC;

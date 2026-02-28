@@ -7,6 +7,7 @@
 #include "GAS/EnhancedAbilitySet.h"
 #include "RevolverPlayerCharacter.generated.h"
 
+class UWeaponManagerComponent;
 struct FAbilitySet_GrantedHandles;
 class USpringArmComponent;
 class UCameraComponent;
@@ -45,6 +46,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Inputs")
 	TObjectPtr<UInputMappingContext> InputContext;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components|Weapon Manager")
+	TObjectPtr<UWeaponManagerComponent> WeaponManagerComponent; 
+	
+	
 	FAbilitySet_GrantedHandles GrantedHandles; 
 	
 private: 
@@ -52,6 +57,9 @@ private:
 	void Move(const FInputActionValue& Value); 
 	UFUNCTION()
 	void Look(const FInputActionValue& Value);
+	
+	UFUNCTION() 
+	void EquipRightHand(const FInputActionValue& Value); 
 	
 private: 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))

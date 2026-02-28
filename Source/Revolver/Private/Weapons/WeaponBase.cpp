@@ -10,14 +10,14 @@
 // Sets default values
 AWeaponBase::AWeaponBase()
 {
-	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon Mesh");
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("Weapon Mesh");
 	WeaponMesh->SetupAttachment(RootComponent);
 	
 	TraceStart = CreateDefaultSubobject<USceneComponent>("Trace Start");
-	TraceStart->SetupAttachment(GetRootComponent());
+	TraceStart->SetupAttachment(WeaponMesh);
 	
 	TraceEnd = CreateDefaultSubobject<USceneComponent>("Trace End");
-	TraceEnd->SetupAttachment(GetRootComponent());
+	TraceEnd->SetupAttachment(WeaponMesh);
 }
 
 

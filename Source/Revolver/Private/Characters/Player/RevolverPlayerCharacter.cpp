@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 
 //plugin
+#include "Components/WeaponManagerComponent.h"
 #include "EditorFiles/EnhancedGameplayTags.h"
 #include "GAS/EnhancedAbilitySet.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
@@ -31,6 +32,9 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	Camera->SetupAttachment(CameraBoom,CameraBoom->SocketName); 
 	
 	bUseControllerRotationYaw = false; 
+	
+	WeaponManagerComponent = CreateDefaultSubobject<UWeaponManagerComponent>(TEXT("AC_WeaponManager")); 
+	
 }
 
 void ARevolverPlayerCharacter::BeginPlay()
@@ -60,6 +64,8 @@ void ARevolverPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	
 	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_Move, ETriggerEvent::Triggered,this,  &ThisClass::Move);
 	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_Aim, ETriggerEvent::Triggered, this, &ThisClass::Look); 
+	// for the likes of needing to send specific event data, I.E equipping weapons via input, then this is how we handle that 
+	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_EquipSword, ETriggerEvent::Started, this, &ThisClass::EquipRightHand); 
 }
 
 void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
@@ -111,5 +117,12 @@ void ARevolverPlayerCharacter::Look(const FInputActionValue& Value)
 	FVector2D Axis = Value.Get<FVector2D>();
 	AddControllerYawInput(Axis.X);
 	AddControllerPitchInput(Axis.Y);
+}
+
+void ARevolverPlayerCharacter::EquipRightHand(const FInputActionValue& Value)
+{
+	FGameplayEventData PayLoad;
+	PayLoad.TargetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Weapon.Melee"))); 
+	ASC->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Abilities.EquipWeapon")),&PayLoad); 
 }
 

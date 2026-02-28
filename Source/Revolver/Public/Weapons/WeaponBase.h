@@ -7,6 +7,29 @@
 #include "GameplayEffectTypes.h"
 #include "WeaponBase.generated.h"
 
+class UEnhancedAbilitySet;
+
+USTRUCT(Blueprintable)
+struct REVOLVER_API FWeaponConfig
+{
+	GENERATED_BODY()
+public: 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UEnhancedAbilitySet> AbilitiesToGrant; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FName EquipSocketName; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FName UnEquipSocketName; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAnimMontage> EquipMontage;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAnimMontage> UnEquipMontage;
+};
+
+
 UCLASS()
 class REVOLVER_API AWeaponBase : public AActor
 {
@@ -21,6 +44,9 @@ public:
 	
 	UFUNCTION()
 	void HitScanEnd();
+	
+	FWeaponConfig GetWeaponConfig() const {return WeaponConfig; }
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -28,11 +54,14 @@ protected:
 	void HitScan(); 
 private: 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<USkeletalMeshComponent> WeaponMesh; 
+	TObjectPtr<UStaticMeshComponent> WeaponMesh; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USceneComponent> TraceStart; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USceneComponent> TraceEnd;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Config",meta = (AllowPrivateAccess = true))
+	FWeaponConfig WeaponConfig; 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hit Scan", meta = (AllowPrivateAccess = true))
 	float TraceRadius;

@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 
 // enhanced ability plugin
+#include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 
 
@@ -42,6 +43,12 @@ void ACharacterBase::OnRep_PlayerState()
 		ASC->InitAbilityActorInfo(this, this); 
 	}
 }
+
+void ACharacterBase::SendGameplayEventToSelf(const FGameplayEventData& EventData)
+{
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, EventData.EventTag,EventData); 
+}
+
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 {
 	if (ASC.Get())
@@ -49,5 +56,18 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 		return ASC.Get();
 	}
 	return nullptr; 
+}
+
+void ACharacterBase::RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove)
+{
+	if (!ASC.Get()|| !HasAuthority())
+	{
+		return; 
+	}
+	
+	for (FGameplayAbilitySpecHandle& AbilityHandle : AbilityHandlesToRemove)
+	{
+		ASC.Get()->ClearAbility(AbilityHandle);	
+	}
 }
 

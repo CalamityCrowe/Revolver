@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class REVOLVER_API UDodgeAbility : public UEnhancedGameplayAbility
 {
 	GENERATED_BODY()

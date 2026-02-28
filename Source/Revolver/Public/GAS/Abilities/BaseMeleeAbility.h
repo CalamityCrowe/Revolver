@@ -7,10 +7,11 @@
 #include "GameplayEffect.h"
 #include "BaseMeleeAbility.generated.h"
 
+class AWeaponBase;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class REVOLVER_API UBaseMeleeAbility : public UEnhancedGameplayAbility
 {
 	GENERATED_BODY()
@@ -35,11 +36,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay Effect")
 	FGameplayTag EffectCallerTag;
 	
-	UFUNCTION(BlueprintCallable)
-	virtual void HandleHitScanStart(); 
+	UPROPERTY()
+	AWeaponBase* EquippedWeapon; 
 	
 	UFUNCTION(BlueprintCallable)
-	virtual void HandleHitScanEnd();
+	virtual void HandleHitScanStart(FGameplayEventData Payload); 
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void HandleHitScanEnd(FGameplayEventData Payload);
+	
+	virtual void MontageStart(){};
+	
 	
 private: 
 	
