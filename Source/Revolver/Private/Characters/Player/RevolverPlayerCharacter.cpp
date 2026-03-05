@@ -80,6 +80,7 @@ void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
 	
 	AttributeSet = PS->GetAttributeSet(); 
 	
+	
 	if (AbilitySet)
 	{
 		AbilitySet->GiveToAbilitySystem(ASC.Get(), &GrantedHandles,this); 
@@ -93,6 +94,7 @@ void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
 	
 }
 
+
 void ARevolverPlayerCharacter::InputAbilityInputTagPressed(FGameplayTag InputTag)
 {
 	ASC->AbilityInputTagPressed(InputTag); 
@@ -101,6 +103,16 @@ void ARevolverPlayerCharacter::InputAbilityInputTagPressed(FGameplayTag InputTag
 void ARevolverPlayerCharacter::InputAbilityInputTagReleased(FGameplayTag InputTag)
 {
 	ASC->AbilityInputTagReleased(InputTag);
+}
+
+void ARevolverPlayerCharacter::Die()
+{
+	Super::Die();
+}
+
+void ARevolverPlayerCharacter::FinishDying()
+{
+	Super::FinishDying();
 }
 
 void ARevolverPlayerCharacter::Move(const FInputActionValue& Value)

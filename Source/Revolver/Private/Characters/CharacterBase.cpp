@@ -9,14 +9,19 @@
 // enhanced ability plugin
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
+#include "GAS/Attributes/EnhancedAttributeSet.h"
 
 
 ACharacterBase::ACharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f); 
+	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
+	
+	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead")); 
+	
 }
+
 
 
 
@@ -32,6 +37,7 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	if (ASC.Get())
 	{
 		ASC->InitAbilityActorInfo(this, this); 
+		
 	}
 }
 
@@ -69,5 +75,46 @@ void ACharacterBase::RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityH
 	{
 		ASC.Get()->ClearAbility(AbilityHandle);	
 	}
+}
+
+
+
+void ACharacterBase::Die()
+{
+	if (ASC.IsValid())
+	{
+		ASC->CancelAllAbilities(); 
+		
+		ASC->AddLooseGameplayTag(DeadTag); 
+	}
+	if (DeathMontage)
+	{
+		if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(DeathMontage))
+		GetMesh()->PlayAnimation(DeathMontage,false);
+	}
+	else
+	{
+		FinishDying(); 
+	}
+	
+}
+
+void ACharacterBase::FinishDying()
+{
+	Destroy();
+}
+
+float ACharacterBase::GetHealth() const
+{
+	if (AttributeSet.Get())
+	{
+		return AttributeSet->GetHealth(); 
+	}
+	return 0; 
+}
+
+bool ACharacterBase::IsAlive() const
+{
+	return GetHealth() > 0.0f;
 }
 

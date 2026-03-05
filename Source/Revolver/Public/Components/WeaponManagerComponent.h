@@ -5,11 +5,13 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GAS/EnhancedAbilitySet.h"
+#include "Weapons/WeaponData.h"
 #include "WeaponManagerComponent.generated.h"
-
 
 class AWeaponBase;
 class ACharacterBase;
+
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class REVOLVER_API UWeaponManagerComponent : public UActorComponent
@@ -40,6 +42,10 @@ private:
 	
 	UPROPERTY()
 	AWeaponBase* EquippedWeapon; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	FWeaponMovementProperties DefaultMovementProperties;
+		
 	
 	FAbilitySet_GrantedHandles AbilitiesGrantedByWeapon; 
 	

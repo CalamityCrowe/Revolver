@@ -4,17 +4,14 @@
 
 #include "Characters/CharacterBase.h"
 #include "GameplayTagContainer.h"
-#include "GAS/EnhancedAbilitySet.h"
 #include "RevolverPlayerCharacter.generated.h"
 
 class UWeaponManagerComponent;
-struct FAbilitySet_GrantedHandles;
 class USpringArmComponent;
 class UCameraComponent;
 
 class UInputMappingContext;
 class UEnhancedInputConfig; 
-class UEnhancedAbilitySet;
 
 UCLASS()
 class REVOLVER_API ARevolverPlayerCharacter : public ACharacterBase
@@ -37,8 +34,6 @@ protected:
 	void InputAbilityInputTagPressed(FGameplayTag InputTag);
 	void InputAbilityInputTagReleased(FGameplayTag InputTag);
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Abilities")
-	TObjectPtr<UEnhancedAbilitySet> AbilitySet; 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Inputs")
 	TObjectPtr<UEnhancedInputConfig>InputConfig; 
@@ -49,8 +44,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components|Weapon Manager")
 	TObjectPtr<UWeaponManagerComponent> WeaponManagerComponent; 
 	
+	virtual void Die() override;
 	
-	FAbilitySet_GrantedHandles GrantedHandles; 
+	virtual void FinishDying() override;
 	
 private: 
 	UFUNCTION()

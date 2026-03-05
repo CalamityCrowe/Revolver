@@ -4,6 +4,7 @@
 #include "Weapons/InstrumentWeapon.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -24,7 +25,7 @@ void AInstrumentWeapon::HitScan()
 {
 	Super::HitScan();
 	FVector StartLocation = this->GetActorLocation();
-	FVector EndLocation = StartLocation;
+	FVector EndLocation = GetInstigator()->GetActorLocation();
 	
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
@@ -38,23 +39,23 @@ void AInstrumentWeapon::HitScan()
 		for (FHitResult& Hit: HitResults)
 		{
 			if (!Hit.GetActor())continue; 
-			if (UAbilitySystemComponent* ASC = Hit.GetActor()->GetComponentByClass<UEnhancedAbilitySystemComponent>())
-			{
-				if (!HitActors.Contains(Hit.GetActor()))
+			if (Hit.GetActor()->GetClass()->ImplementsInterface(UAbilitySystemInterface::StaticClass()))
+			{	
+				IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(Hit.GetActor()); 
+				if (UAbilitySystemComponent* ASC = ASCInterface->GetAbilitySystemComponent())
 				{
-					HitActors.AddUnique(Hit.GetActor());
-					if (Hit.GetActor() == GetInstigator())
+					if (!HitActors.Contains(Hit.GetActor()))
 					{
-						ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); // the target gets a full effect from the bell
-					}else
-					{
-						ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); // the target gets a full effect from the bell
-					} 
+						HitActors.AddUnique(Hit.GetActor());
+						if (Hit.GetActor() == GetInstigator())
+						{
+							ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); // the target gets a full effect from the bell
+						}else
+						{
+							ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); // the target gets a full effect from the bell
+						} 
+					}
 				}
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *Hit.GetActor()->GetName());
 			}
 		}
 	}

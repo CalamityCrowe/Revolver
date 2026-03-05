@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "Combo Input Window"))
 class REVOLVER_API UANS_ComboWindow : public UAnimNotifyState
 {
 	GENERATED_BODY()

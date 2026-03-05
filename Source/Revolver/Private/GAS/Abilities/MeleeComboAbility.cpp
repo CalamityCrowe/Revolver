@@ -14,10 +14,9 @@ void UMeleeComboAbility::MontageStart()
 {
 	Super::MontageStart();
 	ComboCount = 1; 
-	GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red,"Combo ENded");
 	UAbilityTask_WaitGameplayEvent* ContinueComboStart = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this,
-		FGameplayTag::RequestGameplayTag(FName("Event.Combo.Start")),
+		ComboStartTag,
 		nullptr,
 		false,
 		true
@@ -27,7 +26,7 @@ void UMeleeComboAbility::MontageStart()
 	
 	UAbilityTask_WaitGameplayEvent* ContinueComboEnd = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, 
-		FGameplayTag::RequestGameplayTag(FName("Event.Combo.End")),
+		ComboEndTag,
 		nullptr, 
 		false,
 		true);
@@ -37,7 +36,7 @@ void UMeleeComboAbility::MontageStart()
 	
 	UAbilityTask_WaitGameplayEvent* EventInputRecieved = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 		this, 
-		FGameplayTag::RequestGameplayTag(FName("Event.Combo.Input")),
+		ComboInputTag,
 		nullptr,
 		false,
 		true);

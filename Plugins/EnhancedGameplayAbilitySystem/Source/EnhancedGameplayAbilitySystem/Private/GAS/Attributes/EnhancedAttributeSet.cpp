@@ -2,6 +2,8 @@
 
 
 #include "GAS/Attributes/EnhancedAttributeSet.h"
+#include "GameplayEffectExtension.h"
+
 
 UEnhancedAttributeSet::UEnhancedAttributeSet():Health(100.0f), MaxHealth(100.f), Damage(0.0f)
 {
@@ -16,17 +18,17 @@ void UEnhancedAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribu
 	}
 	else if (Attribute == GetMaxHealthAttribute())
 	{
-		if (NewValue >= GetMaxHealth())
-		{
-			
-		}
+		
 	}
 }
 
 void UEnhancedAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-	
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(GetHealth()); 
+	}
 	// will do something later with this
 	
 }

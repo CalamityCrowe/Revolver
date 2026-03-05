@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "Characters/CharacterBase.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GAS/EnhancedAbilitySet.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 #include "Weapons/WeaponBase.h"
@@ -83,9 +84,14 @@ void UWeaponManagerComponent::OnEquipNotifyBegin(FName NotifyName, const FBranch
 		if (EquippedWeapon)
 		{
 			FWeaponConfig CurrentConfig = EquippedWeapon->GetWeaponConfig();
+			FWeaponMovementProperties MovementProperties = EquippedWeapon->GetMovementProperties();
 			EquippedWeapon->AttachToComponent(OwningCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, CurrentConfig.EquipSocketName); 
 			UEnhancedAbilitySystemComponent* OwningASC = Cast<UEnhancedAbilitySystemComponent> (OwningCharacter->GetAbilitySystemComponent());
 			CurrentConfig.AbilitiesToGrant->GiveToAbilitySystem(OwningASC,&AbilitiesGrantedByWeapon,this); 
+			
+			OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = MovementProperties.bShouldOrientMovement; 
+			OwningCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = MovementProperties.bUseControlRotation; 
+
 		}
 		
 		GetAnimInstance()->OnPlayMontageNotifyBegin.RemoveDynamic(this, &UWeaponManagerComponent::OnEquipNotifyBegin);
@@ -97,6 +103,8 @@ void UWeaponManagerComponent::OnUnEquipNotifyBegin(FName NotifyName, const FBran
 {
 	if (NotifyName == FName("UnEquipWeapon"))
 	{
+		OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = DefaultMovementProperties.bShouldOrientMovement;
+		OwningCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = DefaultMovementProperties.bUseControlRotation; 
 		EquippedWeapon->Destroy(); 
 		GetAnimInstance()->OnPlayMontageNotifyBegin.RemoveDynamic(this, &UWeaponManagerComponent::OnUnEquipNotifyBegin); 
 	}

@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (DisplayName = "Hit Scan Window"))
 class REVOLVER_API UANS_HitScanWindow : public UAnimNotifyState
 {
 	GENERATED_BODY()

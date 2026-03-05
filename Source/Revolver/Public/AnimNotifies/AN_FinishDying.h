@@ -4,25 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
-#include "GameplayTagContainer.h"
-#include "AN_SendEventToActor.generated.h"
+#include "AN_FinishDying.generated.h"
 
 /**
  * 
  */
-UCLASS()
-class REVOLVER_API UAN_SendEventToActor : public UAnimNotify
+UCLASS(meta = (DisplayName = "Finish Dying"))
+class REVOLVER_API UAN_FinishDying : public UAnimNotify
 {
 	GENERATED_BODY()
 public: 
-	UAN_SendEventToActor(); 
+	UAN_FinishDying();
 	
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 	
 	virtual FString GetNotifyName_Implementation() const override;
-protected: 
-	
-	UPROPERTY(EditAnywhere, Category = "GAS")
-	FGameplayTag EventToSend; 
-	
 };

@@ -19,6 +19,14 @@ public:
 	virtual void MontageStart() override;
 	
 	virtual void HandleHitScanStart(FGameplayEventData Payload) override;
+protected: 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Event|Combo")
+	FGameplayTag ComboStartTag;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Event|Combo")
+	FGameplayTag ComboEndTag;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Event|Combo")
+	FGameplayTag ComboInputTag; 
+	
 private: 
 	
 	UFUNCTION()

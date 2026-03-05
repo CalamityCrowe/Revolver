@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayAbilitySpec.h"
+#include "GAS/EnhancedAbilitySet.h"
 #include "CharacterBase.generated.h"
 
 class UEnhancedAbilitySystemComponent;
@@ -23,6 +24,16 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	void RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove); 
+	
+	float GetHealth() const;
+	
+	bool IsAlive() const;
+	
+	virtual void Die(); 
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void FinishDying(); 
+	
 	
 	
 protected:
@@ -42,5 +53,17 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess))
 	TWeakObjectPtr<UEnhancedAttributeSet> AttributeSet; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Abilities")
+	TObjectPtr<UEnhancedAbilitySet> AbilitySet; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Abilities")
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Abilities")
+	FGameplayTag DeadTag; 
+	
+	FAbilitySet_GrantedHandles GrantedHandles; 
+
 	
 };

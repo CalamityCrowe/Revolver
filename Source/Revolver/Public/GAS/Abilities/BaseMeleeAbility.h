@@ -36,6 +36,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay Effect")
 	FGameplayTag EffectCallerTag;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Event|Hit Scan")
+	FGameplayTag HitStartTag; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Event|Hit Scan")
+	FGameplayTag HitEndTag; 
+	
 	UPROPERTY()
 	AWeaponBase* EquippedWeapon; 
 	

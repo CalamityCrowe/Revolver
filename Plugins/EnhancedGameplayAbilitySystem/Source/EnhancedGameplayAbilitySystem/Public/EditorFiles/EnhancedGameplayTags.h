@@ -26,6 +26,7 @@ public:
 	// blocking movement tags
 	
 	FGameplayTag Gameplay_BlockMovement; 
+	FGameplayTag Gameplay_Death; 
 	
 protected:
 	
