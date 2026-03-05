@@ -18,8 +18,7 @@ ACharacterBase::ACharacterBase()
 	
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
 	
-	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead")); 
-	
+	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"),false); 
 }
 
 

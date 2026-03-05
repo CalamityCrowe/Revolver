@@ -1,10 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAS/Abilities/EquipWeaponAbility.h"
+#include "GAS/Abilities/Weapon/EquipWeaponAbility.h"
 
 #include "Components/WeaponManagerComponent.h"
-#include "GAS/Abilities/BaseMeleeAbility.h"
 #include "Weapons/WeaponBase.h"
 
 UEquipWeaponAbility::UEquipWeaponAbility()

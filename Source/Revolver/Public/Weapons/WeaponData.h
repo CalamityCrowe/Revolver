@@ -6,16 +6,19 @@
 class UEnhancedAbilitySet; 
 
 
-USTRUCT(Blueprintable)
+USTRUCT(BlueprintType)
 struct REVOLVER_API FWeaponMovementProperties
 {
 	GENERATED_BODY()
 public: 
-	FWeaponMovementProperties():bShouldOrientMovement(false),bUseControlRotation(false){} 
+	FWeaponMovementProperties()
+	:bUseControlRotation(false),
+	bShouldOrientMovement(false)
+	{} 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool bUseControlRotation; 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool bShouldOrientMovement; 
 };
 

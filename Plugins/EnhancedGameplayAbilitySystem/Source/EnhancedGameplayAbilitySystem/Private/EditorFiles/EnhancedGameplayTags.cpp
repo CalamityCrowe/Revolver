@@ -21,7 +21,7 @@ void FEnhancedGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Input_Dash,"GameplayAbility.Movement.Dash","Interaction"); 
 	AddTag(Input_MeleeAttack,"GameplayAbility.Attack.Sword","Melee Attack");
 	
-	AddTag(Gameplay_Death, "State.Death", "Death");
+	AddTag(Gameplay_Death, "State.Dead", "Dead");
 	
 }
 

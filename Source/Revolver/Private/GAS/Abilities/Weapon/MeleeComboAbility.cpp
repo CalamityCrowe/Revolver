@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAS/Abilities/MeleeComboAbility.h"
+#include "GAS/Abilities/Weapon/MeleeComboAbility.h"
 
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
