@@ -8,6 +8,7 @@
 
 class UEnhancedAbilitySystemComponent;
 class ARevolverPlayerState;
+class URevolverPlayerHUD; 
 /**
  * 
  */
@@ -25,12 +26,20 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input System|Ability System")
 	UEnhancedAbilitySystemComponent* GetEnhancedAbilitySystemComponent() const;
 	
+	void CreateHUD(); 
+	
+	void RemoveHUD();
 	
 protected:
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 	
 	virtual void OnRep_PlayerState() override;
 	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<URevolverPlayerHUD> PlayerHudClass; 
+	
+	UPROPERTY()
+	URevolverPlayerHUD* PlayerHUDRef;
 	
 private: 	
 };

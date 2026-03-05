@@ -23,6 +23,8 @@ public:
 	
 	virtual FString GetNotifyName_Implementation() const override;
 	
+	virtual bool ShouldFireInEditor() override {return false; };
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS")
 	FGameplayTag HitStartTag;
 	

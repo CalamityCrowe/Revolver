@@ -38,41 +38,42 @@ class REVOLVER_API AWeaponBase : public AActor
 public:
 	// Sets default values for this actor's properties
 	AWeaponBase();
-
-	UFUNCTION()
-	void HitScanStart(const FGameplayEffectSpecHandle& InEffectSpecHandle);
-	
-	UFUNCTION()
-	void HitScanEnd();
 	
 	FWeaponConfig GetWeaponConfig() const {return WeaponConfig; }
+
+	UStaticMeshComponent* GetMesh() const {return WeaponMesh; }
+	
+	UFUNCTION()
+	virtual void HitScanStart(const FGameplayEffectSpecHandle& InEffectSpecHandle){};
+	
+	UFUNCTION()
+	virtual void HitScanEnd(){}; 
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
-	void HitScan(); 
+	UPROPERTY()
+	TArray<AActor*> HitActors;
+	
+	UFUNCTION()
+	virtual void HitScan(){}
+	
+	FGameplayEffectSpecHandle EffectSpecHandle; 
+		
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hit Scan", meta = (AllowPrivateAccess = true))
+	float TraceRadius;
 private: 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UStaticMeshComponent> WeaponMesh; 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<USceneComponent> TraceStart; 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	TObjectPtr<USceneComponent> TraceEnd;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Config",meta = (AllowPrivateAccess = true))
 	FWeaponConfig WeaponConfig; 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hit Scan", meta = (AllowPrivateAccess = true))
-	float TraceRadius;
-	UPROPERTY(EditDefaultsOnly, BLueprintReadOnly, Category = "Hit Scan", meta = (AllowPrivateAccess = true))
-	float TraceTimer; 
+
+
 	
-	FGameplayEffectSpecHandle EffectSpecHandle; 
-	
-	FTimerHandle HitScanTimer;
-	
-	UPROPERTY()
-	TArray<AActor*> HitActors;
+
+
 	
 };

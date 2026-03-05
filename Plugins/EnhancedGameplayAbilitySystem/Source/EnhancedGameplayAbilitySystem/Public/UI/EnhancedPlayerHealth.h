@@ -23,4 +23,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
 	TObjectPtr<UProgressBar> HealthBar; 
+	
+	float Health; 
+	float MaxHealth;
 };

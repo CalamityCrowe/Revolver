@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, Blueprintable)
 class REVOLVER_API URevolverPlayerHealth : public UEnhancedPlayerHealth
 {
 	GENERATED_UCLASS_BODY()

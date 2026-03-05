@@ -3,6 +3,11 @@
 
 #include "UI/RevolverPlayerHealth.h"
 
+#include "AbilitySystemComponent.h"
+#include "Components/ProgressBar.h"
+#include "GAS/Attributes/EnhancedAttributeSet.h"
+#include "Player/RevolverPlayerState.h"
+
 URevolverPlayerHealth::URevolverPlayerHealth(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
 	
@@ -11,6 +16,20 @@ URevolverPlayerHealth::URevolverPlayerHealth(const FObjectInitializer& ObjectIni
 void URevolverPlayerHealth::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	if (ARevolverPlayerState* PS = GetOwningPlayerState<ARevolverPlayerState>())
+	{
+		UAbilitySystemComponent* ASC = PS->GetAbilitySystemComponent();
+		if (!ASC)
+		{
+			return; 
+		}
+		Health = ASC->GetNumericAttribute(UEnhancedAttributeSet::GetHealthAttribute()); 
+		MaxHealth = ASC->GetNumericAttribute(UEnhancedAttributeSet::GetMaxHealthAttribute());
+		HealthBar->SetPercent(Health/MaxHealth); 
+		
+		ASC->GetGameplayAttributeValueChangeDelegate(UEnhancedAttributeSet::GetHealthAttribute()).AddUObject(this, &URevolverPlayerHealth::UpdateHealth);
+	}
 }
 
 void URevolverPlayerHealth::NativeDestruct()

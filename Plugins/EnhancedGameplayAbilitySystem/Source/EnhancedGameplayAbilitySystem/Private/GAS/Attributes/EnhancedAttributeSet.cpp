@@ -3,7 +3,7 @@
 
 #include "GAS/Attributes/EnhancedAttributeSet.h"
 
-UEnhancedAttributeSet::UEnhancedAttributeSet():MaxHealth(100.f), Health(100.0f), Damage(0.0f)
+UEnhancedAttributeSet::UEnhancedAttributeSet():Health(100.0f), MaxHealth(100.f), Damage(0.0f)
 {
 }
 

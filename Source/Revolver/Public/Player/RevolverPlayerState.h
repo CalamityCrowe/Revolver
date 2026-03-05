@@ -31,6 +31,4 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UEnhancedAttributeSet> AttributeSet;
 	
-	
-	
 };

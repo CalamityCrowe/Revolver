@@ -2,12 +2,15 @@
 
 
 #include "UI/EnhancedPlayerHealth.h"
+#include "Components/ProgressBar.h"
 
-UEnhancedPlayerHealth::UEnhancedPlayerHealth(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UEnhancedPlayerHealth::UEnhancedPlayerHealth(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer), Health(50),MaxHealth(100)
 {
 	
 }
 
 void UEnhancedPlayerHealth::UpdateHealth(const FOnAttributeChangeData& Data)
 {
+	Health = Data.NewValue; 
+	HealthBar->SetPercent(Health/MaxHealth); 
 }

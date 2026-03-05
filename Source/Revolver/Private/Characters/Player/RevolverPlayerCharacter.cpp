@@ -86,7 +86,10 @@ void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
 	}
 	
 	// we would create the player HUD here if we have one
-	
+	if (ARevolverPlayerController* PC = Cast<ARevolverPlayerController>(GetController()))
+	{
+		PC->CreateHUD(); 
+	}
 	
 }
 

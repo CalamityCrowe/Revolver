@@ -19,21 +19,17 @@ void UDodgeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-FVector MovementVector;
+	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+	{
+		CancelAbility(Handle,ActorInfo,ActivationInfo,true);
+		return; 
+	}
+	
+	FVector MovementVector;
 	
 	GetDirection(MovementVector); 
 	
 	UAnimMontage* SelectedAnim = SelectDodgeMontage(MovementVector); 
-	
-		
-	if (MovementVector.IsNearlyZero())
-	{
-		CancelAbility(Handle,ActorInfo,ActivationInfo,true); 
-	}
-	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
-	{
-		CancelAbility(Handle,ActorInfo,ActivationInfo,true);
-	}
 	
 	UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this,
