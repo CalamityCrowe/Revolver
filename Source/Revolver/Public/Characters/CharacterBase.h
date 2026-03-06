@@ -7,7 +7,11 @@
 #include "AbilitySystemInterface.h"
 #include "GameplayAbilitySpec.h"
 #include "GAS/EnhancedAbilitySet.h"
+#include "Revolver/Revolver.h"
 #include "CharacterBase.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterHitReactDelegate, EHitReactDirection,Direction); 
+
 
 class UEnhancedAbilitySystemComponent;
 class UEnhancedAttributeSet;
@@ -21,7 +25,13 @@ public:
 	// Sets default values for this character's properties
 	ACharacterBase();
 	
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Character")
+	FCharacterHitReactDelegate ShowHitReactDelegate; 
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+	EHitReactDirection GetHitReactDirection(const FVector& ImpactPoint) const;
+	
 	
 	void RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove); 
 	
@@ -33,9 +43,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishDying(); 
-	
-	
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

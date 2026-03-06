@@ -21,9 +21,6 @@ ACharacterBase::ACharacterBase()
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"),false); 
 }
 
-
-
-
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -61,6 +58,37 @@ UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const
 		return ASC.Get();
 	}
 	return nullptr; 
+}
+
+EHitReactDirection ACharacterBase::GetHitReactDirection(const FVector& ImpactPoint) const
+{
+	FVector ActorLocation = GetActorLocation();
+	
+	float FrontBackPlaneDist = FVector::PointPlaneDist(ImpactPoint,ActorLocation,GetActorRightVector()); 
+	float LeftRightPlaneDist = FVector::PointPlaneDist(ImpactPoint,ActorLocation,GetActorForwardVector());
+	
+	if (FMath::Abs(FrontBackPlaneDist) <= FMath::Abs(LeftRightPlaneDist))
+	{
+		if (LeftRightPlaneDist >= 0)
+		{
+			return EHitReactDirection::Front; 
+		}
+		else
+		{
+			return EHitReactDirection::Back;
+		}
+	}
+	else
+	{
+		if (FrontBackPlaneDist >= 0)
+		{
+			return EHitReactDirection::Right;
+		} 
+		else
+		{
+			return EHitReactDirection::Left;
+		}
+	}
 }
 
 void ACharacterBase::RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove)
