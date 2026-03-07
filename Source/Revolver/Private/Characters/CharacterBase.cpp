@@ -9,7 +9,7 @@
 // enhanced ability plugin
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
-#include "GAS/Attributes/EnhancedAttributeSet.h"
+#include "GAS/Attributes/RevolverAttributeSet.h"
 
 
 ACharacterBase::ACharacterBase()
@@ -19,6 +19,11 @@ ACharacterBase::ACharacterBase()
 	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
 	
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"),false); 
+	
+	HitDirectionFront = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Front"),false); 
+	HitDirectionBack = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Back"),false); 
+	HitDirectionLeft = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Left"),false); 
+	HitDirectionRight = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Right"),false); 
 }
 
 void ACharacterBase::BeginPlay()
@@ -87,6 +92,29 @@ EHitReactDirection ACharacterBase::GetHitReactDirection(const FVector& ImpactPoi
 		else
 		{
 			return EHitReactDirection::Left;
+		}
+	}
+}
+
+void ACharacterBase::PlayHitReact(FGameplayTag HitDirection)
+{
+	if (IsAlive())
+	{
+		if (HitDirection == HitDirectionFront)
+		{
+			ShowHitReactDelegate.Broadcast(EHitReactDirection::Front); 
+		}
+		else if (HitDirection == HitDirectionBack)
+		{
+			ShowHitReactDelegate.Broadcast(EHitReactDirection::Back);
+		}
+		else if (HitDirection == HitDirectionLeft)
+		{
+			ShowHitReactDelegate.Broadcast(EHitReactDirection::Left);
+		}
+		else if (HitDirection == HitDirectionRight)
+		{
+			ShowHitReactDelegate.Broadcast(EHitReactDirection::Right);
 		}
 	}
 }

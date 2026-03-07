@@ -8,7 +8,7 @@
 #include "RevolverPlayerState.generated.h"
 
 class UEnhancedAbilitySystemComponent;
-class UEnhancedAttributeSet;
+class URevolverAttributeSet;
 /**
  * 
  */
@@ -21,7 +21,7 @@ public:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
-	virtual UEnhancedAttributeSet* GetAttributeSet() const; 
+	virtual URevolverAttributeSet* GetAttributeSet() const; 
 	
 protected:
 	
@@ -29,6 +29,6 @@ protected:
 	TObjectPtr<UEnhancedAbilitySystemComponent> ASC;
 
 	UPROPERTY()
-	TObjectPtr<UEnhancedAttributeSet> AttributeSet;
+	TObjectPtr<URevolverAttributeSet> AttributeSet;
 	
 };

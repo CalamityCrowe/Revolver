@@ -88,6 +88,7 @@ void UWeaponManagerComponent::OnEquipNotifyBegin(FName NotifyName, const FBranch
 			EquippedWeapon->AttachToComponent(OwningCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, CurrentConfig.EquipSocketName); 
 			UEnhancedAbilitySystemComponent* OwningASC = Cast<UEnhancedAbilitySystemComponent> (OwningCharacter->GetAbilitySystemComponent());
 			CurrentConfig.AbilitiesToGrant->GiveToAbilitySystem(OwningASC,&AbilitiesGrantedByWeapon,this); 
+			EquippedWeapon->SpawnWeaponParticle();
 			
 			OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = MovementProperties.bShouldOrientMovement; 
 			OwningCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = MovementProperties.bUseControlRotation; 
@@ -109,9 +110,5 @@ void UWeaponManagerComponent::OnUnEquipNotifyBegin(FName NotifyName, const FBran
 		GetAnimInstance()->OnPlayMontageNotifyBegin.RemoveDynamic(this, &UWeaponManagerComponent::OnUnEquipNotifyBegin); 
 	}
 }
-
-
-
-
 
 

@@ -5,14 +5,14 @@
 
 #include "GAS/EnhancedAbilitySet.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
-#include "GAS/Attributes/EnhancedAttributeSet.h"
+#include "GAS/Attributes/RevolverAttributeSet.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
 	HardRefASC = CreateDefaultSubobject<UEnhancedAbilitySystemComponent>(TEXT("ASC"));
 	ASC = HardRefASC; 
 	
-	HardRefAttributeSet = CreateDefaultSubobject<UEnhancedAttributeSet>(TEXT("AttributeSet"));
+	HardRefAttributeSet = CreateDefaultSubobject<URevolverAttributeSet>(TEXT("AttributeSet"));
 	AttributeSet = HardRefAttributeSet;
 }
 

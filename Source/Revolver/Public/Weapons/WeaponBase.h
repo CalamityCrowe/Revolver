@@ -9,7 +9,7 @@
 #include "WeaponBase.generated.h"
 
 class UEnhancedAbilitySet;
-
+class UNiagaraSystem;
 
 UCLASS()
 class REVOLVER_API AWeaponBase : public AActor
@@ -32,6 +32,8 @@ public:
 	UFUNCTION()
 	virtual void HitScanEnd(){}; 
 	
+	virtual void SpawnWeaponParticle(); 
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,6 +48,10 @@ protected:
 		
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Hit Scan", meta = (AllowPrivateAccess = true))
 	float TraceRadius;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Spawn Effect")
+	TObjectPtr<UNiagaraSystem> SpawnParticle; 
+	
 private: 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UStaticMeshComponent> WeaponMesh; 

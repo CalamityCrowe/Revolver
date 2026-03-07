@@ -24,7 +24,8 @@ public class Revolver : ModuleRules
 			"EnhancedGameplayAbilitySystem", 
 			"Slate",
 			"SlateCore",
-			"UMG"
+			"UMG", 
+			"Niagara"
 		});
 
 		// Uncomment if you are using Slate UI

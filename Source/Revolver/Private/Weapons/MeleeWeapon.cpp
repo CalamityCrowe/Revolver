@@ -49,7 +49,12 @@ void AMeleeWeapon::HitScan()
 			if (!HitActors.Contains(Hit.GetActor()))
 			{
 				HitActors.AddUnique(Hit.GetActor());
-				ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+				
+				// we copy the spec from the const version so we can safely give it the hit location 
+				FGameplayEffectSpec SpecCopy = *EffectSpecHandle.Data.Get(); 
+				SpecCopy.GetContext().AddHitResult(Hit,true); 
+				
+				ASC->ApplyGameplayEffectSpecToSelf(SpecCopy);
 			}
 		}
 	}

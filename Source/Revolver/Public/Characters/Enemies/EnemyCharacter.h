@@ -26,7 +26,7 @@ protected:
 	virtual void FinishDying() override;
 private: 
 	UPROPERTY()
-	UEnhancedAttributeSet* HardRefAttributeSet; 
+	URevolverAttributeSet* HardRefAttributeSet; 
 	
 	UPROPERTY()
 	UEnhancedAbilitySystemComponent* HardRefASC; 

@@ -14,7 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterHitReactDelegate, EHitReac
 
 
 class UEnhancedAbilitySystemComponent;
-class UEnhancedAttributeSet;
+class URevolverAttributeSet;
 
 UCLASS()
 class REVOLVER_API ACharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -32,6 +32,7 @@ public:
 	
 	EHitReactDirection GetHitReactDirection(const FVector& ImpactPoint) const;
 	
+	void PlayHitReact(FGameplayTag HitDirection); 
 	
 	void RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityHandlesToRemove); 
 	
@@ -60,7 +61,7 @@ protected:
 	TWeakObjectPtr<UEnhancedAbilitySystemComponent> ASC;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess))
-	TWeakObjectPtr<UEnhancedAttributeSet> AttributeSet; 
+	TWeakObjectPtr<URevolverAttributeSet> AttributeSet; 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input System| Abilities")
 	TObjectPtr<UEnhancedAbilitySet> AbilitySet; 
@@ -73,5 +74,9 @@ protected:
 	
 	FAbilitySet_GrantedHandles GrantedHandles; 
 
+	FGameplayTag HitDirectionFront;
+	FGameplayTag HitDirectionBack;
+	FGameplayTag HitDirectionLeft;
+	FGameplayTag HitDirectionRight;
 	
 };
