@@ -33,6 +33,7 @@ ABaseProjectile::ABaseProjectile():Speed(2000)
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Purple, GetActorLocation().ToString()); 
 	FVector Direction = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), TargetLocation);
 	MovementComponent->Velocity = Direction*Speed;
 	MovementComponent->Activate(); 

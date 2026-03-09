@@ -34,6 +34,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float Speed; 
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"))
 	FVector TargetLocation; 
 private: 
 	UFUNCTION()

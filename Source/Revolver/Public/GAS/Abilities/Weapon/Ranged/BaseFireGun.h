@@ -39,8 +39,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Projectile")
 	TSubclassOf<AActor> ProjectileClass; 
 	
-	UFUNCTION()
-	virtual void EventRecieved(const FGameplayAbilityTargetDataHandle& PayLoad); 
+	/*UFUNCTION()
+	virtual void EventRecieved(const FGameplayAbilityTargetDataHandle& PayLoad); */
 	
 private:
 	
