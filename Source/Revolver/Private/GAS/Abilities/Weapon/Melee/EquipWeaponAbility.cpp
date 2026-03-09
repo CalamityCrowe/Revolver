@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAS/Abilities/Weapon/EquipWeaponAbility.h"
+#include "GAS/Abilities/Weapon/Melee/EquipWeaponAbility.h"
 
 #include "Components/WeaponManagerComponent.h"
 #include "Weapons/WeaponBase.h"
@@ -21,6 +21,12 @@ void UEquipWeaponAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	
 	CommitAbility(Handle,ActorInfo,ActivationInfo);
 	
+	if (TriggerEventData)
+	{
+		EndAbility(Handle, ActorInfo,ActivationInfo,true, true ); 
+	}
+	
+	// this needs to be set or it will crash
 	FGameplayTagContainer TargetTags = TriggerEventData->TargetTags;
 	
 	if (UWeaponManagerComponent* WeaponManager = GetAvatarActorFromActorInfo()->GetComponentByClass<UWeaponManagerComponent>())

@@ -32,9 +32,18 @@ public:
 	UFUNCTION(BlueprintCallable,Category = "GAS|Ability")
 	ACharacter* GetCharacterFromActorInfo() const; 
 	
+
+	
+	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	
+	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	
 protected: 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
 	FGameplayTag GameplayCueTag; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
 	EEnhancedActivationPolicy ActivationPolicy;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
+	bool bActivateOnGranted; 
 };

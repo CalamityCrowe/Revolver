@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GAS/Abilities/Weapon/BaseMeleeAbility.h"
+#include "GAS/Abilities/Weapon/Melee/BaseMeleeAbility.h"
 
 // Engine/GAS
 #include "GameplayEffectTypes.h"
@@ -51,7 +51,7 @@ void UBaseMeleeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		UAbilityTask_WaitGameplayEvent* HitScanStartEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
-			FGameplayTag::RequestGameplayTag(FName("Event.HitScan.Start")),
+			HitStartTag,
 			nullptr,
 			false,
 			true
@@ -62,7 +62,7 @@ void UBaseMeleeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 		UAbilityTask_WaitGameplayEvent* HitScanEndEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			this,
-			FGameplayTag::RequestGameplayTag(FName("Event.HitScan.End")),
+			HitEndTag,
 			nullptr,
 			false,
 			true
