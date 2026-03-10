@@ -40,7 +40,7 @@ void AMeleeWeapon::HitScan()
 	TArray<FHitResult> HitResults;
 	
 	bool bHit = UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), StartLocation, EndLocation,TraceRadius,ObjectTypes,
-	false,IgnoreActors,EDrawDebugTrace::ForDuration,HitResults,true,FLinearColor::Red,FLinearColor::Green,1); 
+	false,IgnoreActors,EDrawDebugTrace::None,HitResults,true,FLinearColor::Red,FLinearColor::Green,1); 
 	for (FHitResult Hit : HitResults)
 	{
 		if (!Hit.GetActor())continue; 

@@ -54,7 +54,9 @@ void UMeleeComboAbility::HandleHitScanStart(FGameplayEventData Payload)
 // we want to reset the input here and say it can trigger the next part of a combo
 void UMeleeComboAbility::ContinueComboStartEvent(FGameplayEventData Payload)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red,"ContinueComboStart");
+#endif
 	bIsWithinComboWindow = true;
 	bRecievedInputAtRightTime = false; 
 }
@@ -69,7 +71,10 @@ void UMeleeComboAbility::ContinueComboEndEvent(FGameplayEventData Payload)
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red,"Combo ENded"); 
+#if WITH_EDITOR
+		GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red,"Combo Ended"); 
+#endif
+		
 		EndAbility(CurrentSpecHandle,CurrentActorInfo,CurrentActivationInfo,true, false); 
 	}
 }
@@ -77,6 +82,8 @@ void UMeleeComboAbility::ContinueComboEndEvent(FGameplayEventData Payload)
 // for this one, we want to just make the recived input match the combo window bool
 void UMeleeComboAbility::InputRecievedEvent(FGameplayEventData Payload)
 {
+#if WITH_EDITOR
 	GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red,"InputRecievedEvent");
+#endif
 	bRecievedInputAtRightTime = bIsWithinComboWindow;
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayEffectTypes.h"
 #include "BaseProjectile.generated.h"
 
 class UProjectileMovementComponent;
@@ -20,6 +21,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetTargetLocation(const FVector& NewLocation) {TargetLocation = NewLocation;};
 	
+	void SetProjectileDamage(const FGameplayEffectSpecHandle& InDamageEffect); 
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -33,6 +36,11 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float Speed; 
+	
+	UPROPERTY()
+	FGameplayEffectSpecHandle EffectSpecHandle;
+	
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"))
 	FVector TargetLocation; 

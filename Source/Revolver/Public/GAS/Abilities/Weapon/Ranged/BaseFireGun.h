@@ -31,7 +31,13 @@ protected:
 	TSubclassOf<UGameplayEffect> DamageEffect;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
-	FGameplayTag SpawnProjectileTag; 
+	FGameplayTag DamageTag;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
+	float Damage;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
+	FGameplayTag FireWeaponTag; 
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Projectile")
 	TSubclassOf<AGameplayAbilityTargetActor> TargetingClass;
@@ -42,12 +48,13 @@ protected:
 	UFUNCTION()
 	virtual void ValidDataEvent(const FGameplayAbilityTargetDataHandle& PayLoad); 
 	
+	UFUNCTION()
+	virtual void FireWeaponEvent(FGameplayEventData Payload); 
+	
 private:
 	
 	UFUNCTION()
 	void OnMontageCompleted(); 
 	UFUNCTION()
 	void OnMontageCancelled();
-	
-	FVector TargetLocation; 
 };

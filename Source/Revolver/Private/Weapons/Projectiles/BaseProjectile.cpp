@@ -31,6 +31,11 @@ ABaseProjectile::ABaseProjectile():Speed(2000)
 }
 
 
+void ABaseProjectile::SetProjectileDamage(const FGameplayEffectSpecHandle& InDamageEffect)
+{
+	EffectSpecHandle = InDamageEffect;
+}
+
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
@@ -50,6 +55,8 @@ void ABaseProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 			if (UAbilitySystemComponent* ASC = ASInterface->GetAbilitySystemComponent())
 			{
 				// we would do damage stuff here
+				EffectSpecHandle.Data.Get()->GetContext().AddHitResult(SweepResult); 
+				ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); 
 			}
 		}
 		Destroy(); 
