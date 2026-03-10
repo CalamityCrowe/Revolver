@@ -37,10 +37,10 @@ protected:
 	TSubclassOf<AGameplayAbilityTargetActor> TargetingClass;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Projectile")
-	TSubclassOf<AActor> ProjectileClass; 
+	TSubclassOf<AActor> ProjectileClass;
 	
-	/*UFUNCTION()
-	virtual void EventRecieved(const FGameplayAbilityTargetDataHandle& PayLoad); */
+	UFUNCTION()
+	virtual void ValidDataEvent(const FGameplayAbilityTargetDataHandle& PayLoad); 
 	
 private:
 	
@@ -49,4 +49,5 @@ private:
 	UFUNCTION()
 	void OnMontageCancelled();
 	
+	FVector TargetLocation; 
 };

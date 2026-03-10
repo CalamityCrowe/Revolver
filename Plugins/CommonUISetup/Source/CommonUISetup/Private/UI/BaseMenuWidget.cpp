@@ -22,14 +22,13 @@ void UBaseMenuWidget::ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switch
 	if (Switcher && InWidget)
 	{
 		Switcher->SetActiveWidget(InWidget); 
-		float TransDuration = Switcher->GetTransitionDuration();
-		FTimerHandle TimerHandle;
+
 		if (UCommonActivatableWidget* AW = Cast <UCommonActivatableWidget>(InWidget))
 		{
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle,[AW]()
+			Switcher->OnActiveWidgetIndexChanged.AddLambda([AW](UWidget* ActiveWidget, int32 ActiveIndex)
 			{
-				AW->SetFocus();
-			}, TransDuration, false);
+				AW->SetFocus(); 
+			}); 
 		}
 	}
 }

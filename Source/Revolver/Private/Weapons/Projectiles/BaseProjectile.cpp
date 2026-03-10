@@ -30,13 +30,13 @@ ABaseProjectile::ABaseProjectile():Speed(2000)
 	MovementComponent->bRotationFollowsVelocity = true;
 }
 
+
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Purple, GetActorLocation().ToString()); 
 	FVector Direction = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), TargetLocation);
 	MovementComponent->Velocity = Direction*Speed;
-	MovementComponent->Activate(); 
+	MovementComponent->Activate();
 }
 
 void ABaseProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
