@@ -32,7 +32,8 @@ public:
 	UFUNCTION()
 	virtual void HitScanEnd(){}; 
 	
-	virtual void SpawnWeaponParticle(); 
+	UFUNCTION()
+	virtual FVector GetSpawnPoint() const; 
 	
 protected:
 	// Called when the game starts or when spawned
@@ -56,6 +57,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UStaticMeshComponent> WeaponMesh; 
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+	TObjectPtr<USceneComponent> SpawnPoint; 
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Config",meta = (AllowPrivateAccess = true))
 	FWeaponConfig WeaponConfig; 
 	

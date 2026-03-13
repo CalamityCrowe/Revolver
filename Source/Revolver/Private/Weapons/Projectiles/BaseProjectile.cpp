@@ -3,8 +3,12 @@
 
 #include "Weapons/Projectiles/BaseProjectile.h"
 
+// engine.GAS
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayCueManager.h"
+//Engine
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -19,6 +23,7 @@ ABaseProjectile::ABaseProjectile():Speed(2000)
 	Collider->SetSphereRadius(20.f); 
 	Collider->OnComponentBeginOverlap.AddDynamic(this, &ABaseProjectile::OnBeginOverlap); 
 	Collider->OnComponentEndOverlap.AddDynamic(this, &ABaseProjectile::OnEndOverlap);
+	Collider->OnComponentHit.AddDynamic(this, &ABaseProjectile::OnHit);
 	RootComponent = Collider;
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -36,27 +41,44 @@ void ABaseProjectile::SetProjectileDamage(const FGameplayEffectSpecHandle& InDam
 	EffectSpecHandle = InDamageEffect;
 }
 
+
+
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	FVector Direction = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), TargetLocation);
 	MovementComponent->Velocity = Direction*Speed;
 	MovementComponent->Activate();
+	
+	FGameplayCueParameters SpawnParameters;
+	SpawnParameters.Location = GetActorLocation();
+	
+	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(this, SpawnCueTag, EGameplayCueEvent::Executed, SpawnParameters); 	
+}
+
+void ABaseProjectile::Destroyed()
+{
+	Super::Destroyed();
+	
+	FGameplayCueParameters SpawnParameters;
+	SpawnParameters.Location = GetActorLocation();
+	
+	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(this, ImpactCueTag, EGameplayCueEvent::Executed, SpawnParameters);
 }
 
 void ABaseProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor != GetInstigator())
+	if (OtherActor != GetInstigator()) // we check that the owning player isn't the one that was hit 
 	{
-		if (OtherActor->GetClass()->ImplementsInterface(UAbilitySystemInterface::StaticClass()))
+		if (OtherActor->GetClass()->ImplementsInterface(UAbilitySystemInterface::StaticClass())) // we check if the hit actor has an asc
 		{
 			IAbilitySystemInterface* ASInterface = Cast<IAbilitySystemInterface>(OtherActor); 
-			if (UAbilitySystemComponent* ASC = ASInterface->GetAbilitySystemComponent())
+			if (UAbilitySystemComponent* ASC = ASInterface->GetAbilitySystemComponent()) // we grab the ASC and lastly apply damage to the target
 			{
 				// we would do damage stuff here
 				EffectSpecHandle.Data.Get()->GetContext().AddHitResult(SweepResult); 
-				ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); 
+				ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());  
 			}
 		}
 		Destroy(); 
@@ -69,5 +91,10 @@ void ABaseProjectile::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		
 	}
+}
+
+void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,FVector NormalImpulse, const FHitResult& Hit)
+{
+	Destroy(); 
 }
 

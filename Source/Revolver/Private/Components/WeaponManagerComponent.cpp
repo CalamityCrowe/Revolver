@@ -19,17 +19,18 @@ void UWeaponManagerComponent::BeginPlay()
 	Super::BeginPlay();
 	if (GetOwner())
 	{
-		OwningCharacter = Cast<ACharacterBase>(GetOwner()); // we grab the owning character from the get owner tag 
+		OwningCharacter = Cast<ACharacterBase>(GetOwner()); // we grab the owning character from the GetOwner function 
 	}
 }
 
 void UWeaponManagerComponent::EquipWeapon(TSubclassOf<AWeaponBase> WeaponToEquip)
 {
+	// we only run this, if the owning player is valid
 	if (OwningCharacter)
 	{
-		if (IsValid(EquippedWeapon))
+		if (IsValid(EquippedWeapon)) // we check that the current equipped weapon is valid, 
 		{
-			if (EquippedWeapon->GetClass() == WeaponToEquip)
+			if (EquippedWeapon->GetClass() == WeaponToEquip) // we unequip the current weapon 
 			{
 				UnEquipWeapon();
 			}
@@ -88,7 +89,6 @@ void UWeaponManagerComponent::OnEquipNotifyBegin(FName NotifyName, const FBranch
 			EquippedWeapon->AttachToComponent(OwningCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, CurrentConfig.EquipSocketName); 
 			UEnhancedAbilitySystemComponent* OwningASC = Cast<UEnhancedAbilitySystemComponent> (OwningCharacter->GetAbilitySystemComponent());
 			CurrentConfig.AbilitiesToGrant->GiveToAbilitySystem(OwningASC,&AbilitiesGrantedByWeapon,this); 
-			EquippedWeapon->SpawnWeaponParticle();
 			
 			OwningCharacter->GetCharacterMovement()->bOrientRotationToMovement = MovementProperties.bShouldOrientMovement; 
 			OwningCharacter->GetCharacterMovement()->bUseControllerDesiredRotation = MovementProperties.bUseControlRotation; 

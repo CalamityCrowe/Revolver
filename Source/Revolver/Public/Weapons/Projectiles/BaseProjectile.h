@@ -23,6 +23,10 @@ public:
 	
 	void SetProjectileDamage(const FGameplayEffectSpecHandle& InDamageEffect); 
 	
+	void SetSpeed(const float NewSpeed) {Speed = NewSpeed;};
+	
+	virtual void Destroyed() override;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -33,8 +37,11 @@ protected:
 	TObjectPtr<USphereComponent> Collider; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Abilities|GameplayCues")
+	FGameplayTag SpawnCueTag; 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Abilities|GameplayCues")
+	FGameplayTag ImpactCueTag; 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float Speed; 
 	
 	UPROPERTY()
@@ -49,4 +56,6 @@ private:
 	virtual void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	virtual void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

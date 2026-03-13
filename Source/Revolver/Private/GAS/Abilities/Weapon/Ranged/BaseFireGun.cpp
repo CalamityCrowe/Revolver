@@ -8,41 +8,21 @@
 #include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
 #include "Abilities/Tasks/AbilityTask_SpawnActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "Weapons/WeaponBase.h"
 #include "Weapons/Projectiles/BaseProjectile.h"
 
 
-UBaseFireGun::UBaseFireGun()
+// this is called in the base weapon ability class, this essentially just overrides the function and adds the relevant events to it
+void UBaseFireGun::MontageStart()
 {
-}
-
-void UBaseFireGun::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
-{
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	Super::MontageStart();
 	
-	UAbilityTask_PlayMontageAndWait* PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-		this, 
-		TEXT("FireGunMontage"),
-		FireMontage,
-		1.0f,
-		NAME_None); 
-	
-	
-	PlayMontageTask->OnCancelled.AddDynamic(this, &UBaseFireGun::OnMontageCancelled);
-	PlayMontageTask->OnInterrupted.AddDynamic(this, &UBaseFireGun::OnMontageCancelled); 
-	PlayMontageTask->OnCompleted.AddDynamic(this, &UBaseFireGun::OnMontageCompleted); 
-	PlayMontageTask->ReadyForActivation(); 
-	
+	// we create a gameplay event for the ASC to listen for and when the tag is sent it will do the fire weapon event
 	UAbilityTask_WaitGameplayEvent* FireWeaponEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this,
-		FireWeaponTag,nullptr , true, true); 
+	FireWeaponTag,nullptr , true, true); 
 	
 	FireWeaponEvent->EventReceived.AddDynamic(this, &UBaseFireGun::FireWeaponEvent); 
 	FireWeaponEvent->ReadyForActivation(); 
-}
-
-void UBaseFireGun::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
-{
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 // on the fire weapon event, we do a target trace to get where the impact point should be for the projectile to head to.
@@ -67,6 +47,8 @@ void UBaseFireGun::FireWeaponEvent(FGameplayEventData Payload)
 }
 
 
+
+
 // when the valid data event fires, we essentially do a defered spawn on the projectile to give the correct end point to calculate the direction it should move
 void UBaseFireGun::ValidDataEvent(const FGameplayAbilityTargetDataHandle& PayLoad)
 {
@@ -76,29 +58,19 @@ void UBaseFireGun::ValidDataEvent(const FGameplayAbilityTargetDataHandle& PayLoa
 	{
 		return; 
 	}
-	// we get where the projectile should spawn from the pawn right now
+	// we get where the projectile spawn from the weapon
 	FTransform SpawnTransform;
-	SpawnTransform.SetLocation(OwningPawn->GetActorLocation()); 
+	SpawnTransform.SetLocation(GetSpawnLocation()); 
 	FVector TargetLocation = PayLoad.Data[0].Get()->GetEndPoint(); // grabs the target location from the end point
 	
 	// we defer the spawning of the spawning here and this is where the actual values are passed in
 	if (ABaseProjectile* Projectile = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass, SpawnTransform, nullptr, OwningPawn))
 	{
-		FGameplayEffectSpecHandle EffectSpec = MakeOutgoingGameplayEffectSpec(DamageEffect,1);
-		EffectSpec.Data->SetSetByCallerMagnitude(DamageTag, Damage); 
+		FGameplayEffectSpecHandle EffectSpec = MakeOutgoingGameplayEffectSpec(EffectClass,1);
+		EffectSpec.Data->SetSetByCallerMagnitude(EffectCallerTag, EffectMagnitude); 
 		Projectile->SetTargetLocation(TargetLocation); 
 		Projectile->SetProjectileDamage(EffectSpec); 
+		Projectile->SetSpeed(ProjectileSpeed); 
 		UGameplayStatics::FinishSpawningActor(Projectile, SpawnTransform);
 	}
-}
-
-
-void UBaseFireGun::OnMontageCompleted()
-{
-	EndAbility(CurrentSpecHandle,CurrentActorInfo,CurrentActivationInfo, true, false);
-}
-
-void UBaseFireGun::OnMontageCancelled()
-{
-	EndAbility(CurrentSpecHandle,CurrentActorInfo,CurrentActivationInfo, true, true);
 }

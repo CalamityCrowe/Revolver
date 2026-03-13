@@ -122,6 +122,8 @@ GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::SanitizeFloat(L
 					if (ARevolverPlayerController* PC = Cast<ARevolverPlayerController>(SourceController))
 					{
 						// we can do UI stuff here to handle damage numbers if we need them done or not
+						
+						
 					}
 				}
 				

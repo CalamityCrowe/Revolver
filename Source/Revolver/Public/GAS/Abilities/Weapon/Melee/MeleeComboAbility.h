@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseMeleeAbility.h"
+#include "BaseMeleeAttack.h"
 #include "MeleeComboAbility.generated.h"
 
 /**
  * 
  */
 UCLASS(Abstract, HideDropdown)
-class REVOLVER_API UMeleeComboAbility : public UBaseMeleeAbility
+class REVOLVER_API UMeleeComboAbility : public UBaseMeleeAttack
 {
 	GENERATED_BODY()
 public: 
