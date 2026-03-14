@@ -44,7 +44,7 @@ protected:
 	
 	float Speed; 
 	
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"))
 	FGameplayEffectSpecHandle EffectSpecHandle;
 	
 	

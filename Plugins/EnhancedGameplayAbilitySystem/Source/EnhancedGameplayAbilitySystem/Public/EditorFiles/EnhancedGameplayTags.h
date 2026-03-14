@@ -21,7 +21,7 @@ public:
 	// Ability Inputs
 	FGameplayTag Input_Dash; 
 	FGameplayTag Input_MeleeAttack; 
-	
+	FGameplayTag Input_CharacterAbility_1;
 	
 	// blocking movement tags
 	
