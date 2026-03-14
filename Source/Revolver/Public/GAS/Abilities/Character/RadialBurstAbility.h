@@ -1,0 +1,44 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "BaseChordedAbility.h"
+#include "RadialBurstAbility.generated.h"
+
+class ABaseProjectile;
+/**
+ * 
+ */
+UCLASS()
+class REVOLVER_API URadialBurstAbility : public UBaseChordedAbility
+{
+	GENERATED_BODY()
+public: 
+	URadialBurstAbility();
+	
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+protected: 
+	virtual void MontageStarted() override;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Tags")
+	FGameplayTag SpawnEventTag;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Tags")
+	FGameplayTag SpawnCueTag;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	int NumberOfProjectiles; 
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	float RadialPitch; 
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	TSubclassOf<ABaseProjectile> ProjectileClass; 
+	
+	
+	UFUNCTION()
+	virtual void EventRecieved(FGameplayEventData EventData); 
+	
+	
+};
