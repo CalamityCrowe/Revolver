@@ -53,6 +53,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Spawn Effect")
 	TObjectPtr<UNiagaraSystem> SpawnParticle; 
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|GameplayCue")
+	FGameplayTag ImpactCueTag;
+	
 private: 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UStaticMeshComponent> WeaponMesh; 
@@ -65,4 +68,7 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Config",meta = (AllowPrivateAccess = true))
 	FWeaponMovementProperties MovementProperties;
+	
+	
+	
 };

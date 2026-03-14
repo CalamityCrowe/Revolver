@@ -3,7 +3,9 @@
 
 #include "Weapons/MeleeWeapon.h"
 
+#include "AbilitySystemGlobals.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayCueManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -50,10 +52,13 @@ void AMeleeWeapon::HitScan()
 			{
 				HitActors.AddUnique(Hit.GetActor());
 				
+				FGameplayCueParameters CueSpawnParameters;
+				CueSpawnParameters.Location = Hit.ImpactPoint;
+				UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(this, ImpactCueTag,EGameplayCueEvent::Executed, CueSpawnParameters); 
+				
 				// we copy the spec from the const version so we can safely give it the hit location 
 				FGameplayEffectSpec SpecCopy = *EffectSpecHandle.Data.Get(); 
 				SpecCopy.GetContext().AddHitResult(Hit,true); 
-				
 				ASC->ApplyGameplayEffectSpecToSelf(SpecCopy);
 			}
 		}
