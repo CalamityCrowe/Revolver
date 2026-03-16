@@ -17,6 +17,7 @@ enum class EEnhancedActivationPolicy:uint8
 {
 	OnInputTriggered UMETA(DisplayName = "On Input Triggered"),
 	WhileInputActive UMETA(DisplayName = "While Input Active"),
+	Toggle UMETA(DisplayName = "Toggle Ability"), 
 	None UMETA(Hidden)
 };
 

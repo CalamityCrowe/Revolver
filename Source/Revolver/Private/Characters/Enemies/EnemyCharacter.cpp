@@ -11,6 +11,7 @@ AEnemyCharacter::AEnemyCharacter()
 {
 	HardRefASC = CreateDefaultSubobject<UEnhancedAbilitySystemComponent>(TEXT("ASC"));
 	ASC = HardRefASC; 
+	ASC->SetReplicationMode(EGameplayEffectReplicationMode::Full);
 	
 	HardRefAttributeSet = CreateDefaultSubobject<URevolverAttributeSet>(TEXT("AttributeSet"));
 	AttributeSet = HardRefAttributeSet;

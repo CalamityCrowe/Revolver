@@ -9,9 +9,9 @@
 UEnhancedGameplayAbility::UEnhancedGameplayAbility():ActivationPolicy(EEnhancedActivationPolicy::OnInputTriggered),bActivateOnGranted(false)
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
-	
-	AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility"))); 
-	
+	FGameplayTagContainer AbilityContainer;
+	AbilityContainer.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility"))); 
+	SetAssetTags(AbilityContainer); 
 }
 
 ACharacter* UEnhancedGameplayAbility::GetCharacterFromActorInfo() const

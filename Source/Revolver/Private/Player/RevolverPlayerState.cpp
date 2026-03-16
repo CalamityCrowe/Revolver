@@ -10,6 +10,7 @@
 ARevolverPlayerState::ARevolverPlayerState()
 {
 	ASC = CreateDefaultSubobject<UEnhancedAbilitySystemComponent>("Ability System Component");
+	ASC->SetReplicationMode(EGameplayEffectReplicationMode::Full); 
 	
 	AttributeSet = CreateDefaultSubobject<URevolverAttributeSet>("Player Attributes"); 
 }

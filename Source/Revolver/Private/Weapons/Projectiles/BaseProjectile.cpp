@@ -77,7 +77,8 @@ void ABaseProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 			if (UAbilitySystemComponent* ASC = ASInterface->GetAbilitySystemComponent()) // we grab the ASC and lastly apply damage to the target
 			{
 				// we would do damage stuff here
-				EffectSpecHandle.Data.Get()->GetContext().AddHitResult(SweepResult); 
+				if (bFromSweep)
+				EffectSpecHandle.Data.Get()->GetContext().AddHitResult(SweepResult,true); 
 				ASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());  
 			}
 		}

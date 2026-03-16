@@ -42,6 +42,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category = "Abilities|GameplayCues")
 	FGameplayTag ImpactCueTag; 
 	
+	UPROPERTY(EditDefaultsOnly, BLueprintReadOnly, Category = "Abilities|Properties")
 	float Speed; 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = "true"))

@@ -3,6 +3,8 @@
 
 #include "GAS/Abilities/Character/RadialBurstAbility.h"
 
+#include <string>
+
 #include "AbilitySystemGlobals.h"
 #include "GameplayCueManager.h"	
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -41,11 +43,15 @@ void URadialBurstAbility::MontageStarted()
 
 void URadialBurstAbility::EventRecieved(FGameplayEventData EventData)
 {
-	float YawOffset = 360/NumberOfProjectiles;
+	float YawOffset = 360.f/NumberOfProjectiles;
 	
-	ACharacter* Character = GetCharacterFromActorInfo();
-	FVector SpawnLocation =  Character->GetActorLocation() + (Character->GetActorUpVector() * 200); 
-	FVector ForwardVector = Character->GetActorForwardVector();
+	ACharacter* OwningCharacter = GetCharacterFromActorInfo(); 
+	
+	FVector ActorLocation = OwningCharacter->GetActorLocation();
+	FVector UpVector = OwningCharacter->GetActorUpVector();
+	FVector SpawnLocation =  ActorLocation + (UpVector * 200); 
+	
+	FVector ForwardVector = FVector(1, 0, 0) * 200;
 	
 	FGameplayCueParameters SpawnParams; 
 	SpawnParams.Location = SpawnLocation;
@@ -59,14 +65,17 @@ void URadialBurstAbility::EventRecieved(FGameplayEventData EventData)
 	{
 		FRotator VectorRotation = FRotator(RadialPitch,YawOffset * i,0);
 		FVector ForwardRotated = VectorRotation.RotateVector(ForwardVector) * 200;
-		FVector TargetLocation = Character->GetActorLocation() + ForwardRotated;
+		FVector TargetLocation = ActorLocation + ForwardRotated;
+		
+		DrawDebugLine(GetWorld(),SpawnLocation,TargetLocation,FColor::Green,false, 20); 
 		
 		FTransform SpawnTransform; SpawnTransform.SetLocation(SpawnLocation);
 		
-		if (ABaseProjectile* Projectile = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass,SpawnTransform, Character))
+		if (ABaseProjectile* Projectile = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass,SpawnTransform, OwningCharacter))
 		{
 			Projectile->SetProjectileDamage(DamageEffect); 
 			Projectile->SetTargetLocation(TargetLocation);
+			Projectile->SetInstigator(GetCharacterFromActorInfo()); 
 			UGameplayStatics::FinishSpawningActor(Projectile,SpawnTransform); 
 		}
 	}
