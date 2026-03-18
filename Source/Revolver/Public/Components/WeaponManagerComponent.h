@@ -36,6 +36,9 @@ public:
 	
 	UAnimInstance* GetAnimInstance() const;
 	
+	UFUNCTION(BlueprintPure)
+	bool IsWeaponEquipped() const; 
+	
 private:
 	UPROPERTY()
 	ACharacterBase* OwningCharacter; 

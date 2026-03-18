@@ -78,6 +78,11 @@ UAnimInstance* UWeaponManagerComponent::GetAnimInstance() const
 	return OwningCharacter->GetMesh()->GetAnimInstance();
 }
 
+bool UWeaponManagerComponent::IsWeaponEquipped() const
+{
+	return IsValid(EquippedWeapon); 
+}
+
 void UWeaponManagerComponent::OnEquipNotifyBegin(FName NotifyName, const FBranchingPointNotifyPayload& Payload)
 {
 	if (NotifyName == FName("EquipWeapon"))
