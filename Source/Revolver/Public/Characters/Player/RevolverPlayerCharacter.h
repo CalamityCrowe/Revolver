@@ -21,9 +21,10 @@ class REVOLVER_API ARevolverPlayerCharacter : public ACharacterBase
 public:
 	// Sets default values for this character's properties
 	ARevolverPlayerCharacter();
-
-
-
+	
+	USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
+	const FVector& GetDefaultSocketOffset() const {return DefaultSocketOffset;}
+	const float& GetDefaultArmLength() const {return DefaultArmLength;}
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -68,4 +69,7 @@ private:
 	
 	FVector DefaultSocketOffset;
 	float DefaultArmLength;
+	
+	
+	
 };

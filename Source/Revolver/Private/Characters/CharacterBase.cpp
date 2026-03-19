@@ -42,7 +42,6 @@ void ACharacterBase::PossessedBy(AController* NewController)
 	if (ASC.Get())
 	{
 		ASC->InitAbilityActorInfo(this, this); 
-		
 	}
 }
 

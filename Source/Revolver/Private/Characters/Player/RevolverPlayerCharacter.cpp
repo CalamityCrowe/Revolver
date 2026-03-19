@@ -14,7 +14,7 @@
 #include "EditorFiles/EnhancedGameplayTags.h"
 #include "GAS/EnhancedAbilitySet.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
-#include "GAS/Attributes/EnhancedAttributeSet.h"
+#include "GAS/Attributes/RevolverAttributeSet.h"
 #include "Input/GASEnhancedInputComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Player/RevolverPlayerController.h"
@@ -37,6 +37,9 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	
 }
 
+
+
+
 void ARevolverPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -48,6 +51,13 @@ void ARevolverPlayerCharacter::BeginPlay()
 			Subsystem->AddMappingContext(InputContext, 0); 
 		}
 	}
+	
+	if (IsValid(CameraBoom))
+	{
+		DefaultSocketOffset = CameraBoom->SocketOffset;
+		DefaultArmLength = CameraBoom->TargetArmLength; 
+	}
+	
 }
 
 
@@ -140,4 +150,5 @@ void ARevolverPlayerCharacter::EquipRightHand(const FInputActionValue& Value)
 	PayLoad.TargetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Weapon.Melee"))); 
 	ASC->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Abilities.EquipWeapon")),&PayLoad); 
 }
+
 
