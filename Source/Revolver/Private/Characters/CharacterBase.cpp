@@ -24,6 +24,10 @@ ACharacterBase::ACharacterBase()
 	HitDirectionBack = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Back"),false); 
 	HitDirectionLeft = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Left"),false); 
 	HitDirectionRight = FGameplayTag::RequestGameplayTag(FName("Effect.HitReact.Right"),false); 
+	
+	// we do this so the stencil doesn't overlap from AOE targetting 
+	GetMesh()->bRenderCustomDepth = true; 
+	GetMesh()->CustomDepthStencilValue = 1; 
 }
 
 void ACharacterBase::BeginPlay()
@@ -69,30 +73,19 @@ EHitReactDirection ACharacterBase::GetHitReactDirection(const FVector& ImpactPoi
 {
 	FVector ActorLocation = GetActorLocation();
 	
-	float FrontBackPlaneDist = FVector::PointPlaneDist(ImpactPoint,ActorLocation,GetActorRightVector()); 
-	float LeftRightPlaneDist = FVector::PointPlaneDist(ImpactPoint,ActorLocation,GetActorForwardVector());
+	// positivie in the front negative in the back
+	float ForwardDist = FVector::PointPlaneDist(ImpactPoint,ActorLocation,GetActorForwardVector()); 
 	
-	if (FMath::Abs(FrontBackPlaneDist) <= FMath::Abs(LeftRightPlaneDist))
+	// positive to the right, negative to the back
+	float RightDist = FVector::PointPlaneDist(ImpactPoint,ActorLocation,GetActorRightVector());
+	
+	if (FMath::Abs(ForwardDist) >= FMath::Abs(RightDist))
 	{
-		if (LeftRightPlaneDist >= 0)
-		{
-			return EHitReactDirection::Front; 
-		}
-		else
-		{
-			return EHitReactDirection::Back;
-		}
+		return ForwardDist >= 0? EHitReactDirection::Front :EHitReactDirection::Back;
 	}
 	else
 	{
-		if (FrontBackPlaneDist >= 0)
-		{
-			return EHitReactDirection::Right;
-		} 
-		else
-		{
-			return EHitReactDirection::Left;
-		}
+		return RightDist >= 0 ? EHitReactDirection::Right :EHitReactDirection::Left;
 	}
 }
 

@@ -20,7 +20,8 @@ public:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 protected: 
 	virtual void MontageStarted() override;
-	
+
+
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Tags")
 	FGameplayTag SpawnEventTag;
 	
@@ -34,11 +35,34 @@ protected:
 	float RadialPitch; 
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	float ProjectileSpeed; 
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
 	TSubclassOf<ABaseProjectile> ProjectileClass; 
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	bool bStaggeredProjectiles; 
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties", meta = (EditCondition = "bStaggeredProjectiles", EditConditionHides))
+	float StaggeredSpawnTime; 
 	
 	UFUNCTION()
-	virtual void EventRecieved(FGameplayEventData EventData); 
+	virtual void EventRecieved(FGameplayEventData EventData);
+	void SpawnProjectile(float YawOffset, ACharacter* OwningCharacter, const FVector& ActorLocation,
+	                     const FVector& SpawnLocation, const FVector& ForwardVector,
+	                     const FGameplayEffectSpecHandle& DamageEffect, int i);
+
+private: 
+	void BurstSpawn(float YawOffset, ACharacter* OwningCharacter, const FVector& ActorLocation, const FVector& SpawnLocation,
+				const FVector& ForwardVector, const FGameplayEffectSpecHandle& DamageEffect);
+	
+	void StaggerSpawn(float YawOffset, ACharacter* OwningCharacter, const FVector& ActorLocation, const FVector& SpawnLocation,
+			const FVector& ForwardVector, const FGameplayEffectSpecHandle& DamageEffect);
+	
+	int CurrentProjectile; 
+	
+	FTimerHandle TimerHandle;
+
 	
 	
 };

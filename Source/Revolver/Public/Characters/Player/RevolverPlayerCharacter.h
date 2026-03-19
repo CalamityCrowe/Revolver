@@ -22,6 +22,8 @@ public:
 	// Sets default values for this character's properties
 	ARevolverPlayerCharacter();
 
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -63,4 +65,7 @@ private:
 	UPROPERTY (EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 	
+	
+	FVector DefaultSocketOffset;
+	float DefaultArmLength;
 };

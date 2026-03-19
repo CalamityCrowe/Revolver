@@ -3,18 +3,18 @@
 
 #include "GAS/Abilities/Character/RadialBurstAbility.h"
 
-#include <string>
 
 #include "AbilitySystemGlobals.h"
 #include "GameplayCueManager.h"	
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "Characters/CharacterBase.h"
 
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Weapons/Projectiles/BaseProjectile.h"
 
-URadialBurstAbility::URadialBurstAbility()
+URadialBurstAbility::URadialBurstAbility(): NumberOfProjectiles(8),RadialPitch(-30), ProjectileSpeed(1000), ProjectileClass(nullptr)
 {
 	
 }
@@ -41,6 +41,8 @@ void URadialBurstAbility::MontageStarted()
 	SpawnProjectileTask->ReadyForActivation();
 }
 
+
+
 void URadialBurstAbility::EventRecieved(FGameplayEventData EventData)
 {
 	float YawOffset = 360.f/NumberOfProjectiles;
@@ -61,23 +63,67 @@ void URadialBurstAbility::EventRecieved(FGameplayEventData EventData)
 	FGameplayEffectSpecHandle DamageEffect = MakeOutgoingGameplayEffectSpec(EffectClass, 1);
 	DamageEffect.Data.Get()->SetSetByCallerMagnitude(EffectMagnitudeTag,EffectMagnitude); 
 	
-	for (int i = 0; i < NumberOfProjectiles; ++i)
+	if (bStaggeredProjectiles)
 	{
-		FRotator VectorRotation = FRotator(RadialPitch,YawOffset * i,0);
-		FVector ForwardRotated = VectorRotation.RotateVector(ForwardVector) * 200;
-		FVector TargetLocation = ActorLocation + ForwardRotated;
-		
-		DrawDebugLine(GetWorld(),SpawnLocation,TargetLocation,FColor::Green,false, 20); 
-		
-		FTransform SpawnTransform; SpawnTransform.SetLocation(SpawnLocation);
-		
-		if (ABaseProjectile* Projectile = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass,SpawnTransform, OwningCharacter))
-		{
-			Projectile->SetProjectileDamage(DamageEffect); 
-			Projectile->SetTargetLocation(TargetLocation);
-			Projectile->SetInstigator(GetCharacterFromActorInfo()); 
-			UGameplayStatics::FinishSpawningActor(Projectile,SpawnTransform); 
-		}
+		StaggerSpawn(YawOffset, OwningCharacter, ActorLocation, SpawnLocation, ForwardVector, DamageEffect);
+	}
+	else
+	{
+		BurstSpawn(YawOffset, OwningCharacter, ActorLocation, SpawnLocation, ForwardVector, DamageEffect);
 	}
 	
+	
+}
+
+void URadialBurstAbility::SpawnProjectile(const float YawOffset, ACharacter* OwningCharacter, const FVector& ActorLocation, const FVector& SpawnLocation, const FVector& ForwardVector, const FGameplayEffectSpecHandle& DamageEffect, int i)
+{
+	FRotator VectorRotation = FRotator(RadialPitch,YawOffset * i,0);
+	FVector ForwardRotated = VectorRotation.RotateVector(ForwardVector) * 200;
+	FVector TargetLocation = ActorLocation + ForwardRotated;
+		
+	DrawDebugLine(GetWorld(),SpawnLocation,TargetLocation,FColor::Green,false, 20); 
+		
+	FTransform SpawnTransform; SpawnTransform.SetLocation(SpawnLocation);
+		
+	if (ABaseProjectile* Projectile = GetWorld()->SpawnActorDeferred<ABaseProjectile>(ProjectileClass,SpawnTransform, OwningCharacter))
+	{
+		Projectile->SetProjectileDamage(DamageEffect); 
+		Projectile->SetTargetLocation(TargetLocation);
+		Projectile->SetSpeed(ProjectileSpeed);
+		Projectile->SetInstigator(GetCharacterFromActorInfo()); 
+		UGameplayStatics::FinishSpawningActor(Projectile,SpawnTransform); 
+	}
+}
+
+void URadialBurstAbility::BurstSpawn(const float YawOffset, ACharacter* OwningCharacter, const FVector& ActorLocation, const FVector& SpawnLocation,
+                                     const FVector& ForwardVector, const FGameplayEffectSpecHandle& DamageEffect)
+{
+	for (int i = 0; i < NumberOfProjectiles; ++i)
+	{
+		SpawnProjectile(YawOffset, OwningCharacter, ActorLocation, SpawnLocation, ForwardVector, DamageEffect, i);
+	}
+}
+
+void URadialBurstAbility::StaggerSpawn(float YawOffset, ACharacter* OwningCharacter, const FVector& ActorLocation,
+	const FVector& SpawnLocation, const FVector& ForwardVector, const FGameplayEffectSpecHandle& DamageEffect)
+{
+	CurrentProjectile = 0; 
+	
+	FTimerDelegate TimerDelegate;
+	
+	TimerDelegate.BindLambda([this, YawOffset, OwningCharacter, ActorLocation, SpawnLocation, ForwardVector, DamageEffect]
+	{
+		SpawnProjectile(YawOffset, OwningCharacter, ActorLocation, SpawnLocation, ForwardVector, DamageEffect, CurrentProjectile);
+		CurrentProjectile++;
+		if (CurrentProjectile >= NumberOfProjectiles)
+		{
+			GetWorld()->GetTimerManager().ClearTimer(TimerHandle); 
+		}
+	}); 
+	// we clear the timer so there isn't multiple delegates bound 
+	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	}
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle,TimerDelegate,StaggeredSpawnTime,true); 
 }
