@@ -39,5 +39,7 @@ void URevolverPlayerHealth::NativeDestruct()
 
 void URevolverPlayerHealth::UpdateHealth(const FOnAttributeChangeData& Data)
 {
+	
+	
 	Super::UpdateHealth(Data);
 }
