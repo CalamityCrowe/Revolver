@@ -27,10 +27,7 @@ void UAbilityTask_BlendCamera::Activate()
 	// we grab the socket and length for the starting point
 	if (ARevolverPlayerCharacter* Player = Cast<ARevolverPlayerCharacter>(GetAvatarActor()))
 	{
-		StartSocketOffset = Player->GetCameraBoom()->SocketOffset; 
-		StartArmLength = Player->GetCameraBoom()->TargetArmLength; 
-		OriginalArmLength = Player->GetDefaultArmLength(); 
-		OriginalSocketOffset = Player->GetDefaultSocketOffset();
+
 	}
 	else
 	{

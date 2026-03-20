@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "RevolverPlayerCharacter.generated.h"
 
+class UAbilityCameraManagerComponent;
 class UWeaponManagerComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -23,8 +24,8 @@ public:
 	ARevolverPlayerCharacter();
 	
 	USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
-	const FVector& GetDefaultSocketOffset() const {return DefaultSocketOffset;}
-	const float& GetDefaultArmLength() const {return DefaultArmLength;}
+	UCameraComponent* GetCamera() const{return Camera;}
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -66,6 +67,8 @@ private:
 	UPROPERTY (EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
 	TObjectPtr<USpringArmComponent> CameraBoom;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
+	TObjectPtr<UAbilityCameraManagerComponent> AbilityCameraManagerComponent; 
 	
 	FVector DefaultSocketOffset;
 	float DefaultArmLength;

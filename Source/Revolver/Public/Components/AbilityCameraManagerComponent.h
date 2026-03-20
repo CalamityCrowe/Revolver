@@ -4,9 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GAS/Data/AbilityCameraData.h"
+
 #include "AbilityCameraManagerComponent.generated.h"
 
 
+class UAbilitySystemComponent;
+class UCameraComponent;
+class USpringArmComponent;
 class ARevolverPlayerCharacter;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -19,35 +24,57 @@ public:
 	UAbilityCameraManagerComponent();
 	
 	virtual void BeginPlay() override;
-	
-	void IntializeCameraSetup(); 
+
+	void InitializeCameraSetup();
 
 protected: 
 	
 	UFUNCTION()
-	void OnAbility1CameraLerp();
+	void OnTagChange(FGameplayTag GameplayTag, int NewCount);
 	
-	UFUNCTION()
+	UAbilityCameraData* FindDataForTag(const FGameplayTag& Tag);
+
 	void AbilityFinished(); 
 	
 private: 
 	
-	void LerpCamera();
-	
 	UPROPERTY()
 	USpringArmComponent* CameraBoomRef;
 	UPROPERTY()
+	UCameraComponent* CameraRef; 
+	UPROPERTY()
 	ARevolverPlayerCharacter* PlayerRef;
+	UPROPERTY()
+	UAbilitySystemComponent* ASC; 
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera Data", meta = (AllowPrivateAccess))
+	FAbilityCameraSetups CameraSetups;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Transition", meta = (ClampMin = "0.0", UIMin = "0.0", AllowPrivateAccess = true))
+	float TimerStep; 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Transition", meta = (AllowPrivateAccess))
+	UCurveFloat* BlendCurve;
+	
+	
+	float TransitionTime;  // we will set this value when it starts the transition
+
+	
+	float ElapsedTime; 
 	FVector StartSocket;
 	float StartArmLength;
+	float StartFOV; 
 	
 	FVector TargetSocket;
 	float TargetArmLength;
-	
-	FVector DefaultSocket; 
-	float DefaultArmLength;
+	float TargetFOV; 
 	
 	FTimerHandle CameraLerpTimer; 
+	FGameplayTag ActiveAbilityTag; 
+private: 
+	
+	void LerpCamera();
+	void SetStartingValues();
+	void ResetCameraLerp();
+	
 	
 };

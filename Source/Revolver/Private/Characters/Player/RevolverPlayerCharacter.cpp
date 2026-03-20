@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 
 //plugin
+#include "Components/AbilityCameraManagerComponent.h"
 #include "Components/WeaponManagerComponent.h"
 #include "EditorFiles/EnhancedGameplayTags.h"
 #include "GAS/EnhancedAbilitySet.h"
@@ -34,7 +35,7 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	bUseControllerRotationYaw = false; 
 	
 	WeaponManagerComponent = CreateDefaultSubobject<UWeaponManagerComponent>(TEXT("AC_WeaponManager")); 
-	
+	AbilityCameraManagerComponent = CreateDefaultSubobject<UAbilityCameraManagerComponent>(TEXT("Ability Camera Manager")); 
 }
 
 
@@ -44,7 +45,7 @@ void ARevolverPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (ARevolverPlayerController* PC = Cast<ARevolverPlayerController>(GetController()))
+	if (const ARevolverPlayerController* PC = Cast<ARevolverPlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
 		{
@@ -52,10 +53,9 @@ void ARevolverPlayerCharacter::BeginPlay()
 		}
 	}
 	
-	if (IsValid(CameraBoom))
+	if (AbilityCameraManagerComponent)
 	{
-		DefaultSocketOffset = CameraBoom->SocketOffset;
-		DefaultArmLength = CameraBoom->TargetArmLength; 
+		AbilityCameraManagerComponent->InitializeCameraSetup(); 
 	}
 	
 }
