@@ -57,6 +57,7 @@ protected:
 	void SendGameplayEventToSelf(const FGameplayEventData& EventData);
 	
 	
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess))
 	TWeakObjectPtr<UEnhancedAbilitySystemComponent> ASC;
 	

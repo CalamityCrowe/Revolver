@@ -42,7 +42,7 @@ public:
 protected: 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
-	FGameplayTag GameplayCueTag; 
+	FGameplayTag CoolDownTag; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
 	EEnhancedActivationPolicy ActivationPolicy;
 	
@@ -50,4 +50,7 @@ protected:
 	bool bActivateOnGranted; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	bool bShouldShowInHUD;
+	
+	
+	
 };

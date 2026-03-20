@@ -102,8 +102,18 @@ void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
 		PC->CreateHUD(); 
 	}
 	
+	SendAbilitiesChangedEvent(); 
 }
 
+void ARevolverPlayerCharacter::SendAbilitiesChangedEvent()
+{
+	FGameplayEventData EventData;
+	EventData.EventTag = FGameplayTag::RequestGameplayTag(FName("Event.Abilities.Changed")); 
+	EventData.Instigator = this; 
+	EventData.Target = this; 
+	
+	SendGameplayEventToSelf(EventData);
+}
 
 void ARevolverPlayerCharacter::InputAbilityInputTagPressed(FGameplayTag InputTag)
 {
