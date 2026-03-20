@@ -22,9 +22,11 @@ class REVOLVER_API UAbilityCameraManagerComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UAbilityCameraManagerComponent();
-	
+
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 	void InitializeCameraSetup();
 
 protected: 
@@ -54,6 +56,8 @@ private:
 	float TimerStep; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Transition", meta = (AllowPrivateAccess))
 	UCurveFloat* BlendCurve;
+	
+	TMap<FGameplayTag, FDelegateHandle> TagDelegateHandles;
 	
 	
 	float TransitionTime;  // we will set this value when it starts the transition

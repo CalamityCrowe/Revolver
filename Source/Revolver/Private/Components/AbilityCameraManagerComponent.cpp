@@ -17,6 +17,20 @@ UAbilityCameraManagerComponent::UAbilityCameraManagerComponent()
 void UAbilityCameraManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+// with this we clear all the delegates that bound using the tags in this 
+void UAbilityCameraManagerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (ASC)
+	{
+		for (auto& Pair: TagDelegateHandles)
+		{
+			ASC->RegisterGameplayTagEvent(Pair.Key,EGameplayTagEventType::NewOrRemoved).Remove(Pair.Value);
+		}	
+		TagDelegateHandles.Empty();
+	}
+	Super::EndPlay(EndPlayReason);
 	
 }
 
@@ -44,13 +58,19 @@ void UAbilityCameraManagerComponent::InitializeCameraSetup()
 	ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(PlayerRef);
 	if (ASC)
 	{
-		ASC->RegisterGameplayTagEvent(CameraSetups.FirstAbilityData->CameraTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAbilityCameraManagerComponent::OnTagChange); 
-		ASC->RegisterGameplayTagEvent(CameraSetups.SecondAbilityData->CameraTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAbilityCameraManagerComponent::OnTagChange); 
-		ASC->RegisterGameplayTagEvent(CameraSetups.ThirdAbilityData->CameraTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAbilityCameraManagerComponent::OnTagChange); 
+		FDelegateHandle Handle1 = ASC->RegisterGameplayTagEvent(CameraSetups.FirstAbilityData->CameraTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAbilityCameraManagerComponent::OnTagChange); 
+		TagDelegateHandles.Add(CameraSetups.FirstAbilityData->CameraTag, Handle1);
+		
+		FDelegateHandle Handle2 = 	ASC->RegisterGameplayTagEvent(CameraSetups.SecondAbilityData->CameraTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAbilityCameraManagerComponent::OnTagChange); 
+		TagDelegateHandles.Add(CameraSetups.SecondAbilityData->CameraTag, Handle2);
+		
+		FDelegateHandle Handle3 = ASC->RegisterGameplayTagEvent(CameraSetups.ThirdAbilityData->CameraTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAbilityCameraManagerComponent::OnTagChange); 
+		TagDelegateHandles.Add(CameraSetups.ThirdAbilityData->CameraTag, Handle3);
 		
 	}
 }
 
+// with here, we are checking the tag from the camera data against the one changing and return the correct data 
 UAbilityCameraData* UAbilityCameraManagerComponent::FindDataForTag(const FGameplayTag& Tag)
 {
 	if (CameraSetups.FirstAbilityData->CameraTag == Tag)return CameraSetups.FirstAbilityData;
@@ -59,7 +79,7 @@ UAbilityCameraData* UAbilityCameraManagerComponent::FindDataForTag(const FGamepl
 	if (CameraSetups.FourthAbilityData->CameraTag == Tag)return CameraSetups.FourthAbilityData;
 	return nullptr; 
 }
-
+// this function is bound 
 void UAbilityCameraManagerComponent::OnTagChange(FGameplayTag GameplayTag, int32 NewCount)
 {
 	if (NewCount > 0)
