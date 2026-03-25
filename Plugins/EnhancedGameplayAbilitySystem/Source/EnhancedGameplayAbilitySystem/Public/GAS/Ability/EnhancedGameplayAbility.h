@@ -33,7 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable,Category = "GAS|Ability")
 	ACharacter* GetCharacterFromActorInfo() const; 
 	
-
+	UFUNCTION(BlueprintPure)
+	FGameplayTagContainer GetActivationOwnedTags() const;
 	
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	

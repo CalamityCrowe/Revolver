@@ -19,6 +19,11 @@ ACharacter* UEnhancedGameplayAbility::GetCharacterFromActorInfo() const
 	return(CurrentActorInfo ? Cast<ACharacter>(CurrentActorInfo->AvatarActor.Get()) : nullptr); 
 }
 
+FGameplayTagContainer UEnhancedGameplayAbility::GetActivationOwnedTags() const
+{
+	return ActivationOwnedTags; 
+}
+
 void UEnhancedGameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnAvatarSet(ActorInfo, Spec);
