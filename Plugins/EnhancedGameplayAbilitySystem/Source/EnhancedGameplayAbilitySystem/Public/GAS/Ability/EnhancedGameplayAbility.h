@@ -12,6 +12,8 @@
 
 class ACharacter;
 
+
+
 UENUM(BlueprintType)
 enum class EEnhancedActivationPolicy:uint8
 {
@@ -20,6 +22,32 @@ enum class EEnhancedActivationPolicy:uint8
 	Toggle UMETA(DisplayName = "Toggle Ability"), 
 	None UMETA(Hidden)
 };
+
+UCLASS()
+class ENHANCEDGAMEPLAYABILITYSYSTEM_API UAbilityHUDData: public UPrimaryDataAsset
+{
+	GENERATED_BODY()
+public: 
+	UAbilityHUDData()
+	{
+		DefaultColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		CooldownColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.5f);
+		ActiveColor = FLinearColor(1.0f, 1.0f, 0.0f, 0.5f);
+	} 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Image Settings")
+	FSlateBrush AbilityIcon; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Image Settings")
+	FLinearColor DefaultColor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Image Settings")
+	FLinearColor ActiveColor; 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Image Settings")
+	FLinearColor CooldownColor;
+	
+	
+};
+
 
 UCLASS(Abstract , Blueprintable, meta= (HideFromSelection = true))
 class ENHANCEDGAMEPLAYABILITYSYSTEM_API UEnhancedGameplayAbility : public UGameplayAbility
@@ -52,6 +80,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	bool bShouldShowInHUD;
 	
-	
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|HUD", meta = (EditCondition = "bShouldShowInHUD",EditConditionHides))
+	TObjectPtr<UAbilityHUDData> AbilityHUDData;
 };
