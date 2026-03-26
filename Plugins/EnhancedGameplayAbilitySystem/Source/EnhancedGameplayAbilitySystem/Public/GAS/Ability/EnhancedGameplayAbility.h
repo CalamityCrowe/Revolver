@@ -31,7 +31,7 @@ public:
 	UAbilityHUDData()
 	{
 		DefaultColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		CooldownColor = FLinearColor(0.5f, 0.5f, 0.5f, 0.5f);
+		CooldownColor = FLinearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		ActiveColor = FLinearColor(1.0f, 1.0f, 0.0f, 0.5f);
 	} 
 	
@@ -80,6 +80,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	bool bShouldShowInHUD;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|HUD", meta = (EditCondition = "bShouldShowInHUD",EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|HUD", meta = (EditCondition = "bShouldShowInHUD",EditConditionHides))
 	TObjectPtr<UAbilityHUDData> AbilityHUDData;
 };
