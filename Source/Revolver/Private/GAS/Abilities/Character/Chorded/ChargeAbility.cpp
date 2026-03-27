@@ -5,14 +5,15 @@
 // engine 
 #include "Abilities/Tasks/AbilityTask_ApplyRootMotionConstantForce.h"
 #include "GameFramework/Character.h"
-
-
-// revolver
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+
+// revolver
+
 #include "Player/RevolverPlayerController.h"
 
 
@@ -32,9 +33,19 @@ void UChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		{
 			Character->DisableInput(PC); 
 		}
+		
+		if (UCharacterMovementComponent* MovementComponent = Character->GetCharacterMovement())
+		{
+			MovementComponent->bUseControllerDesiredRotation = true; 
+			MovementComponent->bOrientRotationToMovement = false; 
+		}
+		
+		
+		
 	}
 }
 
+// we dont call this directly, this will be called in the base chorded ability so any previously bound 
 void UChargeAbility::MontageStarted()
 {
 	Super::MontageStarted();
@@ -187,6 +198,8 @@ void UChargeAbility::OnChargeFinish()
 	{
 		Collision->SetCollisionObjectType(ECC_Pawn); 
 	}
+	// will fix this part to include the fixing of the movement
+	
 	
 	CommitAbility(CurrentSpecHandle, CurrentActorInfo,CurrentActivationInfo); 
 	
