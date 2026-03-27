@@ -25,7 +25,7 @@ public:
 	
 	USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
 	UCameraComponent* GetCamera() const{return Camera;}
-	
+	UWeaponManagerComponent* GetWeaponManager() const{return WeaponManagerComponent;}
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

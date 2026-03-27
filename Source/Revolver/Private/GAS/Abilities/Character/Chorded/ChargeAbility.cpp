@@ -14,6 +14,9 @@
 
 // revolver
 
+#include "Characters/Player/RevolverPlayerCharacter.h"
+#include "Components/WeaponManagerComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Player/RevolverPlayerController.h"
 
 
@@ -33,15 +36,7 @@ void UChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		{
 			Character->DisableInput(PC); 
 		}
-		
-		if (UCharacterMovementComponent* MovementComponent = Character->GetCharacterMovement())
-		{
-			MovementComponent->bUseControllerDesiredRotation = true; 
-			MovementComponent->bOrientRotationToMovement = false; 
-		}
-		
-		
-		
+		SetControlOrientMovement(true, false); 
 	}
 }
 
@@ -175,6 +170,8 @@ void UChargeAbility::ChargeForce()
 	
 	ChargeDirection = GetAvatarActorFromActorInfo()->GetActorForwardVector().GetSafeNormal()* DirectionMagnitude; 
 	
+	CommitAbilityCost(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo); 
+	
 	
 	UAbilityTask_ApplyRootMotionConstantForce* RootMotionTask = UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
 		this, FName(""),
@@ -199,8 +196,23 @@ void UChargeAbility::OnChargeFinish()
 		Collision->SetCollisionObjectType(ECC_Pawn); 
 	}
 	// will fix this part to include the fixing of the movement
+	if (ARevolverPlayerCharacter* PlayerCharacter = Cast<ARevolverPlayerCharacter>(GetAvatarActorFromActorInfo()))
+	{
+		if (PlayerCharacter->GetWeaponManager()->GetEquippedWeapon() == nullptr)
+		{
+			SetControlOrientMovement(false, true); 
+		} 
+	}
 	
+	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo,CurrentActivationInfo, true); 
 	
-	CommitAbility(CurrentSpecHandle, CurrentActorInfo,CurrentActivationInfo); 
-	
+}
+
+void UChargeAbility::SetControlOrientMovement(bool NewControl, bool NewOrient)
+{
+	if (UCharacterMovementComponent* MovementComponent = GetCharacterFromActorInfo()->GetCharacterMovement())
+	{
+		MovementComponent->bUseControllerDesiredRotation = NewControl; 
+		MovementComponent->bOrientRotationToMovement = NewOrient; 
+	}
 }

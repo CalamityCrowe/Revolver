@@ -82,6 +82,8 @@ private:
 	UFUNCTION()
 	virtual void OnChargeFinish(); 
 	
+	void SetControlOrientMovement(bool NewControl, bool NewOrient);
+	
 	FTimerHandle HitScanTimer; 
 	
 	FVector ChargeDirection; 
