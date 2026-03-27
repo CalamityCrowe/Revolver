@@ -15,11 +15,20 @@ void UBaseChordedAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
-	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+	if (bShouldCommitOnActivation)
 	{
-		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+		{
+			CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+			return; 
+		}		
+	}
+	
+	if (CheckCooldown(Handle, ActorInfo) == false || CheckCost(Handle, ActorInfo) == false)
+	{
 		return; 
 	}
+	
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy
 	(this, 
@@ -35,6 +44,7 @@ void UBaseChordedAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	PlayMontageAndWait->ReadyForActivation();
 	
 	MontageStarted(); // we add this call here so extending the functionality doesn't mean overriding the whole activate ability 
+
 }
 
 void UBaseChordedAbility::MontageStarted()

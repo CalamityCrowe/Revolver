@@ -75,10 +75,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
 	EEnhancedActivationPolicy ActivationPolicy;
 	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Abilities")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	bool bActivateOnGranted; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	bool bShouldShowInHUD;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Abilities")
+	bool bShouldCommitOnActivation; 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|HUD", meta = (EditCondition = "bShouldShowInHUD",EditConditionHides))
 	TObjectPtr<UAbilityHUDData> AbilityHUDData;

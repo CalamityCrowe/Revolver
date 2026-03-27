@@ -25,6 +25,7 @@ public:
 
 	
 protected:
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Animations")
 	TObjectPtr<UAnimMontage> AbilityMontage; 
 	
@@ -34,19 +35,21 @@ protected:
 	FGameplayTag EffectMagnitudeTag;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
 	float EffectMagnitude; 
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
+	FGameplayTag CameraTag; 
 	
 	UFUNCTION()
 	virtual void MontageStarted(); 
 	
-private: 
 	UFUNCTION()
-	void OnMontageCompleted(); 
+	virtual void OnMontageCompleted(); 
 	
 	UFUNCTION()
-	void OnMontageCancelled(); 
+	virtual void OnMontageCancelled(); 
 	
 	UFUNCTION()
-	void OnMontageInterupted(); 
+	virtual void OnMontageInterupted(); 
+	
+	
 	
 };
