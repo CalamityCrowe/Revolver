@@ -38,6 +38,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
 	FGameplayTag CameraTag; 
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Event")
+	FGameplayTag MontageTriggeredTag;
+	
+	
 	UFUNCTION()
 	virtual void MontageStarted(); 
 	
@@ -50,6 +54,7 @@ protected:
 	UFUNCTION()
 	virtual void OnMontageInterupted(); 
 	
-	
+	virtual void SetControlOrientMovement(bool NewControl, bool NewOrient);
+
 	
 };

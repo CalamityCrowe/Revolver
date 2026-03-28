@@ -28,8 +28,6 @@ protected:
 	
 	virtual void OnMontageInterupted() override;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Event")
-	FGameplayTag MontageTriggeredTag;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Event")
 	FGameplayTag HitScanStartTag;
@@ -82,7 +80,6 @@ private:
 	UFUNCTION()
 	virtual void OnChargeFinish(); 
 	
-	void SetControlOrientMovement(bool NewControl, bool NewOrient);
 	
 	FTimerHandle HitScanTimer; 
 	

@@ -3,7 +3,10 @@
 
 #include "GAS/Abilities/Character/BaseChordedAbility.h"
 
+// engine
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UBaseChordedAbility::UBaseChordedAbility()
 {
@@ -65,4 +68,13 @@ void UBaseChordedAbility::OnMontageCancelled()
 void UBaseChordedAbility::OnMontageInterupted()
 {
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
+}
+
+void UBaseChordedAbility::SetControlOrientMovement(bool NewControl, bool NewOrient)
+{
+	if (UCharacterMovementComponent* MovementComponent = GetCharacterFromActorInfo()->GetCharacterMovement())
+	{
+		MovementComponent->bUseControllerDesiredRotation = NewControl; 
+		MovementComponent->bOrientRotationToMovement = NewOrient; 
+	}
 }
