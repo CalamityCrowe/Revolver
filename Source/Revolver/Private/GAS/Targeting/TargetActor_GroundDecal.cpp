@@ -5,6 +5,11 @@
 
 #include "Kismet/GameplayStatics.h"
 
+ATargetActor_GroundDecal::ATargetActor_GroundDecal(): DecalMaterial(nullptr), DecalSize(0.0f)
+{
+	
+}
+
 void ATargetActor_GroundDecal::BeginPlay()
 {
 	Super::BeginPlay();
@@ -12,5 +17,5 @@ void ATargetActor_GroundDecal::BeginPlay()
 	UGameplayStatics::SpawnDecalAttached(
 		DecalMaterial, FVector(256.f,DecalSize,DecalSize),
 		GetRootComponent(),FName(""),
-		FVector(),FRotator(0,-90,0)); 
+		FVector(),FRotator(-90,0,0)); 
 }

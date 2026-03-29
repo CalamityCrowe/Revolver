@@ -23,6 +23,7 @@ public:
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	
 protected:
 	
@@ -54,7 +55,26 @@ protected:
 	UFUNCTION()
 	virtual void OnMontageInterupted(); 
 	
+	UFUNCTION()
+	virtual void MontageTriggeredEvent(FGameplayEventData Payload); 
+	
+	
+	virtual void ApplyCameraEffect(); 
+	
+	virtual void RemoveCameraEffect(); 
+	
+	
+	virtual void EnableAbilityOrientation(); 
+	
+	virtual void DisableAbilityOrientation();
+	
+	UPROPERTY()
+	TArray<AActor*> HitActors; 
+	UFUNCTION()
+	virtual void AbilityHitScan(const TArray<FHitResult> HitResults); 
+private: 
 	virtual void SetControlOrientMovement(bool NewControl, bool NewOrient);
 
+	
 	
 };

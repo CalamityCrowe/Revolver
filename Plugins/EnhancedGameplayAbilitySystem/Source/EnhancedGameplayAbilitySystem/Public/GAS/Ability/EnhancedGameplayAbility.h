@@ -70,9 +70,9 @@ public:
 	
 protected: 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
-	FGameplayTag CoolDownTag; 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Tag")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|")
+	FGameplayTag CooldownTag; 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	EEnhancedActivationPolicy ActivationPolicy;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")

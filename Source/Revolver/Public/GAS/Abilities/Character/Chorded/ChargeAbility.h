@@ -59,9 +59,6 @@ protected:
 	
 private: 
 	
-	UPROPERTY()
-	TArray<AActor*> HitActors; 
-	
 	UFUNCTION()
 	virtual void MontageTriggerEvent(FGameplayEventData Payload); 
 	

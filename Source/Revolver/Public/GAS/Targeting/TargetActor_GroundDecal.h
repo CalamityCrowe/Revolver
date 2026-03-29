@@ -18,11 +18,11 @@ public:
 	
 	virtual void BeginPlay() override;
 	
-protected: 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties|Materials")
 	TObjectPtr<UMaterialInterface> DecalMaterial;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties|Materials")
 	float DecalSize;
+	
 };

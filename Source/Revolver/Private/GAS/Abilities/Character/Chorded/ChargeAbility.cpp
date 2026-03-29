@@ -11,7 +11,6 @@
 #include "Kismet/KismetSystemLibrary.h"
 
 // revolver
-
 #include "Characters/Player/RevolverPlayerCharacter.h"
 #include "Components/WeaponManagerComponent.h"
 #include "Player/RevolverPlayerController.h"
@@ -33,7 +32,7 @@ void UChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		{
 			Character->DisableInput(PC); 
 		}
-		SetControlOrientMovement(true, false); 
+		EnableAbilityOrientation(); 
 	}
 }
 
@@ -135,30 +134,12 @@ void UChargeAbility::HitScan()
 	
 	UKismetSystemLibrary::SphereTraceMultiForObjects(GetWorld(), StartLocation, EndLocation,HitRadius,ObjectTypes,false,ActorsToIgnore,EDrawDebugTrace::ForDuration,HitResults,true); 
 	
-	if (HitResults.Num() > 0)
-	{
-		for (FHitResult Hit : HitResults)
-		{
-			UAbilitySystemComponent* HitASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Hit.GetActor()); 
-			if (!HitActors.Contains(Hit.GetActor()) && HitASC)
-			{
-				HitActors.AddUnique(Hit.GetActor());
-				FGameplayEffectSpecHandle EffectSpecHandle =  MakeOutgoingGameplayEffectSpec(EffectClass, 1); 
-				EffectSpecHandle.Data->SetSetByCallerMagnitude(EffectMagnitudeTag,EffectMagnitude); 
-				
-				EffectSpecHandle.Data->GetContext().AddHitResult(Hit,true); 
-				HitASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); 
-			}
-		}
-	}
+	AbilityHitScan(HitResults); 
 }
 
 void UChargeAbility::ChargeForce()
 {
-	if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetAvatarActorFromActorInfo()))
-	{
-		ASC->AddLooseGameplayTag(CameraTag);
-	}
+	ApplyCameraEffect(); 
 	
 	if (UCapsuleComponent* Collision = GetCharacterFromActorInfo()->GetCapsuleComponent())
 	{
@@ -184,22 +165,14 @@ void UChargeAbility::ChargeForce()
 
 void UChargeAbility::OnChargeFinish()
 {
-	if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetAvatarActorFromActorInfo()))
-	{
-		ASC->RemoveLooseGameplayTag(CameraTag);
-	}
+	RemoveCameraEffect();
 	if (UCapsuleComponent* Collision = GetCharacterFromActorInfo()->GetCapsuleComponent())
 	{
 		Collision->SetCollisionObjectType(ECC_Pawn); 
 	}
 	// will fix this part to include the fixing of the movement
-	if (ARevolverPlayerCharacter* PlayerCharacter = Cast<ARevolverPlayerCharacter>(GetAvatarActorFromActorInfo()))
-	{
-		if (PlayerCharacter->GetWeaponManager()->GetEquippedWeapon() == nullptr)
-		{
-			SetControlOrientMovement(false, true); 
-		} 
-	}
+	
+	DisableAbilityOrientation(); 
 	
 	CommitAbilityCooldown(CurrentSpecHandle, CurrentActorInfo,CurrentActivationInfo, true); 
 	
