@@ -17,33 +17,32 @@ class REVOLVER_API URadialBurstAbility : public UBaseChordedAbility
 public: 
 	URadialBurstAbility();
 	
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 protected: 
 	virtual void MontageStarted() override;
-
-
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Tags")
-	FGameplayTag SpawnEventTag;
+	
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Tags")
 	FGameplayTag SpawnCueTag;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties|Projectile")
 	int NumberOfProjectiles; 
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties|Projectile")
 	float RadialPitch; 
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties|Projectile")
 	float ProjectileSpeed; 
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties|Projectile")
 	TSubclassOf<ABaseProjectile> ProjectileClass; 
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties|Projectile")
 	bool bStaggeredProjectiles; 
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties", meta = (EditCondition = "bStaggeredProjectiles", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Properties|Projectile", meta = (EditCondition = "bStaggeredProjectiles", EditConditionHides))
 	float StaggeredSpawnTime; 
 	
 	UFUNCTION()

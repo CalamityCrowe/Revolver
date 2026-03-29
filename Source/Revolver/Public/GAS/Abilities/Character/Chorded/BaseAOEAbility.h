@@ -22,6 +22,8 @@ public:
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
+	virtual void CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility) override;
+	
 protected: 
 	
 	virtual void MontageStarted() override;
@@ -66,6 +68,9 @@ protected:
 	TEnumAsByte<EGameplayTargetingConfirmation::Type> TargetingConfirmation; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Properties|Targeting")
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Properties|Targeting")
+	FCollisionProfileName TraceProfile;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Properties|Targeting")
 	FGameplayTag AOEDamageEffectTag;
 	

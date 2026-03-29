@@ -19,10 +19,20 @@ URadialBurstAbility::URadialBurstAbility(): NumberOfProjectiles(8),RadialPitch(-
 	
 }
 
+void URadialBurstAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	ApplyCameraEffect(); 
+}
+
 void URadialBurstAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	GetCharacterFromActorInfo()->GetCharacterMovement()->SetMovementMode(MOVE_Walking); 
+	RemoveCameraEffect(); 
 }
 
 void URadialBurstAbility::MontageStarted()
@@ -31,7 +41,7 @@ void URadialBurstAbility::MontageStarted()
 	GetCharacterFromActorInfo()->GetCharacterMovement()->SetMovementMode(MOVE_Flying); 
 	
 	UAbilityTask_WaitGameplayEvent* SpawnProjectileTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, 
-		SpawnEventTag, 
+		MontageTriggeredTag, 
 		nullptr, 
 		true,
 		true

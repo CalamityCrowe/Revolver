@@ -3,14 +3,18 @@
 
 #include "GAS/Abilities/Character/Chorded/BaseAOEAbility.h"
 
+//engine
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "GameplayCueManager.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_WaitTargetData.h"
-#include "GAS/Targeting/TargetActor_GroundDecal.h"
 #include "Kismet/KismetSystemLibrary.h"
+
+// revolver
+#include "GAS/Targeting/TargetActor_GroundDecal.h"
+
 
 UBaseAOEAbility::UBaseAOEAbility()
 {
@@ -23,6 +27,14 @@ void UBaseAOEAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,co
 	
 	ApplyCameraEffect(); 
 	EnableAbilityOrientation(); 	
+}
+
+void UBaseAOEAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateCancelAbility)
+{
+	bIsReloopingMontage = false;
+	RemoveCameraEffect();
+	Super::CancelAbility(Handle, ActorInfo, ActivationInfo, bReplicateCancelAbility);
 }
 
 
@@ -140,11 +152,13 @@ void UBaseAOEAbility::OnMontageCompleted()
 			GroundDecalTarget->MaxRange = MaxRange;			
 			GroundDecalTarget->DecalSize = (AOERadius * 2);
 			GroundDecalTarget->DecalMaterial = TargetingMaterial;
+			GroundDecalTarget->TraceProfile = TraceProfile; 
 		}
 		WaitTargetData->FinishSpawningActor(this, TargetActor); 
 	}
 	
 	WaitTargetData->ValidData.AddDynamic(this, &UBaseAOEAbility::ValidTargeting);
+	WaitTargetData->ReadyForActivation();
 	
 }
 
@@ -167,7 +181,7 @@ void UBaseAOEAbility::TargetingInterrupted()
 	
 	if (bIsWaitingTargetDetails)
 	{
-		EndAbility(CurrentSpecHandle,CurrentActorInfo,CurrentActivationInfo,true,true); 
+		CancelAbility(CurrentSpecHandle,CurrentActorInfo,CurrentActivationInfo,true); 
 	}
 }
 
