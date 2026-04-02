@@ -10,7 +10,7 @@ class ABaseProjectile;
 /**
  * 
  */
-UCLASS()
+UCLASS(abstract, HideDropdown)
 class REVOLVER_API URadialBurstAbility : public UBaseChordedAbility
 {
 	GENERATED_BODY()
@@ -21,7 +21,7 @@ public:
 	
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 protected: 
-	virtual void MontageStarted() override;
+	virtual void MontageStarted_Implementation() override;
 	
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities|Tags")

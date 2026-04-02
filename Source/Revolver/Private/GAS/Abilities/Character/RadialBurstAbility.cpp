@@ -35,9 +35,9 @@ void URadialBurstAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, co
 	RemoveCameraEffect(); 
 }
 
-void URadialBurstAbility::MontageStarted()
+void URadialBurstAbility::MontageStarted_Implementation()
 {
-	Super::MontageStarted();
+	Super::MontageStarted_Implementation();
 	GetCharacterFromActorInfo()->GetCharacterMovement()->SetMovementMode(MOVE_Flying); 
 	
 	UAbilityTask_WaitGameplayEvent* SpawnProjectileTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, 

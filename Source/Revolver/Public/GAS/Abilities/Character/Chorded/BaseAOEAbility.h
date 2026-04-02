@@ -12,7 +12,7 @@ class AGameplayAbilityTargetActor;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class REVOLVER_API UBaseAOEAbility : public UBaseChordedAbility
 {
 	GENERATED_BODY()
@@ -26,7 +26,7 @@ public:
 	
 protected: 
 	
-	virtual void MontageStarted() override;
+	virtual void MontageStarted_Implementation() override;
 	
 	virtual void OnMontageCompleted() override;
 	

@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class REVOLVER_API UChargeAbility : public UBaseChordedAbility
 {
 	GENERATED_BODY()
@@ -20,7 +20,7 @@ public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	
 protected: 
-	virtual void MontageStarted() override;
+	virtual void MontageStarted_Implementation() override;
 	
 	virtual void OnMontageCancelled() override;
 	

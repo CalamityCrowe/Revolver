@@ -37,8 +37,8 @@ protected:
 	bool bHasDuration;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Passive", meta = (EditCondition = "bHasDuration", EditConditionHides))
-	float EffectDuration;
+	float TimerIntervals;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Passive", meta = (EditCondition = "bHasDuration", EditConditionHides))
-	FGameplayTag DurationTag; 
+	
+	
 };

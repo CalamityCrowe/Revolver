@@ -13,7 +13,7 @@
  * them. Think Along the lines of Warframes abilities or even god of war ragnaroks abilities
  */
 
-UCLASS()
+UCLASS(abstract,HideDropdown)
 class REVOLVER_API UBaseChordedAbility : public UEnhancedGameplayAbility
 {
 	GENERATED_BODY()
@@ -43,8 +43,11 @@ protected:
 	FGameplayTag MontageTriggeredTag;
 	
 	
-	UFUNCTION()
-	virtual void MontageStarted(); 
+	UFUNCTION(BlueprintCallable,BlueprintNativeEvent)
+	void MontageStarted(); 
+	
+	virtual void MontageStarted_Implementation();
+	
 	
 	UFUNCTION()
 	virtual void OnMontageCompleted(); 

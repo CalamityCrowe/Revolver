@@ -38,9 +38,9 @@ void UBaseAOEAbility::CancelAbility(const FGameplayAbilitySpecHandle Handle, con
 }
 
 
-void UBaseAOEAbility::MontageStarted()
+void UBaseAOEAbility::MontageStarted_Implementation()
 {
-	Super::MontageStarted();
+	Super::MontageStarted_Implementation();
 	
 	bIsWaitingTargetDetails = true;
 	

@@ -36,9 +36,9 @@ void UChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 }
 
 // we dont call this directly, this will be called in the base chorded ability so any previously bound 
-void UChargeAbility::MontageStarted()
+void UChargeAbility::MontageStarted_Implementation()
 {
-	Super::MontageStarted();
+	Super::MontageStarted_Implementation();
 	
 	UAbilityTask_WaitGameplayEvent*  MontageTriggeredEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent
 	(this,MontageTriggeredTag,

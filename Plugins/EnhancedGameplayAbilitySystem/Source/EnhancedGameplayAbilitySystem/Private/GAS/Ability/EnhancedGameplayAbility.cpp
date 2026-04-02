@@ -12,6 +12,9 @@ UEnhancedGameplayAbility::UEnhancedGameplayAbility():ActivationPolicy(EEnhancedA
 	FGameplayTagContainer AbilityContainer;
 	AbilityContainer.AddTag(FGameplayTag::RequestGameplayTag(TEXT("GameplayAbility"))); 
 	SetAssetTags(AbilityContainer); 
+	
+	SourceBlockedTags.AddTag(FGameplayTag::RequestGameplayTag("State.Dead")); 
+	
 }
 
 ACharacter* UEnhancedGameplayAbility::GetCharacterFromActorInfo() const

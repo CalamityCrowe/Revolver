@@ -64,9 +64,9 @@ void UBaseChordedAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,con
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
-void UBaseChordedAbility::MontageStarted()
+void UBaseChordedAbility::MontageStarted_Implementation()
 {
-	// we do nothing in here, but if we are doing something like spawning projectiles or something like that, then we can create an event here for it
+	
 }
 
 void UBaseChordedAbility::OnMontageCompleted()
