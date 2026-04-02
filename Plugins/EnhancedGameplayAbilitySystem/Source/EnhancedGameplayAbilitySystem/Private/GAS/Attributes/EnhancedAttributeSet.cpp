@@ -18,7 +18,7 @@ void UEnhancedAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribu
 	}
 	else if (Attribute == GetMaxHealthAttribute())
 	{
-		
+		// might do something here to adjust the current health to increase / decrease by the same amount
 	}
 }
 

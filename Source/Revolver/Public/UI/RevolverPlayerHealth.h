@@ -20,4 +20,18 @@ public:
 protected: 
 	virtual void UpdateHealth(const FOnAttributeChangeData& Data) override;
 	
+	virtual void AnimateChange();
+	
+	UPROPERTY(EditDefaultsOnly)
+	float TimerInterval; 
+	UPROPERTY(EditDefaultsOnly)
+	float AnimDuration;
+	
+private: 
+	
+	float DisplayHealth; 
+	float OldHealth; 
+	float Alpha; 
+	
+	FTimerHandle HealthChangeTimer;
 };

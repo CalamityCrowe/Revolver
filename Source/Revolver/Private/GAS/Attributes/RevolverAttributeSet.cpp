@@ -18,6 +18,12 @@ URevolverAttributeSet::URevolverAttributeSet():Mana(50), MaxMana(50 )
 void URevolverAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
+	
+	if (Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMana());
+	}
+	
 }
 
 void URevolverAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)

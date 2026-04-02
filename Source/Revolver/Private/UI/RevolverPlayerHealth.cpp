@@ -29,7 +29,7 @@ void URevolverPlayerHealth::NativeConstruct()
 		MaxHealth = ASC->GetNumericAttribute(UEnhancedAttributeSet::GetMaxHealthAttribute());
 		HealthBar->SetPercent(Health/MaxHealth); 
 		 
-		
+		DisplayHealth = Health;
 		
 		FString HealthString = FString::Printf(TEXT("%.0f"), Health); 
 		CurrentHealthText->SetText(FText::FromString(HealthString)); 
@@ -48,7 +48,28 @@ void URevolverPlayerHealth::NativeDestruct()
 
 void URevolverPlayerHealth::UpdateHealth(const FOnAttributeChangeData& Data)
 {
+	OldHealth = DisplayHealth; 
+	Health = Data.NewValue; 
+	Alpha = 0; 
+	// todo: Work out the smooth transition
 	
+	GetWorld()->GetTimerManager().SetTimer(HealthChangeTimer,this,&URevolverPlayerHealth::AnimateChange, TimerInterval, true); 
+}
+
+void URevolverPlayerHealth::AnimateChange()
+{
+	Alpha =  FMath::Clamp(Alpha += (TimerInterval/AnimDuration),0,1);
+	GEngine->AddOnScreenDebugMessage(-1,2,FColor::Red, FString::Printf(TEXT("%.f"),Alpha));
+	DisplayHealth = FMath::Lerp(OldHealth,Health,Alpha);
+	HealthBar->SetPercent(DisplayHealth/MaxHealth);
 	
-	Super::UpdateHealth(Data);
+	if (CurrentHealthText)
+	{
+		FString HealthString = FString::Printf(TEXT("%.0f"), DisplayHealth);
+		CurrentHealthText->SetText(FText::FromString(HealthString));
+	}
+	if (Alpha >= 1.0f)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(HealthChangeTimer);
+	}
 }
