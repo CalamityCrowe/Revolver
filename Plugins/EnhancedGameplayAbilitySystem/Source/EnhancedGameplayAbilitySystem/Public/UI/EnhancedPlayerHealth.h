@@ -8,7 +8,8 @@
 #include "EnhancedPlayerHealth.generated.h"
 
 class UProgressBar;
-
+class UTextBlock;
+class UHorizontalBox; 
 /**
  * 
  */
@@ -23,6 +24,17 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
 	TObjectPtr<UProgressBar> HealthBar; 
+	
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
+	TObjectPtr<UHorizontalBox> TextFormatBox; 
+	
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> CurrentHealthText; 
+	
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> MaxHealthText;
+	
+	
 	
 	float Health; 
 	float MaxHealth;

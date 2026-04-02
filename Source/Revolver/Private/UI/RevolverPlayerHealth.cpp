@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
 #include "GAS/Attributes/EnhancedAttributeSet.h"
 #include "Player/RevolverPlayerState.h"
 
@@ -27,6 +28,14 @@ void URevolverPlayerHealth::NativeConstruct()
 		Health = ASC->GetNumericAttribute(UEnhancedAttributeSet::GetHealthAttribute()); 
 		MaxHealth = ASC->GetNumericAttribute(UEnhancedAttributeSet::GetMaxHealthAttribute());
 		HealthBar->SetPercent(Health/MaxHealth); 
+		 
+		
+		
+		FString HealthString = FString::Printf(TEXT("%.0f"), Health); 
+		CurrentHealthText->SetText(FText::FromString(HealthString)); 
+		
+		FString MaxHealthString = FString::Printf(TEXT("%.0f"), MaxHealth);
+		MaxHealthText->SetText(FText::FromString(MaxHealthString));
 		
 		ASC->GetGameplayAttributeValueChangeDelegate(UEnhancedAttributeSet::GetHealthAttribute()).AddUObject(this, &URevolverPlayerHealth::UpdateHealth);
 	}

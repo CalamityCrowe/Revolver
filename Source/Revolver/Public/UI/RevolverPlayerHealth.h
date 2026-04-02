@@ -19,4 +19,5 @@ public:
 	
 protected: 
 	virtual void UpdateHealth(const FOnAttributeChangeData& Data) override;
+	
 };
