@@ -26,17 +26,25 @@ void UBaseChordedAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	
 	if (bShouldCommitOnActivation)
 	{
-		if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+		if (CheckCooldown(Handle, ActorInfo) == false || CheckCost(Handle, ActorInfo) == false)
 		{
 			CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 			return; 
 		}		
+		else
+		{
+			CommitAbility(Handle, ActorInfo,ActivationInfo); 
+		}
+	}
+	else
+	{
+		if (CheckCooldown(Handle, ActorInfo) == false || CheckCost(Handle, ActorInfo) == false)
+		{	
+			CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+			return; 
+		}	
 	}
 	
-	if (CheckCooldown(Handle, ActorInfo) == false || CheckCost(Handle, ActorInfo) == false)
-	{
-		return; 
-	}
 	
 	
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy
@@ -59,10 +67,9 @@ void UBaseChordedAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 void UBaseChordedAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,bool bReplicateEndAbility, bool bWasCancelled)
 {
 	
-	
-	
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
+
 
 void UBaseChordedAbility::MontageStarted_Implementation()
 {

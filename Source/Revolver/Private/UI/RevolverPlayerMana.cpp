@@ -62,7 +62,7 @@ void URevolverPlayerMana::AnimateChange()
 	DisplayMana = FMath::Lerp(OldMana, Mana, Alpha); 
 	if (ManaBar && ManaText)
 	{
-		ManaBar->SetPercent(DisplayMana);
+		ManaBar->SetPercent(DisplayMana/MaxMana);
 		FString ManaString = FString::Printf(TEXT("%.0f"), DisplayMana); 
 		ManaText->SetText(FText::FromString(ManaString)); 
 	}
