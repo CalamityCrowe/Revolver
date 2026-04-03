@@ -23,14 +23,29 @@ public:
 
 protected: 
 	
-	void UpdateMana(const FOnAttributeChangeData& Data);
-
+	virtual void UpdateMana(const FOnAttributeChangeData& Data);
+	
+	virtual void AnimateChange();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess, BindWidgetOptional))
 	TObjectPtr<UProgressBar> ManaBar; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess, BindWidgetOptional))
 	TObjectPtr<UTextBlock> ManaText; 	
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Animate")
+	float TimerInterval; 
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Animate")
+	float AnimDuration;
+	
 	float Mana; 
-	float MaxMana; 
+	float MaxMana;
+	
+private: 
+	
+	float DisplayMana;
+	float OldMana;
+	float Alpha;
+	
+	FTimerHandle ManaChangeTimer;
 };

@@ -28,6 +28,10 @@ void URevolverPlayerMana::NativeConstruct()
 				ManaText->SetText(FText::AsNumber(FMath::TruncToInt(Mana))); 
 			}
 		
+			DisplayMana = Mana; 
+			FString ManaString = FString::Printf(TEXT("%.0f"), DisplayMana);
+			ManaText->SetText(FText::FromString(ManaString));
+			
 			ASC->GetGameplayAttributeValueChangeDelegate(URevolverAttributeSet::GetManaAttribute()).AddUObject(this, & URevolverPlayerMana::UpdateMana); 
 		}		
 	}
@@ -41,7 +45,30 @@ void URevolverPlayerMana::NativeDestruct()
 
 void URevolverPlayerMana::UpdateMana(const FOnAttributeChangeData& Data)
 {
-	Mana = Data.NewValue; 
-	ManaBar->SetPercent(Mana/MaxMana);
-	ManaText->SetText(FText::AsNumber(FMath::TruncToInt(Mana)));
+	OldMana = DisplayMana;
+	Mana = Data.NewValue;
+	Alpha = 0; 
+	
+	if (GetWorld()->GetTimerManager().IsTimerActive(ManaChangeTimer))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ManaChangeTimer);
+	}
+	GetWorld()->GetTimerManager().SetTimer(ManaChangeTimer, this, &URevolverPlayerMana::AnimateChange, TimerInterval, true); 
+}
+
+void URevolverPlayerMana::AnimateChange()
+{
+	Alpha = FMath::Clamp(Alpha+= (TimerInterval/AnimDuration), 0.0f , 1.0f); 
+	DisplayMana = FMath::Lerp(OldMana, Mana, Alpha); 
+	if (ManaBar && ManaText)
+	{
+		ManaBar->SetPercent(DisplayMana);
+		FString ManaString = FString::Printf(TEXT("%.0f"), DisplayMana); 
+		ManaText->SetText(FText::FromString(ManaString)); 
+	}
+	
+	if (Alpha >= 1.0f)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ManaChangeTimer);
+	}
 }
