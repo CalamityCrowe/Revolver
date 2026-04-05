@@ -6,6 +6,10 @@
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "EnemyController.generated.h"
 
+
+
+
+
 UCLASS()
 class REVOLVER_API AEnemyController : public AAIController
 {
@@ -22,6 +26,5 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Blackboard|Keys")
 	FName TargetKeyName; 
-	
 	
 };
