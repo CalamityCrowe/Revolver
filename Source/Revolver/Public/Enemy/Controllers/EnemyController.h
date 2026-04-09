@@ -7,9 +7,6 @@
 #include "EnemyController.generated.h"
 
 
-
-
-
 UCLASS()
 class REVOLVER_API AEnemyController : public AAIController
 {
@@ -19,8 +16,8 @@ public:
 	AEnemyController();
 
 protected:
-	virtual void BeginPlay() override;
-
+	virtual void OnPossess(APawn* PossessPawn) override;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Blackboard|Trees")
 	TObjectPtr<UBehaviorTree> BehaviourTree;
 	

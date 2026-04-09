@@ -11,7 +11,18 @@ void UANS_HitScanWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequ
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 	
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(),HitStartTag,FGameplayEventData()); 
+	FGameplayEventData Payload;
+	if (bUseSkeletonForCollisions)
+	{
+		USocketCollisionParamsObject* ParamsObj = NewObject<USocketCollisionParamsObject>();
+		ParamsObj->Params.SocketName = SocketName;
+		ParamsObj->Params.CollisionRadius = CollisionRadius;
+		
+		Payload.OptionalObject = ParamsObj;
+	}
+
+	
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(),HitStartTag,Payload); 
 }
 
 void UANS_HitScanWindow::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,const FAnimNotifyEventReference& EventReference)

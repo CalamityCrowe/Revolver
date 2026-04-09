@@ -4,12 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
 #include "Animation/AnimNotifies/AnimNotifyState.h"
+#include "GAS/Data/PayloadData.h"
 #include "ANS_HitScanWindow.generated.h"
 
 /**
  * 
  */
+
+
+
 UCLASS(meta = (DisplayName = "Hit Scan Window"))
 class REVOLVER_API UANS_HitScanWindow : public UAnimNotifyState
 {
@@ -30,6 +35,15 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS")
 	FGameplayTag HitEndTag;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS")
+	bool bUseSkeletonForCollisions; 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS", meta =  (EditCondition = "bUseSkeletonForCollisions", EditConditionHides))
+	FName SocketName; 
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS", meta =  (EditCondition = "bUseSkeletonForCollisions", EditConditionHides))
+	float CollisionRadius;
 	
 	
 };

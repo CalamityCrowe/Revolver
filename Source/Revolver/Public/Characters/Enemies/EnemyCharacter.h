@@ -6,6 +6,8 @@
 #include "Characters/CharacterBase.h"
 #include "EnemyCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackEnded); 
+
 UCLASS()
 class REVOLVER_API AEnemyCharacter : public ACharacterBase
 {
@@ -17,6 +19,10 @@ public:
 	virtual void BeginPlay() override;
 	
 	virtual void PossessedBy(AController* inController) override;
+	
+	UPROPERTY(BlueprintAssignable, EditAnywhere)
+	FOnAttackEnded OnAttackEnded; 
+	
 protected:
 	
 	virtual void HealthUpdated(const FOnAttributeChangeData& Data); 
