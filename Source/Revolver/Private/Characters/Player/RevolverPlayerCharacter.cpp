@@ -128,7 +128,8 @@ void ARevolverPlayerCharacter::InputAbilityInputTagReleased(FGameplayTag InputTa
 void ARevolverPlayerCharacter::Die()
 {
 	Super::Die();
-	GEngine->AddOnScreenDebugMessage(-1,5,FColor::Yellow, "DEAD PLAYER");
+	if (ARevolverPlayerController* PC = Cast<ARevolverPlayerController>(GetController()))
+	DisableInput(PC); 
 }
 
 void ARevolverPlayerCharacter::FinishDying()

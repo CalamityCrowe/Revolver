@@ -3,6 +3,7 @@
 
 #include "Characters/Enemies/EnemyCharacter.h"
 
+#include "Enemy/Controllers/EnemyController.h"
 #include "GAS/EnhancedAbilitySet.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 #include "GAS/Attributes/RevolverAttributeSet.h"
@@ -53,6 +54,11 @@ void AEnemyCharacter::HealthUpdated(const FOnAttributeChangeData& Data)
 
 void AEnemyCharacter::Die()
 {
+	if (AEnemyController* AIC = Cast<AEnemyController>(GetController()))
+	{
+		AIC->StopBehaviourTree(); 
+	}
+	
 	Super::Die();
 }
 

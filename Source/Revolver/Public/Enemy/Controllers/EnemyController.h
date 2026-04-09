@@ -15,6 +15,8 @@ class REVOLVER_API AEnemyController : public AAIController
 public:
 	AEnemyController();
 
+	virtual void StopBehaviourTree(); 
+	
 protected:
 	virtual void OnPossess(APawn* PossessPawn) override;
 	
