@@ -81,7 +81,6 @@ void URevolverAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffe
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
 		const float LocalDamage = GetDamage(); 
-GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::SanitizeFloat(LocalDamage));
 		SetDamage(0); 
 		
 		if (LocalDamage > 0.0f)

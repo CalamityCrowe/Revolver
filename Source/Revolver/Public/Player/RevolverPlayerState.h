@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 #include "RevolverPlayerState.generated.h"
 
+struct FOnAttributeChangeData;
 class UEnhancedAbilitySystemComponent;
 class URevolverAttributeSet;
 /**
@@ -23,6 +25,14 @@ public:
 	
 	virtual URevolverAttributeSet* GetAttributeSet() const; 
 	
+	UFUNCTION(BlueprintPure)
+	float GetHealth() const;
+	UFUNCTION(BlueprintPure)
+	float GetMaxHealth() const; 
+	UFUNCTION(BlueprintPure)
+	bool IsAlive() const; 
+	
+	
 protected:
 	
 	UPROPERTY()
@@ -30,5 +40,14 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<URevolverAttributeSet> AttributeSet;
+	
+	FGameplayTag DeadTag;
+	
+	FDelegateHandle HealthChangedDelegate;
+	
+	virtual void BeginPlay() override;
+	
+	
+	virtual void HealthChanged(const FOnAttributeChangeData& Data); 
 	
 };

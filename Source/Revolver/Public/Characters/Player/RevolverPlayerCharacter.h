@@ -26,6 +26,9 @@ public:
 	USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
 	UCameraComponent* GetCamera() const{return Camera;}
 	UWeaponManagerComponent* GetWeaponManager() const{return WeaponManagerComponent;}
+	
+	virtual void Die() override;
+	virtual void FinishDying() override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -49,9 +52,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components|Weapon Manager")
 	TObjectPtr<UWeaponManagerComponent> WeaponManagerComponent; 
 	
-	virtual void Die() override;
-	
-	virtual void FinishDying() override;
+
 	
 private: 
 	UFUNCTION()

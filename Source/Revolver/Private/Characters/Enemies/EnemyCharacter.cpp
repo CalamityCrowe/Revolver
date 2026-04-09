@@ -36,11 +36,7 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::PossessedBy(AController* inController)
 {
 	Super::PossessedBy(inController);
-	
-	if (AbilitySet)
-	{
-		AbilitySet->GiveToAbilitySystem(ASC.Get(),&GrantedHandles,this);
-	}
+
 }
 
 void AEnemyCharacter::HealthUpdated(const FOnAttributeChangeData& Data)
