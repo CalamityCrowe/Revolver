@@ -196,6 +196,3 @@ void UEnhancedAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, PredictionKey);
 	}
 }
-
-
-

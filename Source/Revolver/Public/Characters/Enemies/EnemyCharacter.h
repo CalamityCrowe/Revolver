@@ -7,6 +7,7 @@
 #include "EnemyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackEnded); 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath); 
 
 UCLASS()
 class REVOLVER_API AEnemyCharacter : public ACharacterBase
@@ -22,6 +23,9 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, EditAnywhere)
 	FOnAttackEnded OnAttackEnded; 
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnDeath OnDeathDelegate;
 	
 protected:
 	

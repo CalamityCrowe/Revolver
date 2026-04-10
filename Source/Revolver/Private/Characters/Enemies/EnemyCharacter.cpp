@@ -58,12 +58,12 @@ void AEnemyCharacter::Die()
 	{
 		AIC->StopBehaviourTree(); 
 	}
-	
 	Super::Die();
 }
 
 void AEnemyCharacter::FinishDying()
 {
+	OnDeathDelegate.Broadcast(); 
 	Super::FinishDying();
 }
 

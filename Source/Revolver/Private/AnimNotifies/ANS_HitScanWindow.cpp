@@ -20,7 +20,6 @@ void UANS_HitScanWindow::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequ
 		
 		Payload.OptionalObject = ParamsObj;
 	}
-
 	
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(),HitStartTag,Payload); 
 }
