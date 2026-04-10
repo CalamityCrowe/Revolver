@@ -44,4 +44,6 @@ protected:
 	UFUNCTION()
 	void OnEnemyDefeated(); 
 	
+	FVector GetSpawnLocation() const;
+	
 };
