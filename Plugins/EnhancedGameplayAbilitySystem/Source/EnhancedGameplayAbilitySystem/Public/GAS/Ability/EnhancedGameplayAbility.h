@@ -68,10 +68,21 @@ public:
 	
 	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	
+	virtual float GetAbilityCooldown() const {return AbilityCooldown; };
+	
+	virtual float GetAbilityCost() const {return AbilityCost; };
+	
 protected: 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Cooldowns")
 	FGameplayTag CooldownTag; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Cooldowns")
+	float AbilityCooldown; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Costs")
+	float AbilityCost;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities")
 	EEnhancedActivationPolicy ActivationPolicy;
 	

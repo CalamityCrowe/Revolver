@@ -26,14 +26,7 @@ protected:
 	TObjectPtr<UProgressBar> HealthBar; 
 	
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
-	TObjectPtr<UHorizontalBox> TextFormatBox; 
-	
-	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
 	TObjectPtr<UTextBlock> CurrentHealthText; 
-	
-	UPROPERTY(EditDefaultsOnly, meta = (BindWidgetOptional))
-	TObjectPtr<UTextBlock> MaxHealthText;
-	
 	
 	
 	float Health; 
