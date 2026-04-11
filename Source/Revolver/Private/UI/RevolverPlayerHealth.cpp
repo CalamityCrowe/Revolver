@@ -34,9 +34,6 @@ void URevolverPlayerHealth::NativeConstruct()
 		FString HealthString = FString::Printf(TEXT("%.0f"), Health); 
 		CurrentHealthText->SetText(FText::FromString(HealthString)); 
 		
-		FString MaxHealthString = FString::Printf(TEXT("%.0f"), MaxHealth);
-		MaxHealthText->SetText(FText::FromString(MaxHealthString));
-		
 		ASC->GetGameplayAttributeValueChangeDelegate(UEnhancedAttributeSet::GetHealthAttribute()).AddUObject(this, &URevolverPlayerHealth::UpdateHealth);
 	}
 }
