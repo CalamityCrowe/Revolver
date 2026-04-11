@@ -55,7 +55,6 @@ void ABaseEnemySpawner::AttemptToSpawn()
 
 void ABaseEnemySpawner::OnEnemyDefeated()
 {
-	
 	if (OnEnemyDefeatedDelegate.IsBound())
 	{
 		OnEnemyDefeatedDelegate.Broadcast(); 

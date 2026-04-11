@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "RevolverGamemode.generated.h"
 
+class AWaveManager;
 /**
  * 
  */
@@ -15,5 +16,14 @@ class REVOLVER_API ARevolverGamemode : public AGameModeBase
 	GENERATED_BODY()
 	
 public: 
+	ARevolverGamemode(); 
 	
+	virtual void BeginPlay() override;
+	
+private: 
+	UPROPERTY()
+	AWaveManager* WaveManagerRef;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Classes, NoClear, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWaveManager> WaveManagerClass;
 };

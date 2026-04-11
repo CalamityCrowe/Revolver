@@ -5,7 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseEnemySpawner.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDefeated)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyDefeated);
 
 class UBoxComponent; 
 class AEnemyCharacter; 
@@ -32,7 +32,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UBoxComponent> BoxSpawner;
 	
-	UPROPERTY(EditDefautsOnly, BlueprintReadWrite, Category = "Spawner logic")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Spawner logic")
 	float SpawnTimer;
 	
 	UPROPERTY()
