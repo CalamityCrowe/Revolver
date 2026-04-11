@@ -70,6 +70,11 @@ void UBaseChordedAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,con
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
+bool UBaseChordedAbility::CheckCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
+	FGameplayTagContainer* OptionalRelevantTags) const
+{
+	return Super::CheckCost(Handle, ActorInfo, OptionalRelevantTags);
+}
 
 void UBaseChordedAbility::MontageStarted_Implementation()
 {
