@@ -7,15 +7,14 @@
 
 UBaseMenuWidget::UBaseMenuWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	
+	SetIsFocusable(true);
 }
 
 void UBaseMenuWidget::NativeOnActivated()
 {
 	Super::NativeOnActivated();
-	
-	
 }
+
 
 void UBaseMenuWidget::ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switcher, UWidget* InWidget)
 {

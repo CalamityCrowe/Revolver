@@ -12,8 +12,6 @@ UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Supe
 	OptionLabelText = FText::FromString("Option");
 }
 
-
-
 void UOptionsCycler::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -30,6 +28,17 @@ void UOptionsCycler::InitializeOption(const FText& CurrentOptionText, const TArr
 	DefaultSelectedIndex = CurrentDefaultIndex;
 	SetupWidgetDisplay();
 }
+
+void UOptionsCycler::UpdateSelection(int NewIndex)
+{
+	WR_OptionRotator->SetSelectedItem(NewIndex);
+}
+
+void UOptionsCycler::MarkAsCustom()
+{
+	WR_OptionRotator->MarkAsCustom();
+}
+
 void UOptionsCycler::SetupWidgetDisplay()
 {
 	CT_OptionName->SetText(OptionLabelText); 
@@ -42,9 +51,11 @@ void UOptionsCycler::SetupWidgetDisplay()
 void UOptionsCycler::OnPreviousButtonClicked()
 {
 	WR_OptionRotator->ShiftTextLeft(); 
+	OnOptionsChanged.Broadcast(WR_OptionRotator->GetSelectedIndex()); 
 }
 
 void UOptionsCycler::OnNextButtonClicked()
 {
 	WR_OptionRotator->ShiftTextRight(); 
+	OnOptionsChanged.Broadcast(WR_OptionRotator->GetSelectedIndex()); 
 }

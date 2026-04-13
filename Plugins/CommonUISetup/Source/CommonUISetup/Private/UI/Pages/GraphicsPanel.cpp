@@ -10,41 +10,65 @@
 
 UGraphicsPanel::UGraphicsPanel(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
-	
+	SetIsFocusable(true);
 }
 
 void UGraphicsPanel::InitializeOptions()
 {
+	// calls the parent function to clear the selection box
 	Super::InitializeOptions();
-	if (OptionsTable && OptionsCycleClass)
+	
+	// we invalidate these here so they are empty/null for using again
+	OverallOptions = nullptr;
+	OtherOptions.Empty();
+	
+	if (OptionsTable && OptionsCycleClass) // we check if the data table and the cycler class are valid
 	{
-		TArray<FName> RowNames = OptionsTable->GetRowNames();
+		// we then grab all the rows and loop through them
+		TArray<FName> RowNames = OptionsTable->GetRowNames(); 
 		for (FName RowName : RowNames)
 		{
-			FGraphicsConfig* RowData = OptionsTable->FindRow<FGraphicsConfig>(RowName, TEXT(""));
+			FGraphicsConfig* RowData = OptionsTable->FindRow<FGraphicsConfig>(RowName, TEXT("")); // we get the current graphics setting and check it is valid
 			if (RowData)
 			{
+				// we then create the widget to display the current setting and grab the setting it is representing
 				UOptionsCycler* OC = CreateWidget<UOptionsCycler>(GetWorld(),OptionsCycleClass);
 				FText EnumToText = StaticEnum<EGraphicsOptions>()->GetDisplayNameTextByValue(static_cast<int64>(RowData->GraphicsOptionType));
 				
-				
+				// we grab all the text values for the setting (medium, high , cinematic, etc)
 				TArray<FText> OptionValues;
 				RowData->Options.GenerateValueArray(OptionValues);
 
+				// we get all the values for the settings repressented by a string and set the default value
 				TArray<int> OptionsKeys;
 				RowData->Options.GenerateKeyArray(OptionsKeys);
 				int DefaultGraphicsOption = OptionsKeys.Find(GetGraphicsOptionValue(RowData->GraphicsOptionType));
 				
-				
+				// calls the initiallizer to do the final setup and set some padding
 				OC->InitializeOption(EnumToText,OptionValues,DefaultGraphicsOption);
 				OC->SetPadding(FMargin(0,0,0,10));
 
+				// we check if it is the overall setting and if so, we set the reference to the overall options
+				if (RowData->GraphicsOptionType == EGraphicsOptions::Overall)
+				{
+					OverallOptions = OC;
+				}
+				else
+				{
+					OtherOptions.AddUnique(OC);
+					OC->OnOptionsChanged.AddDynamic(this, &UGraphicsPanel::OnNonOverallOptionChanged);
+				}
+				// lastly we add it to the scroll box
 				SB_OptionsScroll->AddChild(OC);
 			}
 		}
+		
+		if (OverallOptions) // last we check if the overall options is valid and if so we bind the delegate to apply the settings correctly
+		OverallOptions->OnOptionsChanged.AddDynamic(this,&UGraphicsPanel::ChangeOverallValues); 
 	}
 }
 
+// this returns the current setting for the graphics option getting editted
 int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) const
 {
 	if (UGameUserSettings* CurrentGameSettings = UGameUserSettings::GetGameUserSettings())
@@ -84,3 +108,18 @@ int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) con
 	}
 	return 0;
 }
+
+
+void UGraphicsPanel::ChangeOverallValues(int SelectedIndex)
+{
+	for (UOptionsCycler* Option: OtherOptions) // loops through all the other options and makes them the index that has been passed in
+	{
+		Option->UpdateSelection(SelectedIndex);
+	}
+}
+
+void UGraphicsPanel::OnNonOverallOptionChanged(int32 SelectedIndex)
+{
+	OverallOptions->MarkAsCustom(); 
+}
+

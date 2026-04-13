@@ -18,6 +18,7 @@ class COMMONUISETUP_API UBaseMenuWidget : public UCommonActivatableWidget
 public: 
 
 	virtual void NativeOnActivated() override;
+
 	
 protected: 
 	 

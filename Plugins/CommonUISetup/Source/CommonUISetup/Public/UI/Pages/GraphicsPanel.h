@@ -7,6 +7,8 @@
 #include "MenuFiles/GraphicsOptions.h"
 #include "GraphicsPanel.generated.h"
 
+
+class UOptionsCycler; 
 /**
  * 
  */
@@ -21,5 +23,16 @@ protected:
 	
 private:
 	int GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions)const ; 
+	
+	UFUNCTION()
+	virtual void ChangeOverallValues(int SelectedIndex); 
+	UFUNCTION()
+	virtual void OnNonOverallOptionChanged(int32 SelectedIndex); 
+	
+	UPROPERTY()
+	TObjectPtr<UOptionsCycler> OverallOptions; 
+	
+	UPROPERTY()
+	TArray<TObjectPtr<UOptionsCycler>> OtherOptions;
 	
 };

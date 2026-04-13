@@ -24,8 +24,7 @@ public:
 	
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	
-	virtual FReply NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent) override;
-	
+	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 private: 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_NewGame;

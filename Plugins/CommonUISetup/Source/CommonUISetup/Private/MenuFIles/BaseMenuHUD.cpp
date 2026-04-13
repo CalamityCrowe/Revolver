@@ -18,11 +18,5 @@ void ABaseMenuHUD::BeginPlay()
 		MenuWidget = CreateWidget<UBaseMenuWidget>(GetWorld(), MenuWidgetClass);
 		MenuWidget->AddToViewport(); 
 		
-		if (APlayerController* PC = GetOwningPlayerController())
-		{
-			FInputModeUIOnly InputMode; 
-			InputMode.SetWidgetToFocus(MenuWidget->TakeWidget()); 
-			PC->SetInputMode(InputMode);
-		} 
 	}
 }

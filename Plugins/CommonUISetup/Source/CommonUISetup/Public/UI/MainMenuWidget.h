@@ -25,6 +25,7 @@ public:
 	
 	virtual void NativeConstruct() override;
 
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 	
 private: 
 	UPROPERTY(meta = (BindWidget))

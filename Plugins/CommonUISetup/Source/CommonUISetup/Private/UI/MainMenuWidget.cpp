@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // Common UI Setup Plugin
+#include "Components/VerticalBox.h"
 #include "UI/Components/BaseMenuButton.h"
 #include "UI/MainMenu/MainMenuSelector.h"
 #include "UI/MainMenu/SettingsMenuSelector.h"
@@ -16,6 +17,7 @@
 
 UMainMenuWidget::UMainMenuWidget(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
+	
 }
 
 void UMainMenuWidget::NativeConstruct()
@@ -47,6 +49,15 @@ void UMainMenuWidget::NativeConstruct()
 	ActivateWidget(); 
 }
 
+UWidget* UMainMenuWidget::NativeGetDesiredFocusTarget() const
+{
+	if (WM_MainMenu)
+	{
+		return WM_MainMenu->MenuSelector;
+	}
+	return Super::NativeGetDesiredFocusTarget();
+}
+
 void UMainMenuWidget::OnSettingsPressed()
 {
 	ChangeWidgetPanel(WS_MainMenu, WM_Settings); 
@@ -62,7 +73,7 @@ void UMainMenuWidget::OnQuitPressed()
 		ConfirmationWidget->ConfirmSelection.BindDynamic(this, &ThisClass::UMainMenuWidget::QuitConfirmation); 
 	}
 }
-
+#pragma region Switching widget panels
 void UMainMenuWidget::OnAudioOptionsPressed()
 {
 	ChangeWidgetPanel(WS_MainMenu, WM_AudioOptions);
@@ -87,6 +98,7 @@ void UMainMenuWidget::BackToSettingsPressed()
 {
 	ChangeWidgetPanel(WS_MainMenu, WM_Settings);
 }
+#pragma endregion
 
 void UMainMenuWidget::QuitConfirmation(bool Confirm)
 {

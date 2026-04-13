@@ -9,7 +9,7 @@
 
 UOptionsPanel::UOptionsPanel(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
-	
+	SetIsFocusable(true);	
 }
 
 void UOptionsPanel::NativePreConstruct()
@@ -19,11 +19,11 @@ void UOptionsPanel::NativePreConstruct()
 	{
 		CT_MenuText->SetText(MenuTextLabel); 
 	}
-	
+	// we call this here so we can see what this looks like in the editor before launching the game
 	InitializeOptions();
 	
 }
-
+// we bind the options back button on clicked event
 void UOptionsPanel::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -33,7 +33,7 @@ void UOptionsPanel::NativeConstruct()
 
 void UOptionsPanel::InitializeOptions()
 {
-	SB_OptionsScroll->ClearChildren(); 
+	SB_OptionsScroll->ClearChildren(); // emptys the widget
 }
 
 void UOptionsPanel::OnBackButtonPressed()
