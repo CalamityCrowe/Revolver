@@ -79,6 +79,9 @@ protected:
 	
 	virtual void InitializeOptions(); 
 	
+	UFUNCTION()
+	virtual void ApplyOptions(); 
+	
 private: 
 	void OnBackButtonPressed(); 
 };

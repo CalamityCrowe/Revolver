@@ -2,6 +2,8 @@
 
 
 #include "UI/Pages/GraphicsPanel.h"
+
+#include "IMediaControls.h"
 #include "Data/GraphicsSettingsTable.h"
 #include "Components/ScrollBox.h"
 #include "GameFramework/GameUserSettings.h"
@@ -20,7 +22,7 @@ void UGraphicsPanel::InitializeOptions()
 	
 	// we invalidate these here so they are empty/null for using again
 	OverallOptions = nullptr;
-	OtherOptions.Empty();
+	AllOptions.Empty();
 	
 	if (OptionsTable && OptionsCycleClass) // we check if the data table and the cycler class are valid
 	{
@@ -48,6 +50,8 @@ void UGraphicsPanel::InitializeOptions()
 				OC->InitializeOption(EnumToText,OptionValues,DefaultGraphicsOption);
 				OC->SetPadding(FMargin(0,0,0,10));
 
+				AllOptions.Add(RowData->GraphicsOptionType, OC); 
+				
 				// we check if it is the overall setting and if so, we set the reference to the overall options
 				if (RowData->GraphicsOptionType == EGraphicsOptions::Overall)
 				{
@@ -55,7 +59,6 @@ void UGraphicsPanel::InitializeOptions()
 				}
 				else
 				{
-					OtherOptions.AddUnique(OC);
 					OC->OnOptionsChanged.AddDynamic(this, &UGraphicsPanel::OnNonOverallOptionChanged);
 				}
 				// lastly we add it to the scroll box
@@ -68,6 +71,54 @@ void UGraphicsPanel::InitializeOptions()
 	}
 }
 
+void UGraphicsPanel::ApplyOptions()
+{
+	Super::ApplyOptions();
+	if (UGameUserSettings* CurrentGameSettings = UGameUserSettings::GetGameUserSettings())
+	{
+		for (TPair<EGraphicsOptions, UOptionsCycler*>& Option :AllOptions)
+		{
+			if (int32 SettingValue = Option.Value->GetCurrentSetting(); SettingValue >= 0)
+			{
+				switch (Option.Key)
+				{
+				case EGraphicsOptions::Overall:
+					CurrentGameSettings->SetOverallScalabilityLevel(SettingValue); 
+					break;
+				case EGraphicsOptions::GlobalIllumination:
+					CurrentGameSettings->SetGlobalIlluminationQuality(SettingValue);
+					break;
+				case EGraphicsOptions::Shadows:
+					CurrentGameSettings->SetShadowQuality(SettingValue);
+					break;
+				case EGraphicsOptions::AntiAliasing:
+					CurrentGameSettings->SetAntiAliasingQuality(SettingValue);
+					break;
+				case EGraphicsOptions::ViewDistance:
+					CurrentGameSettings->SetViewDistanceQuality(SettingValue);
+					break;
+				case EGraphicsOptions::TextureQuality:
+					CurrentGameSettings->SetTextureQuality(SettingValue);
+					break;
+				case EGraphicsOptions::Effects:
+					CurrentGameSettings->SetVisualEffectQuality(SettingValue);
+					break;
+				case EGraphicsOptions::Reflections:
+					CurrentGameSettings->SetReflectionQuality(SettingValue);
+					break;
+				case EGraphicsOptions::PostProcessing:
+					CurrentGameSettings->SetPostProcessingQuality(SettingValue);
+					break;
+				case EGraphicsOptions::COUNT:
+					// we do nothing
+					break;
+				}
+			}
+		}
+		CurrentGameSettings->ApplySettings(false); 
+	}
+}
+
 // this returns the current setting for the graphics option getting editted
 int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) const
 {
@@ -77,31 +128,22 @@ int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) con
 		{
 		case EGraphicsOptions::Overall:
 			return CurrentGameSettings->GetOverallScalabilityLevel();
-			break;
 		case EGraphicsOptions::GlobalIllumination:
 			return CurrentGameSettings->GetGlobalIlluminationQuality();
-			break;
 		case EGraphicsOptions::Shadows:
 			return CurrentGameSettings->GetShadowQuality();
-			break;
 		case EGraphicsOptions::AntiAliasing:
 			return CurrentGameSettings->GetAntiAliasingQuality();
-			break;
 		case EGraphicsOptions::ViewDistance:
 			return CurrentGameSettings->GetViewDistanceQuality();
-			break;
 		case EGraphicsOptions::TextureQuality:
 			return CurrentGameSettings->GetTextureQuality();
-			break;
 		case EGraphicsOptions::Effects:
 			return CurrentGameSettings->GetVisualEffectQuality();
-			break;
 		case EGraphicsOptions::Reflections:
 			return CurrentGameSettings->GetReflectionQuality();
-			break;
 		case EGraphicsOptions::PostProcessing:
 			return CurrentGameSettings->GetPostProcessingQuality();
-			break;
 		case EGraphicsOptions::COUNT:
 			break;
 		}
@@ -112,9 +154,12 @@ int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) con
 
 void UGraphicsPanel::ChangeOverallValues(int SelectedIndex)
 {
-	for (UOptionsCycler* Option: OtherOptions) // loops through all the other options and makes them the index that has been passed in
+	for (TPair<EGraphicsOptions, UOptionsCycler*>& Pair :AllOptions)
 	{
-		Option->UpdateSelection(SelectedIndex);
+		if (Pair.Key != EGraphicsOptions::Overall)
+		{
+			Pair.Value->UpdateSelection(SelectedIndex);
+		}
 	}
 }
 

@@ -29,11 +29,17 @@ void UOptionsPanel::NativeConstruct()
 	Super::NativeConstruct();
 	
 	WB_Back->OnClicked().AddUObject(this, &UOptionsPanel::OnBackButtonPressed); 
+	WB_Apply->OnClicked().AddUObject(this, &UOptionsPanel::ApplyOptions);
 }
 
 void UOptionsPanel::InitializeOptions()
 {
 	SB_OptionsScroll->ClearChildren(); // emptys the widget
+}
+
+void UOptionsPanel::ApplyOptions()
+{
+	
 }
 
 void UOptionsPanel::OnBackButtonPressed()

@@ -7,7 +7,7 @@
 #include "UI/Components/BaseMenuButton.h"
 #include "UI/Components/BaseOptionsRotator.h"
 
-UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer), bMarkedAsCustom(false)
 {
 	OptionLabelText = FText::FromString("Option");
 }
@@ -32,11 +32,22 @@ void UOptionsCycler::InitializeOption(const FText& CurrentOptionText, const TArr
 void UOptionsCycler::UpdateSelection(int NewIndex)
 {
 	WR_OptionRotator->SetSelectedItem(NewIndex);
+	bMarkedAsCustom = false;
 }
 
 void UOptionsCycler::MarkAsCustom()
 {
 	WR_OptionRotator->MarkAsCustom();
+	bMarkedAsCustom = true;
+}
+
+int32 UOptionsCycler::GetCurrentSetting() const
+{
+	if (WR_OptionRotator)
+	{
+		return bMarkedAsCustom == true ?  -1 : WR_OptionRotator->GetSelectedIndex(); // we return -1 for an invalid index
+	}
+	return DefaultSelectedIndex;
 }
 
 void UOptionsCycler::SetupWidgetDisplay()
@@ -52,10 +63,12 @@ void UOptionsCycler::OnPreviousButtonClicked()
 {
 	WR_OptionRotator->ShiftTextLeft(); 
 	OnOptionsChanged.Broadcast(WR_OptionRotator->GetSelectedIndex()); 
+	bMarkedAsCustom = false;
 }
 
 void UOptionsCycler::OnNextButtonClicked()
 {
 	WR_OptionRotator->ShiftTextRight(); 
 	OnOptionsChanged.Broadcast(WR_OptionRotator->GetSelectedIndex()); 
+	bMarkedAsCustom = false;
 }

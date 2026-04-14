@@ -21,8 +21,12 @@ protected:
 	
 	virtual void InitializeOptions() override;
 	
+	virtual void ApplyOptions() override;
+	
 private:
 	int GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions)const ; 
+	
+	
 	
 	UFUNCTION()
 	virtual void ChangeOverallValues(int SelectedIndex); 
@@ -31,8 +35,8 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UOptionsCycler> OverallOptions; 
+
 	
 	UPROPERTY()
-	TArray<TObjectPtr<UOptionsCycler>> OtherOptions;
-	
+	TMap<EGraphicsOptions,UOptionsCycler*>AllOptions;
 };
