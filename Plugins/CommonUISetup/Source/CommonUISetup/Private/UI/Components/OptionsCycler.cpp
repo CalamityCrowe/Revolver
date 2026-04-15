@@ -10,6 +10,7 @@
 UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer), bMarkedAsCustom(false)
 {
 	OptionLabelText = FText::FromString("Option");
+	DefaultSelectedIndex = 3; // we set it as 3 as the default will be high (3) in the options
 }
 
 void UOptionsCycler::NativePreConstruct()
@@ -34,6 +35,7 @@ void UOptionsCycler::UpdateSelection(int NewIndex)
 	WR_OptionRotator->SetSelectedItem(NewIndex);
 	bMarkedAsCustom = false;
 }
+
 
 void UOptionsCycler::MarkAsCustom()
 {

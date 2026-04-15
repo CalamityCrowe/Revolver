@@ -30,6 +30,7 @@ void UOptionsPanel::NativeConstruct()
 	
 	WB_Back->OnClicked().AddUObject(this, &UOptionsPanel::OnBackButtonPressed); 
 	WB_Apply->OnClicked().AddUObject(this, &UOptionsPanel::ApplyOptions);
+	WB_Reset->OnClicked().AddUObject(this, &UOptionsPanel::ResetOptions);
 }
 
 void UOptionsPanel::InitializeOptions()
@@ -38,6 +39,11 @@ void UOptionsPanel::InitializeOptions()
 }
 
 void UOptionsPanel::ApplyOptions()
+{
+	
+}
+
+void UOptionsPanel::ResetOptions()
 {
 	
 }

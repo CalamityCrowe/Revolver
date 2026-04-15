@@ -23,6 +23,10 @@ protected:
 	
 	virtual void ApplyOptions() override;
 	
+	virtual void ResetOptions() override;
+	
+	int32 DefaultSelectedIndex;
+	
 private:
 	int GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions)const ; 
 	

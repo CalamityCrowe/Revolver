@@ -82,6 +82,9 @@ protected:
 	UFUNCTION()
 	virtual void ApplyOptions(); 
 	
+	UFUNCTION()
+	virtual void ResetOptions();
+	
 private: 
 	void OnBackButtonPressed(); 
 };

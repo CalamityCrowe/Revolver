@@ -10,7 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/Components/OptionsCycler.h"
 
-UGraphicsPanel::UGraphicsPanel(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+UGraphicsPanel::UGraphicsPanel(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer), DefaultSelectedIndex(2)
 {
 	SetIsFocusable(true);
 }
@@ -119,6 +119,16 @@ void UGraphicsPanel::ApplyOptions()
 	}
 }
 
+void UGraphicsPanel::ResetOptions()
+{
+	Super::ResetOptions();
+	for (TPair<EGraphicsOptions, UOptionsCycler*>& Option :AllOptions)
+	{
+		Option.Value->UpdateSelection(DefaultSelectedIndex); 
+	}
+	ApplyOptions(); 
+}
+
 // this returns the current setting for the graphics option getting editted
 int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) const
 {
@@ -150,7 +160,6 @@ int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) con
 	}
 	return 0;
 }
-
 
 void UGraphicsPanel::ChangeOverallValues(int SelectedIndex)
 {
