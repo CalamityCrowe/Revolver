@@ -24,14 +24,35 @@ void UBaseSlider::NativePreConstruct()
 	{
 		CT_OptionText->SetText(OptionLabelText); 
 	}
-	
+	if (S_SliderSetting)
+	{
+		S_SliderSetting->OnValueChanged.RemoveDynamic(this, &UBaseSlider::UpdateValue);
+		S_SliderSetting->OnValueChanged.AddDynamic(this, &ThisClass::UpdateValue); 
+	}
+	if (DM_SliderFill)
+	{
+		UpdateValue(DefaultValue);
+	}
+}
+
+void UBaseSlider::InitializeSlider(FText OptionName, float InValue)
+{
+	DefaultValue = InValue;
+	OptionLabelText = OptionName; 
 	SetupSliderMaterial(); 
+}
+
+float UBaseSlider::GetSliderValue() const
+{
+	return S_SliderSetting->GetValue();
 }
 
 void UBaseSlider::SetupSliderMaterial()
 {
 	if (MI_SliderMaterial)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Purple, "FUCK YOU VOLUME"); 
+		
 		DM_SliderFill = UMaterialInstanceDynamic::Create(MI_SliderMaterial,this);
 		
 		if (!DM_SliderFill)
@@ -46,10 +67,6 @@ void UBaseSlider::SetupSliderMaterial()
 		
 		S_SliderSetting->SetWidgetStyle(SliderStyle);
 		
-
-		
-		S_SliderSetting->OnValueChanged.AddDynamic(this, &ThisClass::OnSliderChanged); 
-		
 		DM_SliderFill->SetScalarParameterValue("Max Percent", S_SliderSetting->GetMaxValue()); 
 		S_SliderSetting->SetValue(DefaultValue); 
 		if (CT_SliderValue)
@@ -61,10 +78,12 @@ void UBaseSlider::SetupSliderMaterial()
 	
 }
 
-void UBaseSlider::OnSliderChanged(float NewValue)
+void UBaseSlider::UpdateValue(float NewValue)
 {
-	if (CT_SliderValue)
+	if (!CT_SliderValue || !S_SliderSetting || !DM_SliderFill)
 	{
+		return;
+	}
 		float ClampedValue = FMath::GetMappedRangeValueClamped(
 	 FVector2D(S_SliderSetting->GetMinValue(), S_SliderSetting->GetMaxValue()),
 	FVector2D(InputMinRange, InputMaxRange),
@@ -75,5 +94,5 @@ void UBaseSlider::OnSliderChanged(float NewValue)
 		Format.MinimumIntegralDigits = 2; 
 		
 		CT_SliderValue->SetText(FText::AsNumber(ClampedValue, &Format)); 
-	}
+	
 }

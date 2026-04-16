@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Class.h"
 #include "GraphicsOptions.generated.h"
 
 UENUM(Blueprintable)
@@ -19,5 +18,7 @@ enum class EGraphicsOptions : uint8
 	Effects UMETA(DisplayName = "Effects"),
 	Reflections UMETA(DisplayName = "Reflections"),
 	PostProcessing UMETA(DisplayName = "Post Processing"),
+	Foliage UMETA(DisplayName = "Foliage"),
+	Shading UMETA(DisplayName = "Shading"),
 	COUNT UMETA (Hidden)
 };

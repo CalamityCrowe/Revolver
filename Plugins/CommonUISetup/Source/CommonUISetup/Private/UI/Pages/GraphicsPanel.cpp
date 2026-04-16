@@ -109,6 +109,12 @@ void UGraphicsPanel::ApplyOptions()
 				case EGraphicsOptions::PostProcessing:
 					CurrentGameSettings->SetPostProcessingQuality(SettingValue);
 					break;
+				case EGraphicsOptions::Foliage:
+					CurrentGameSettings->SetFoliageQuality(SettingValue);
+					break;
+				case EGraphicsOptions::Shading: 
+					CurrentGameSettings->SetShadingQuality(SettingValue);
+					break;
 				case EGraphicsOptions::COUNT:
 					// we do nothing
 					break;
@@ -154,6 +160,10 @@ int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) con
 			return CurrentGameSettings->GetReflectionQuality();
 		case EGraphicsOptions::PostProcessing:
 			return CurrentGameSettings->GetPostProcessingQuality();
+		case EGraphicsOptions::Foliage: 
+			return CurrentGameSettings->GetFoliageQuality();
+		case EGraphicsOptions::Shading: 
+			return CurrentGameSettings->GetShadingQuality();
 		case EGraphicsOptions::COUNT:
 			break;
 		}

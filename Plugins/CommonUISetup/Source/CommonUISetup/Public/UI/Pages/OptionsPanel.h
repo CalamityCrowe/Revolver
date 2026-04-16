@@ -32,9 +32,7 @@ public:
 	virtual void NativeConstruct() override;
 	
 	FOnButtonPressed OnBackPressed; 
-	
-	
-	
+
 protected:
 	
 	UPROPERTY(meta = (BindWidget))
@@ -72,7 +70,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Options Panel|Data Table")
 	TObjectPtr<UDataTable> OptionsTable; 
 	
-	UPROPERTY(EditAnywhere, Category = "Options Panel|Data Table")
+	UPROPERTY(EditAnywhere, Category = "Options Panel|Widgets")
 	TSubclassOf<UOptionsCycler> OptionsCycleClass;
 	
 protected: 
