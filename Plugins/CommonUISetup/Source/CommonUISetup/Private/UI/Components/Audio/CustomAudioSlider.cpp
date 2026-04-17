@@ -16,6 +16,7 @@ void UCustomAudioSlider::InitializeSoundSettings(USoundClass* soundClass, USound
 	SoundMix = soundMix;
 }
 
+// we just add a final step to make sure that the volume is set correctly in relation to the slider 
 void UCustomAudioSlider::UpdateValue(float NewValue)
 {
 	Super::UpdateValue(NewValue);

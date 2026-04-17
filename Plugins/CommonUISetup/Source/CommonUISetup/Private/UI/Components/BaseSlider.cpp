@@ -49,17 +49,17 @@ float UBaseSlider::GetSliderValue() const
 
 void UBaseSlider::SetupSliderMaterial()
 {
+	// we check if the slider material is valid
 	if (MI_SliderMaterial)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Purple, "FUCK YOU VOLUME"); 
-		
+		// we create a dynamic instance of the slider and then check if it is valid
 		DM_SliderFill = UMaterialInstanceDynamic::Create(MI_SliderMaterial,this);
-		
 		if (!DM_SliderFill)
 		{
 			return; 
 		}
 		
+		// we then set this material for each of the possible states for the slider
 		FSliderStyle SliderStyle = S_SliderSetting->GetWidgetStyle();
 		SliderStyle.NormalBarImage.SetResourceObject(DM_SliderFill);
 		SliderStyle.HoveredBarImage.SetResourceObject(DM_SliderFill);
@@ -67,6 +67,7 @@ void UBaseSlider::SetupSliderMaterial()
 		
 		S_SliderSetting->SetWidgetStyle(SliderStyle);
 		
+		// we lastly apply any material parameters here as well, along with the value in the text
 		DM_SliderFill->SetScalarParameterValue("Max Percent", S_SliderSetting->GetMaxValue()); 
 		S_SliderSetting->SetValue(DefaultValue); 
 		if (CT_SliderValue)
@@ -80,14 +81,18 @@ void UBaseSlider::SetupSliderMaterial()
 
 void UBaseSlider::UpdateValue(float NewValue)
 {
+	
+	// we exit ouyt of the updating if any of the values are not valid
 	if (!CT_SliderValue || !S_SliderSetting || !DM_SliderFill)
 	{
 		return;
 	}
+	// we clamp the slider based on an input range set in the editor
 		float ClampedValue = FMath::GetMappedRangeValueClamped(
 	 FVector2D(S_SliderSetting->GetMinValue(), S_SliderSetting->GetMaxValue()),
 	FVector2D(InputMinRange, InputMaxRange),
 	NewValue);
+	// we format the slider and text here
 		DM_SliderFill->SetScalarParameterValue(FillMaterialParameter, NewValue);
 		FNumberFormattingOptions Format;
 		Format.MaximumFractionalDigits = 0; 

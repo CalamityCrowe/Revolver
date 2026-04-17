@@ -34,7 +34,7 @@ void UGraphicsPanel::InitializeOptions()
 			if (RowData)
 			{
 				// we then create the widget to display the current setting and grab the setting it is representing
-				UOptionsCycler* OC = CreateWidget<UOptionsCycler>(GetWorld(),OptionsCycleClass);
+				UOptionsCycler* OC = CreateWidget<UOptionsCycler>(this,OptionsCycleClass);
 				FText EnumToText = StaticEnum<EGraphicsOptions>()->GetDisplayNameTextByValue(static_cast<int64>(RowData->GraphicsOptionType));
 				
 				// we grab all the text values for the setting (medium, high , cinematic, etc)
@@ -171,6 +171,7 @@ int UGraphicsPanel::GetGraphicsOptionValue(EGraphicsOptions GraphicsOptions) con
 	return 0;
 }
 
+// we loop all the settings and apply the same setting to all of them
 void UGraphicsPanel::ChangeOverallValues(int SelectedIndex)
 {
 	for (TPair<EGraphicsOptions, UOptionsCycler*>& Pair :AllOptions)

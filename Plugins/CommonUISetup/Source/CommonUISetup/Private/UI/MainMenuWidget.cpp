@@ -49,15 +49,6 @@ void UMainMenuWidget::NativeConstruct()
 	ActivateWidget(); 
 }
 
-UWidget* UMainMenuWidget::NativeGetDesiredFocusTarget() const
-{
-	if (WM_MainMenu)
-	{
-		return WM_MainMenu->MenuSelector;
-	}
-	return Super::NativeGetDesiredFocusTarget();
-}
-
 void UMainMenuWidget::OnSettingsPressed()
 {
 	ChangeWidgetPanel(WS_MainMenu, WM_Settings); 
