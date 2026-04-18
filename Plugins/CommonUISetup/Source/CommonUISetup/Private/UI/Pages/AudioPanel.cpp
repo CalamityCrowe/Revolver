@@ -65,7 +65,7 @@ void UAudioPanel::InitalizeSliders()
 					// the standard initiallization stuff
 					AS->InitializeSlider(RowData->SoundClassName, Volume); 
 					AS->InitializeSoundSettings(RowData->SoundClass, RowData->SoundClassMix); 
-					AS->SetPadding(FMargin(0.f,0.f,0.f,10.f));
+					AS->SetPadding(OptionsPadding);
 					VolumeSliders.Add(RowName,AS); 
 					
 					SB_OptionsScroll->AddChild(AS); 
@@ -100,7 +100,7 @@ void UAudioPanel::OnAudioDevicesObtained(const TArray<FAudioOutputDeviceInfo>& A
 	if (AudioDeviceCycler && SB_OptionsScroll)
 	{
 		AudioDeviceCycler->InitializeOption(OptionText,AudioDevicesText,ActiveAudioDevice);
-		AudioDeviceCycler->SetPadding(FMargin(0.f,0.f,0.f,10.f));
+		AudioDeviceCycler->SetPadding(OptionsPadding);
 		AudioDeviceCycler->OnOptionsChanged.AddDynamic(this,&UAudioPanel::OnAudioDeviceChanged); 
 		
 		SB_OptionsScroll->AddChild(AudioDeviceCycler);

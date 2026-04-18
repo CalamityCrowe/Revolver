@@ -12,7 +12,7 @@ class UOptionsCycler;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UGraphicsPanel : public UOptionsPanel
 {
 	GENERATED_UCLASS_BODY()

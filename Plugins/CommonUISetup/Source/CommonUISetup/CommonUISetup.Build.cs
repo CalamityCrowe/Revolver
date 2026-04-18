@@ -45,7 +45,8 @@ public class CommonUISetup : ModuleRules
 				"Slate",
 				"SlateCore",
 				"AudioMixer",
-				"AudioMixerCore"
+				"AudioMixerCore", 
+				"ApplicationCore"
 
 				
 				// ... add private dependencies that you statically link with here ...	

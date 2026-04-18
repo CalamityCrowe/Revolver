@@ -63,6 +63,8 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Back; 
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Options Panel")
+	FMargin OptionsPadding;
 	
 	UPROPERTY(EditAnywhere, Category = "Options Panel")
 	FText MenuTextLabel;

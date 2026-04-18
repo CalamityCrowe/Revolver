@@ -48,7 +48,7 @@ void UGraphicsPanel::InitializeOptions()
 				
 				// calls the initiallizer to do the final setup and set some padding
 				OC->InitializeOption(EnumToText,OptionValues,DefaultGraphicsOption);
-				OC->SetPadding(FMargin(0,0,0,10));
+				OC->SetPadding(OptionsPadding);
 
 				AllOptions.Add(RowData->GraphicsOptionType, OC); 
 				

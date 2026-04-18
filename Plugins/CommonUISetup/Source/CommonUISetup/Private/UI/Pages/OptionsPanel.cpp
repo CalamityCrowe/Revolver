@@ -10,6 +10,7 @@
 UOptionsPanel::UOptionsPanel(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
 	SetIsFocusable(true);	
+	OptionsPadding = FMargin(0.0f,5.0f);
 }
 
 void UOptionsPanel::NativePreConstruct()

@@ -43,7 +43,7 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UOptionsPanel> WM_VideoOptions;
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UOptionsPanel> WM_ControlsOptions;
+	TObjectPtr<UOptionsPanel> WM_DisplayOptions;
 	
 
 	UPROPERTY(EditDefaultsOnly,meta = (AllowPrivateAccess), Category = "Quit Widget")
@@ -80,5 +80,5 @@ private:
 	
 private: 
 	
-	bool AllPagesSet()const {return (WM_MainMenu && WM_Settings && WM_AudioOptions && WM_VideoOptions && WM_ControlsOptions);}
+	bool AllPagesSet()const {return (WM_MainMenu && WM_Settings && WM_AudioOptions && WM_VideoOptions && WM_DisplayOptions);}
 };

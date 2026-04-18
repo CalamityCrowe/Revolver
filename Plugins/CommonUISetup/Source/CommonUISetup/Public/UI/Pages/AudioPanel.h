@@ -11,12 +11,10 @@ class UCustomAudioSlider;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UAudioPanel : public UOptionsPanel
 {
 	GENERATED_UCLASS_BODY()
-public: 
-	
 protected:
 	virtual void InitializeOptions() override;
 	virtual void ApplyOptions() override;

@@ -16,7 +16,7 @@ void USettingsMenuSelector::NativeConstruct()
 	
 	WB_Audio->OnClicked().AddUObject(this, &USettingsMenuSelector::OnAudioButtonPressed); 
 	WB_Video->OnClicked().AddUObject(this, &USettingsMenuSelector::OnVideoButtonPressed);
-	WB_Controls->OnClicked().AddUObject(this, &USettingsMenuSelector::OnControlsButtonPressed);
+	WB_Display->OnClicked().AddUObject(this, &USettingsMenuSelector::OnDisplayButtonPressed);
 	WB_Back->OnClicked().AddUObject(this, &USettingsMenuSelector::OnBackButtonPressed);
 }
 
@@ -36,11 +36,11 @@ void USettingsMenuSelector::OnVideoButtonPressed()
 	}
 }
 
-void USettingsMenuSelector::OnControlsButtonPressed()
+void USettingsMenuSelector::OnDisplayButtonPressed()
 {
-	if (OnControlsPressed.IsBound())
+	if (OnDisplayPressed.IsBound())
 	{
-		OnControlsPressed.Execute();
+		OnDisplayPressed.Execute();
 	}
 }
 

@@ -33,7 +33,7 @@ void UMainMenuWidget::NativeConstruct()
 		// Settings Tab Buttons 
 		WM_Settings->OnAudioPressed.BindDynamic(this, &ThisClass::OnAudioOptionsPressed); 
 		WM_Settings->OnVideoPressed.BindDynamic(this, &ThisClass::OnVideoOptionsPressed);
-		WM_Settings->OnControlsPressed.BindDynamic(this, &ThisClass::OnControlsOptionsPressed);
+		WM_Settings->OnDisplayPressed.BindDynamic(this, &ThisClass::OnControlsOptionsPressed);
 		WM_Settings->OnBackPressed.BindDynamic(this, &ThisClass::BackToMainMenuPressed); 
 	
 		// Audio Options button
@@ -43,7 +43,7 @@ void UMainMenuWidget::NativeConstruct()
 		WM_VideoOptions->OnBackPressed.BindDynamic(this, &ThisClass::BackToSettingsPressed);
 		
 		// controls Options button 
-		WM_ControlsOptions->OnBackPressed.BindDynamic(this, &ThisClass::BackToSettingsPressed);
+		WM_DisplayOptions->OnBackPressed.BindDynamic(this, &ThisClass::BackToSettingsPressed);
 	}
 	
 	ActivateWidget(); 
@@ -77,7 +77,7 @@ void UMainMenuWidget::OnVideoOptionsPressed()
 
 void UMainMenuWidget::OnControlsOptionsPressed()
 {
-	ChangeWidgetPanel(WS_MainMenu, WM_ControlsOptions);
+	ChangeWidgetPanel(WS_MainMenu, WM_DisplayOptions);
 }
 
 void UMainMenuWidget::BackToMainMenuPressed()
