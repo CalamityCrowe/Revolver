@@ -4,6 +4,7 @@
 #include "MenuFIles/BaseMenuHUD.h"
 
 #include "UI/BaseMenuWidget.h"
+#include "UI/BaseLayout.h"
 
 ABaseMenuHUD::ABaseMenuHUD()
 {
@@ -13,10 +14,11 @@ void ABaseMenuHUD::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (MenuWidgetClass)
+	if (BaseLayoutClass)
 	{
-		MenuWidget = CreateWidget<UBaseMenuWidget>(GetWorld(), MenuWidgetClass);
-		MenuWidget->AddToViewport(); 
+		BaseLayout = CreateWidget<UBaseLayout>(PlayerOwner, BaseLayoutClass);
+		BaseLayout->AddToViewport(); 
 		
+		BaseLayout->PushWidget(MenuWidgetClass); 
 	}
 }

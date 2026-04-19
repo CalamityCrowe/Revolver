@@ -3,6 +3,7 @@
 
 #include "MenuFiles/MainMenuController.h"
 
+
 AMainMenuController::AMainMenuController()
 {
 	
@@ -11,5 +12,5 @@ AMainMenuController::AMainMenuController()
 void AMainMenuController::BeginPlay()
 {
 	Super::BeginPlay();
-	SetInputMode(FInputModeUIOnly()); 
+	SetInputMode(FInputModeGameOnly());
 }

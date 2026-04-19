@@ -8,6 +8,7 @@
 UBaseMenuWidget::UBaseMenuWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	SetIsFocusable(true);
+	SetConsumePointerInput(true);
 }
 
 void UBaseMenuWidget::NativeOnActivated()
@@ -34,8 +35,6 @@ void UBaseMenuWidget::ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switch
 
 TOptional<FUIInputConfig> UBaseMenuWidget::GetDesiredInputConfig() const
 {
-	UE_LOG(LogTemp, Warning, TEXT("GetDesiredInputConfig called!"));
-
 	FUIInputConfig config = FUIInputConfig(ECommonInputMode::Menu,EMouseCaptureMode::CapturePermanently,false);
 	config.bIgnoreLookInput = true;
 	config.bIgnoreMoveInput = true;

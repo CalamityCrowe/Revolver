@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "BaseMenuHUD.generated.h"
 
+class UCommonActivatableWidget;
+class UBaseLayout;
 class UBaseMenuWidget; 
 class UCommonActivatableWidgetStack;
 /**
@@ -25,10 +27,15 @@ public:
 private: 
 	
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
-	TSubclassOf<UBaseMenuWidget> MenuWidgetClass;
+	TSubclassOf<UCommonActivatableWidget> MenuWidgetClass;
+	
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = true))
+	TSubclassOf<UBaseLayout> BaseLayoutClass;
 	
 	UCommonActivatableWidgetStack* MenuStack; 
 	
 	UPROPERTY()
 	UBaseMenuWidget* MenuWidget;
+	UPROPERTY()
+	UBaseLayout* BaseLayout;
 };
