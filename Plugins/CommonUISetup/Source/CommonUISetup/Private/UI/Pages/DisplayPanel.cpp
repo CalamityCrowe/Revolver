@@ -4,7 +4,7 @@
 #include "UI/Pages/DisplayPanel.h"
 
 #include "Components/ScrollBox.h"
-#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "UI/Components/OptionsCycler.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Subsystem/ExtendedUserSettingsSubsystem.h"
@@ -22,8 +22,8 @@ UDisplayPanel::UDisplayPanel(const FObjectInitializer& ObjectInitializer) : Supe
 
 void UDisplayPanel::NativePreConstruct()
 {
-	UGameInstance* GI = GetGameInstance();
-	if (GI)
+	
+	if (UGameInstance* GI = GetGameInstance())
 	{
 		ExtendedUserSettingsSubsystem = GI->GetSubsystem<UExtendedUserSettingsSubsystem>();
 	}
@@ -92,14 +92,24 @@ void UDisplayPanel::InitializeWindowModeSetting()
 
 void UDisplayPanel::InitializeResolutionSetting()
 {
+	Resolutions.Empty();
+	
+	TArray<FIntPoint> TempResolutions; 
+	if (UKismetSystemLibrary::GetSupportedFullscreenResolutions(TempResolutions))
+	{
+		for (const FIntPoint& Resolution : TempResolutions)
+		{
+			FFormatNamedArguments Args; 
+			Args.Add(TEXT("X"), Resolution.X);
+			Args.Add(TEXT("Y"), Resolution.Y);
+			Resolutions.Add(FText::Format(NSLOCTEXT("Display","ResolutionFormat", "{X}x{Y}"), Args)); 
+		}
+	} 
+		
 	if (UOptionsCycler* OC = CreateWidget<UOptionsCycler>(this, OptionsCycleClass))
 	{
 		ResolutionCycler = OC;
-		TArray<FText> Resolutions = TArray<FText>
-		{
-			FText(FText::FromString("1920x1080")),
-			FText(FText::FromString("1280x720"))
-		}; 
+		
 		ResolutionCycler->InitializeOption(ResolutionText,Resolutions, 0);
 		ResolutionCycler->SetPadding(OptionsPadding);
 		SB_OptionsScroll->AddChild(OC);
@@ -111,15 +121,20 @@ void UDisplayPanel::InitializeFPSLimitSettings()
 	if (UOptionsCycler* OC = CreateWidget<UOptionsCycler>(this, OptionsCycleClass))
 	{
 		FPSLimitCycler = OC;
-		TArray<FText> FPSLimits = TArray<FText>
+		TArray<FText> FPSLimitsText; 
+		for (int FPS: FPSLimits)
 		{
-			FText(FText::FromString("144")),
-			FText(FText::FromString("60"))
-		}; 
-		FPSLimitCycler->InitializeOption(FPSLimitText,FPSLimits, 0);
+			FPSLimitsText.Add(FText::FromString(FString::FromInt(FPS))); 
+		}
+		FPSLimitCycler->InitializeOption(FPSLimitText,FPSLimitsText, 0);
 		FPSLimitCycler->SetPadding(OptionsPadding);
 		SB_OptionsScroll->AddChild(OC);
 	}
+}
+
+void UDisplayPanel::ApplyFPS(UGameUserSettings* US)
+{
+	US->SetFrameRateLimit(FPSLimits[FPSLimitCycler->GetCurrentSetting()]);
 }
 
 void UDisplayPanel::ApplyActiveDisplay()
@@ -130,20 +145,34 @@ void UDisplayPanel::ApplyActiveDisplay()
 		ExtendedUserSettingsSubsystem->SetActiveDisplay(MonitorInfo.ID); 
 	}
 }
-void UDisplayPanel::ApplyWindowModeSettings()
+void UDisplayPanel::ApplyWindowModeSettings(UGameUserSettings* US)
 {
-	if (UGameUserSettings* US = UGameUserSettings::GetGameUserSettings())
+	US->SetFullscreenMode(AllWindowModes[WindowModeCycler->GetCurrentSetting()]);
+}
+
+void UDisplayPanel::ApplyResolution(UGameUserSettings* US)
+{
+	TArray<FIntPoint> TempResolutions;
+	if (UKismetSystemLibrary::GetSupportedFullscreenResolutions(TempResolutions))
 	{
-		US->SetFullscreenMode(AllWindowModes[WindowModeCycler->GetCurrentSetting()]);
-		US->ApplyResolutionSettings(false); 
+		FIntPoint SelectedResolution = TempResolutions[ResolutionCycler->GetCurrentSetting()];
+		UE_LOG(LogTemp, Warning, TEXT("Setting resolution: %dx%d"), SelectedResolution.X, SelectedResolution.Y);
+		US->SetScreenResolution(SelectedResolution);
 	}
 }
 
 void UDisplayPanel::ApplyOptions()
 {
 	Super::ApplyOptions();
-	ApplyWindowModeSettings(); 
-	ApplyActiveDisplay();
+	if (UGameUserSettings* US = UGameUserSettings::GetGameUserSettings())
+	{
+		ApplyFPS(US); 
+		ApplyActiveDisplay();
+		ApplyResolution(US);
+		ApplyWindowModeSettings(US); 
+		US->ApplySettings(false); 
+
+	} 
 }
 
 void UDisplayPanel::ResetOptions()

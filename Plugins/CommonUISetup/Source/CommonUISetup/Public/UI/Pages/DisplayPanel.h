@@ -45,6 +45,10 @@ protected:
 	
 	TArray<FText> WindowModesArray;
 	TArray<FText> DisplayNames; 
+	TArray<FText> Resolutions; 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Options Panel|Display Options")
+	TArray<int> FPSLimits;
+	
 	TArray<FMonitorInfo> AllDisplays; 
 	
 	UPROPERTY()
@@ -55,7 +59,9 @@ private:
 	void InitializeResolutionSetting();
 	void InitializeFPSLimitSettings();
 	
+	void ApplyFPS(UGameUserSettings* US);
 	void ApplyActiveDisplay(); 
-	void ApplyWindowModeSettings();
-	
+	void ApplyWindowModeSettings(UGameUserSettings* US);
+	void ApplyResolution(UGameUserSettings* US);
+
 };

@@ -3,7 +3,6 @@
 
 #include "Components/PooledComponent.h"
 
-#include "ToolBuilderUtil.h"
 #include "Actors/PooledActor.h"
 
 UPooledComponent::UPooledComponent()
