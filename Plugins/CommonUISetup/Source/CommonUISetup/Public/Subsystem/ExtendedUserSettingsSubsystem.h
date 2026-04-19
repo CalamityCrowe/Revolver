@@ -17,5 +17,6 @@ class COMMONUISETUP_API UExtendedUserSettingsSubsystem : public UGameInstanceSub
 public: 
 	TArray<FMonitorInfo> GetAllMonitorInfo() const; 
 	
+	void SetActiveDisplay(const FString& DisplayID); 
 	
 };

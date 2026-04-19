@@ -6,6 +6,7 @@
 #include "OptionsPanel.h"
 #include "DisplayPanel.generated.h"
 
+class UExtendedUserSettingsSubsystem;
 /**
  * 
  */
@@ -14,6 +15,9 @@ class COMMONUISETUP_API UDisplayPanel : public UOptionsPanel
 {
 	GENERATED_UCLASS_BODY()
 protected:
+	
+	virtual void NativePreConstruct() override;
+	
 	virtual void InitializeOptions() override;
 	virtual void ApplyOptions() override;
 	virtual void ResetOptions() override;
@@ -41,12 +45,17 @@ protected:
 	
 	TArray<FText> WindowModesArray;
 	TArray<FText> DisplayNames; 
+	TArray<FMonitorInfo> AllDisplays; 
+	
+	UPROPERTY()
+	UExtendedUserSettingsSubsystem* ExtendedUserSettingsSubsystem;
 private: 
 	void InitializeMonitorSetting();
 	void InitializeWindowModeSetting();
 	void InitializeResolutionSetting();
 	void InitializeFPSLimitSettings();
 	
+	void ApplyActiveDisplay(); 
 	void ApplyWindowModeSettings();
 	
 };

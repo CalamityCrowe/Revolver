@@ -14,12 +14,22 @@ UDisplayPanel::UDisplayPanel(const FObjectInitializer& ObjectInitializer) : Supe
 	const UEnum* EnumPtr = StaticEnum<EWindowMode::Type>();
 	for (int32 i = 0; i < EnumPtr->NumEnums() -1; i++)
 	{
-		AllWindowModes.Add((EWindowMode::Type)EnumPtr->GetValueByIndex(i));
+		AllWindowModes.Add(static_cast<EWindowMode::Type>(EnumPtr->GetValueByIndex(i)));
 	}
 	
 }
 
 
+void UDisplayPanel::NativePreConstruct()
+{
+	UGameInstance* GI = GetGameInstance();
+	if (GI)
+	{
+		ExtendedUserSettingsSubsystem = GI->GetSubsystem<UExtendedUserSettingsSubsystem>();
+	}
+	Super::NativePreConstruct();
+	
+}
 
 void UDisplayPanel::InitializeOptions()
 {
@@ -38,15 +48,14 @@ void UDisplayPanel::InitializeOptions()
 void UDisplayPanel::InitializeMonitorSetting()
 {
 	DisplayNames.Empty();
+	AllDisplays.Empty();
 	
-	if (UGameInstance* GI = GetGameInstance())
+	if (ExtendedUserSettingsSubsystem)
 	{
-		if (UExtendedUserSettingsSubsystem* ExtendedSubsystem = GI->GetSubsystem<UExtendedUserSettingsSubsystem>())
+		AllDisplays = ExtendedUserSettingsSubsystem->GetAllMonitorInfo();
+		for (FMonitorInfo Monitor : AllDisplays)
 		{
-			for (FMonitorInfo Monitor : ExtendedSubsystem->GetAllMonitorInfo())
-			{
-				DisplayNames.Add(FText::FromString(Monitor.Name)); 
-			} 
+			DisplayNames.Add(FText::FromString(Monitor.Name));
 		}
 	}
 	
@@ -113,6 +122,14 @@ void UDisplayPanel::InitializeFPSLimitSettings()
 	}
 }
 
+void UDisplayPanel::ApplyActiveDisplay()
+{
+	FMonitorInfo MonitorInfo = AllDisplays[MonitorCycler->GetCurrentSetting()];
+	if (ExtendedUserSettingsSubsystem)
+	{
+		ExtendedUserSettingsSubsystem->SetActiveDisplay(MonitorInfo.ID); 
+	}
+}
 void UDisplayPanel::ApplyWindowModeSettings()
 {
 	if (UGameUserSettings* US = UGameUserSettings::GetGameUserSettings())
@@ -126,6 +143,7 @@ void UDisplayPanel::ApplyOptions()
 {
 	Super::ApplyOptions();
 	ApplyWindowModeSettings(); 
+	ApplyActiveDisplay();
 }
 
 void UDisplayPanel::ResetOptions()
