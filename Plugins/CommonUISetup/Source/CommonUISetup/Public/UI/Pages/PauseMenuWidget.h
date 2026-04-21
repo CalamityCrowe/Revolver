@@ -6,11 +6,30 @@
 #include "BaseMenuWidget.h"
 #include "PauseMenuWidget.generated.h"
 
+
+class UPauseMenuSelector;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract,  HideDropdown)
 class COMMONUISETUP_API UPauseMenuWidget : public UBaseMenuWidget
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
+public: 
+	virtual void NativeConstruct() override; 
+protected: 
+	
+	UPROPERTY(Meta = (BindWidget))
+	TObjectPtr<UPauseMenuSelector> WM_PauseSelector;
+	
+	
+	UFUNCTION()
+	virtual void OnResumeGamePressed(); 
+	UFUNCTION()
+	virtual void OnMainMenuPressed(); 
+	
+	
+	virtual void BackToMainMenuPressed() override;
+	
+	virtual bool AllPagesSet() const override{return (WM_PauseSelector && Super::AllPagesSet());};
 };

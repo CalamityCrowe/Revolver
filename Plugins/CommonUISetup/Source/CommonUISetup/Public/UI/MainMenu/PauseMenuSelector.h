@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "UI/Components/BaseMenuSelector.h"
-#include "PauseGameSelector.generated.h"
+#include "PauseMenuSelector.generated.h"
 
 class UBaseMenuButton;
 /**
  * 
  */
 UCLASS(Abstract, Hidedropdown)
-class COMMONUISETUP_API UPauseGameSelector : public UBaseMenuSelector
+class COMMONUISETUP_API UPauseMenuSelector : public UBaseMenuSelector
 {
 	GENERATED_UCLASS_BODY()
 public: 
