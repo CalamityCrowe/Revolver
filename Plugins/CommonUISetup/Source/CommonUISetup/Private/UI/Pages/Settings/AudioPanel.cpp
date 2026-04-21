@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Pages/AudioPanel.h"
+#include "UI/Pages/Settings/AudioPanel.h"
 
 #include "AudioMixerBlueprintLibrary.h"
 #include "Components/ScrollBox.h"

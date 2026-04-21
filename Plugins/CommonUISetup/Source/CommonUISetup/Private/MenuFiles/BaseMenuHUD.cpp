@@ -3,7 +3,6 @@
 
 #include "MenuFIles/BaseMenuHUD.h"
 
-#include "UI/BaseMenuWidget.h"
 #include "UI/BaseLayout.h"
 
 ABaseMenuHUD::ABaseMenuHUD()

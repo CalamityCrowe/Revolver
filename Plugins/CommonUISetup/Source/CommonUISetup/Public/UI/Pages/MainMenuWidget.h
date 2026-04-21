@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/BaseMenuWidget.h"
+#include "UI/Pages/BaseMenuWidget.h"
 #include "MainMenuWidget.generated.h"
 
 class UOptionsPanel;

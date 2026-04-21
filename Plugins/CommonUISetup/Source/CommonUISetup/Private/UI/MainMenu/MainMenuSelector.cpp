@@ -14,6 +14,7 @@ UMainMenuSelector::UMainMenuSelector(const FObjectInitializer& ObjectInitializer
 void UMainMenuSelector::NativeConstruct()
 {
 	Super::NativeConstruct();
+	WB_NewGame->OnClicked().AddUObject(this, &UMainMenuSelector::OnNewGameButtonPressed);
 	WB_Settings->OnClicked().AddUObject(this, &UMainMenuSelector::OnSettingsButtonPressed); 
 	WB_Quit->OnClicked().AddUObject(this, &UMainMenuSelector::OnQuitButtonPressed);
     

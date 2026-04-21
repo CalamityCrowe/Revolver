@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Pages/GraphicsPanel.h"
+#include "UI/Pages/Settings/GraphicsPanel.h"
 
 #include "IMediaControls.h"
 #include "Data/GraphicsSettingsTable.h"

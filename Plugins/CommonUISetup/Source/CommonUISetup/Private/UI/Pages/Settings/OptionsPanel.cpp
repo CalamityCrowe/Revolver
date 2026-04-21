@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Pages/OptionsPanel.h"
+#include "UI/Pages/Settings/OptionsPanel.h"
 
 #include "CommonTextBlock.h"
 #include "Components/ScrollBox.h"

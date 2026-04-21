@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Pages/DisplayPanel.h"
+#include "UI/Pages/Settings/DisplayPanel.h"
 
 #include "Components/ScrollBox.h"
 #include "Kismet/KismetSystemLibrary.h"
