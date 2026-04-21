@@ -3,12 +3,45 @@
 
 #include "Player/RevolverPlayerController.h"
 
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 #include "Player/RevolverPlayerState.h"
 #include "UI/HUD/RevolverPlayerHUD.h"
 
+// CommonUISetup
+#include "MenuFiles/HUDS/BasePauseHUD.h"
+
+
 ARevolverPlayerController::ARevolverPlayerController()
 {
+}
+
+void ARevolverPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	if (ABasePauseHUD* PauseHUD = Cast<ABasePauseHUD>(GetHUD()))
+	{
+		PauseHUDRef = PauseHUD;
+	}
+}
+
+void ARevolverPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		{
+			Subsystem->AddMappingContext(PauseMappingContext,0 ); 
+		}
+	}
+	
+	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &ARevolverPlayerController::ShowPauseHUD); 
+	}
+	
 }
 
 ARevolverPlayerState* ARevolverPlayerController::GetRevolverPlayerState() const
@@ -52,6 +85,14 @@ void ARevolverPlayerController::RemoveHUD()
 	if (PlayerHUDRef)
 	{
 		PlayerHUDRef->RemoveFromParent();
+	}
+}
+
+void ARevolverPlayerController::ShowPauseHUD(const FInputActionValue& Value)
+{
+	if (PauseHUDRef)
+	{
+		PauseHUDRef->ShowPauseMenu(); 
 	}
 }
 
