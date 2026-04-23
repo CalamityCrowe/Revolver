@@ -171,5 +171,15 @@ void UAudioPanel::ApplyOptions()
 
 void UAudioPanel::ResetOptions()
 {
-	
+	TArray<FName> RowNames = OptionsTable->GetRowNames();
+	for (FName RowName : RowNames)
+	{
+		if (FAudioConfig* RowData = OptionsTable->FindRow<FAudioConfig>(RowName, TEXT("")))
+		{
+			if (UCustomAudioSlider* OC =  *VolumeSliders.Find(RowName))
+			{
+				OC->UpdateValue(RowData->DefaultVolume); 
+			} 
+		}	
+	}
 }

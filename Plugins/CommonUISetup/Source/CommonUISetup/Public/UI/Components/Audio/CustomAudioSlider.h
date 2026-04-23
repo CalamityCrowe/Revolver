@@ -19,8 +19,7 @@ class COMMONUISETUP_API UCustomAudioSlider : public UBaseSlider
 public:
 
 	void InitializeSoundSettings(USoundClass* soundClass, USoundMix* soundMix); 
-
-protected: 
+	
 	virtual void UpdateValue(float NewValue)override;
 
 private: 
