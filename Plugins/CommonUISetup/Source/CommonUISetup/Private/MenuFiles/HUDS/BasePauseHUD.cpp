@@ -3,6 +3,8 @@
 
 #include "MenuFiles/HUDS/BasePauseHUD.h"
 #include "UI/BaseLayout.h"
+#include "UI/Pages/PauseMenuWidget.h"
+
 ABasePauseHUD::ABasePauseHUD()
 {
 	
@@ -14,13 +16,24 @@ void ABasePauseHUD::BeginPlay()
 	{
 		BaseLayout = CreateWidget<UBaseLayout>(PlayerOwner, BaseLayoutClass);
 		BaseLayout->AddToViewport(); 
+		
+		BaseLayout->PushWidget(HUDWidgetClass); 
 	}
 }
 
 void ABasePauseHUD::ShowPauseMenu()
 {
-	if (BaseLayout)
+	if (BaseLayout && !PauseMenuWidget)
 	{
-		BaseLayout->PushWidget(PauseMenuWidgetClass); 
+		PauseMenuWidget = BaseLayout->PushWidget(PauseMenuWidgetClass); 
+	}
+}
+
+void ABasePauseHUD::RemovePauseMenu()
+{
+	if (PauseMenuWidget)
+	{
+		BaseLayout->PopWidget(*PauseMenuWidget); 
+		PauseMenuWidget = nullptr;
 	}
 }

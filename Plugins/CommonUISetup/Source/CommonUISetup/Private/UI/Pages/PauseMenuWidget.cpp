@@ -3,6 +3,7 @@
 
 #include "UI/Pages/PauseMenuWidget.h"
 
+#include "Interfaces/PauseGameInterface.h"
 #include "UI/MainMenu/PauseMenuSelector.h"
 
 UPauseMenuWidget::UPauseMenuWidget(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
@@ -24,6 +25,10 @@ void UPauseMenuWidget::NativeConstruct()
 void UPauseMenuWidget::OnResumeGamePressed()
 {
 	// will implement this later
+	if (GetOwningPlayer()->GetClass()->ImplementsInterface(UPauseGameInterface::StaticClass()))
+	{
+		IPauseGameInterface::Execute_ResumeGame(GetOwningPlayer()); 
+	}
 }
 
 void UPauseMenuWidget::OnMainMenuPressed()

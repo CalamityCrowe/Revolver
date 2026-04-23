@@ -20,8 +20,9 @@ class COMMONUISETUP_API UBaseLayout : public UCommonUserWidget
 public: 
 	virtual void NativePreConstruct() override;
 	
-	virtual void PushWidget(TSubclassOf<UCommonActivatableWidget> ActivatableWidgetClass);
+	virtual UCommonActivatableWidget* PushWidget(TSubclassOf<UCommonActivatableWidget> ActivatableWidgetClass);
 	
+	virtual void PopWidget(UCommonActivatableWidget& WidgetToRemove); 
 protected: 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

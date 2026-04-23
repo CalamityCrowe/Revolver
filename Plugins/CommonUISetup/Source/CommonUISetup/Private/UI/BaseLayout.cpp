@@ -15,7 +15,12 @@ void UBaseLayout::NativePreConstruct()
 	Super::NativePreConstruct();
 }
 
-void UBaseLayout::PushWidget(TSubclassOf<UCommonActivatableWidget> ActivatableWidgetClass)
+UCommonActivatableWidget* UBaseLayout::PushWidget(TSubclassOf<UCommonActivatableWidget> ActivatableWidgetClass)
 {
-	CAWS_WidgetStack->AddWidget(ActivatableWidgetClass); 
+	return CAWS_WidgetStack->AddWidget(ActivatableWidgetClass); 
+}
+
+void UBaseLayout::PopWidget(UCommonActivatableWidget& WidgetToRemove)
+{
+	WidgetToRemove.DeactivateWidget();  
 }

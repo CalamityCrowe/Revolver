@@ -20,7 +20,7 @@ public:
 	FOnButtonPressed OnMainMenuPressed;
 	
 	virtual void NativeConstruct() override;
-	
+	virtual void NativeOnInitialized() override;
 private: 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_ResumeGame; 

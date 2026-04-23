@@ -57,14 +57,6 @@ void UBaseMenuWidget::ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switch
 	}
 }
 
-TOptional<FUIInputConfig> UBaseMenuWidget::GetDesiredInputConfig() const
-{
-	FUIInputConfig config = FUIInputConfig(ECommonInputMode::Menu,EMouseCaptureMode::CapturePermanently,false);
-	config.bIgnoreLookInput = true;
-	config.bIgnoreMoveInput = true;
-	return config;
-}
-
 void UBaseMenuWidget::OnSettingsPressed()
 {
 	ChangeWidgetPanel(WS_MainMenu, WM_Settings);

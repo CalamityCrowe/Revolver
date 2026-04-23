@@ -14,6 +14,11 @@ UPauseMenuSelector::UPauseMenuSelector(const FObjectInitializer& ObjectInitializ
 void UPauseMenuSelector::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+void UPauseMenuSelector::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
 	WB_ResumeGame->OnClicked().AddUObject(this,&UPauseMenuSelector::OnResumeGameButtonPressed); 
 	WB_Settings->OnClicked().AddUObject(this,&UPauseMenuSelector::OnSettingsButtonPressed);
 	WB_MainMenu->OnClicked().AddUObject(this,&UPauseMenuSelector::OnMainMenuButtonPressed);

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonActivatableWidget.h"
+#include "UI/BaseCommonActivatableWidget.h"
 #include "BaseMenuWidget.generated.h"
 
 class UOptionsPanel;
@@ -14,7 +14,7 @@ class UCommonActivatableWidgetSwitcher;
  * 
  */
 UCLASS(Abstract, HideDropdown)
-class COMMONUISETUP_API UBaseMenuWidget : public UCommonActivatableWidget
+class COMMONUISETUP_API UBaseMenuWidget : public UBaseCommonActivatableWidget
 {
 	GENERATED_UCLASS_BODY()
 public: 
@@ -41,8 +41,7 @@ protected:
 	
 	virtual void ChangeWidgetPanel(UCommonActivatableWidgetSwitcher* Switcher, UWidget* InWidget);
 
-    virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
-	
+
 	UFUNCTION()
 	virtual void OnSettingsPressed();
 	

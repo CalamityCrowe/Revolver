@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Interfaces/PauseGameInterface.h"
 #include "RevolverPlayerController.generated.h"
 
 class ABasePauseHUD;
@@ -16,7 +17,7 @@ class URevolverPlayerHUD;
  * 
  */
 UCLASS()
-class REVOLVER_API ARevolverPlayerController : public APlayerController
+class REVOLVER_API ARevolverPlayerController : public APlayerController, public IPauseGameInterface
 {
 	GENERATED_BODY()
 	
@@ -38,7 +39,10 @@ public:
 	void RemoveHUD();
 	
 	UFUNCTION()
-	void ShowPauseHUD(const FInputActionValue& Value); 
+	void PausedInput(const FInputActionValue& Value); 
+	
+	virtual void PauseGame_Implementation() override;
+	virtual void ResumeGame_Implementation() override;
 	
 protected:
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
@@ -59,4 +63,7 @@ protected:
 	ABasePauseHUD* PauseHUDRef; 
 	
 private: 	
+	
+	bool bIsPaused; 
+	
 };

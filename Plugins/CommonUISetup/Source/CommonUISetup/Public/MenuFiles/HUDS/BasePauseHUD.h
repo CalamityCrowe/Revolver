@@ -25,6 +25,7 @@ public:
 	
 	virtual void ShowPauseMenu(); 
 	
+	virtual void RemovePauseMenu(); 
 	
 protected:
 	
@@ -34,8 +35,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "CommonUI")
 	TSubclassOf<UBaseLayout> BaseLayoutClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "CommonUI")
+	TSubclassOf<UCommonActivatableWidget> HUDWidgetClass;
+	
 	UPROPERTY()
-	UPauseMenuWidget* PauseMenuWidget;
+	UCommonActivatableWidget* PauseMenuWidget;
 	
 	UPROPERTY()
 	UBaseLayout* BaseLayout;

@@ -29,6 +29,12 @@ void ARevolverPlayerController::BeginPlay()
 void ARevolverPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+	
+	if (!IA_Pause || !PauseMappingContext)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pause mapping config or input not configured")); 
+	}
+	
 	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
@@ -39,7 +45,7 @@ void ARevolverPlayerController::SetupInputComponent()
 	
 	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &ARevolverPlayerController::ShowPauseHUD); 
+		EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &ARevolverPlayerController::PausedInput); 
 	}
 	
 }
@@ -88,11 +94,36 @@ void ARevolverPlayerController::RemoveHUD()
 	}
 }
 
-void ARevolverPlayerController::ShowPauseHUD(const FInputActionValue& Value)
+void ARevolverPlayerController::PausedInput(const FInputActionValue& Value)
 {
+	if (bIsPaused)
+	{
+		ResumeGame_Implementation(); 		
+	}
+	else
+	{
+		PauseGame_Implementation(); 
+	}
+}
+
+// we implement the logic of pausing the game here so we can call it through the inteface instead of casting
+void ARevolverPlayerController::PauseGame_Implementation()
+{
+	IPauseGameInterface::PauseGame_Implementation();
 	if (PauseHUDRef)
 	{
 		PauseHUDRef->ShowPauseMenu(); 
+		bIsPaused = true;
+	}
+}
+
+void ARevolverPlayerController::ResumeGame_Implementation()
+{
+	IPauseGameInterface::ResumeGame_Implementation();
+	if (PauseHUDRef)
+	{
+		PauseHUDRef->RemovePauseMenu(); 
+		bIsPaused = false;
 	}
 }
 
