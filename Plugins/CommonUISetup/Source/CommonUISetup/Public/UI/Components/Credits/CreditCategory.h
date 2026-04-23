@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "MenuFiles/CreditsStructure.h"
 #include "CreditCategory.generated.h"
 
+class UCreditRole;
 class UCommonTextBlock;
 class UVerticalBox;
 /**
@@ -17,10 +19,22 @@ class COMMONUISETUP_API UCreditCategory : public UUserWidget
 	GENERATED_UCLASS_BODY()
 public: 
 	
+	void InitializeCategory(const FText& InText); 
+	
+	void AddCredit(const FCredits& Credit);
+	
 protected: 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "CommonUI|Credits", meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UVerticalBox> VB_Credit;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "CommonUI|Credits", meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonTextBlock> CT_CreditCategory;
+	
+	UPROPERTY(EditDefaultsOnly, Category= "CommonUI|Credits")
+	TSubclassOf<UCreditRole> CreditRoleWidgetClass;
+	
+
+private: 
+	UPROPERTY()
+	TMap<FString, UCreditRole*> Roles; 
 };
