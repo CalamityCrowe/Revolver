@@ -16,6 +16,7 @@ void UMainMenuSelector::NativeConstruct()
 	Super::NativeConstruct();
 	WB_NewGame->OnClicked().AddUObject(this, &UMainMenuSelector::OnNewGameButtonPressed);
 	WB_Settings->OnClicked().AddUObject(this, &UMainMenuSelector::OnSettingsButtonPressed); 
+	WB_Credits->OnClicked().AddUObject(this, &UMainMenuSelector::OnCreditsButtonPressed);
 	WB_Quit->OnClicked().AddUObject(this, &UMainMenuSelector::OnQuitButtonPressed);
     
 	SetFocus();
@@ -48,6 +49,14 @@ void UMainMenuSelector::OnSettingsButtonPressed() const
 	if (OnSettingsPressed.IsBound())
 	{
 		OnSettingsPressed.Execute();
+	}
+}
+
+void UMainMenuSelector::OnCreditsButtonPressed() const
+{
+	if (OnCreditsPressed.IsBound())
+	{
+		OnCreditsPressed.Execute();
 	}
 }
 

@@ -21,3 +21,12 @@ void ABaseMenuHUD::BeginPlay()
 		BaseLayout->PushWidget(MenuWidgetClass); 
 	}
 }
+
+UCommonActivatableWidget* ABaseMenuHUD::PushWidget_Implementation(TSubclassOf<UCommonActivatableWidget> WidgetClass)
+{
+	if(BaseLayout)
+	{
+		return BaseLayout->PushWidget(WidgetClass); 
+	}
+	return nullptr;
+}

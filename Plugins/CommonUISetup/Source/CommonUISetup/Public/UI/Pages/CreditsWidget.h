@@ -6,6 +6,8 @@
 #include "UI/BaseCommonActivatableWidget.h"
 #include "CreditsWidget.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE(FOnCreditsFinished); 
+
 /**
  * 
  */
@@ -19,8 +21,10 @@ class COMMONUISETUP_API UCreditsWidget : public UBaseCommonActivatableWidget
 {
 	GENERATED_UCLASS_BODY()
 public: 
-	 
+	virtual void NativePreConstruct() override; 
 	virtual void NativeOnActivated() override;
+	
+	FOnCreditsFinished OnCreditsFinished;
 	
 	
 protected: 
@@ -37,12 +41,27 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits")
 	TSubclassOf<UCreditCategory> CreditCategoryWidgetClass; 	
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits")
+	FVector2D SpacerSize; 
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits")
+	float ScrollSpeed; 
+	
+	
+	void ResetCredits();
 private: 
 	
 	void InitializeCredits(); 
 	
+	void AddSpacer(); 
+	
+	
+	void ScrollCredits(); 
+	
 	UPROPERTY()
 	TMap<FString, UCreditCategory*> CreditCategories;
 	
+	FTimerHandle ScrollTimerHandle; 
+	
+	bool bScrolling = true;
 };

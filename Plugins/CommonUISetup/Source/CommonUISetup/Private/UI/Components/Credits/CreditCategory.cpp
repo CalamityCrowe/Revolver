@@ -27,7 +27,7 @@ void UCreditCategory::AddCredit(const FCredits& Credit)
 	UCreditRole* CreditRole = Found? *Found:nullptr;
 	if (!CreditRole)
 	{
-		CreditRole = CreateWidget<UCreditRole>(GetOwningPlayer(), CreditRoleWidgetClass); 
+		CreditRole = CreateWidget<UCreditRole>(this, CreditRoleWidgetClass); 
 		CreditRole->SetRoleText(Credit.Role);
 		VB_Credit->AddChild(CreditRole);
 		Roles.Add(Key, CreditRole);

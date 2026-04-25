@@ -6,13 +6,17 @@
 // engine
 #include "CommonActivatableWidgetSwitcher.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/VerticalBox.h"
+#include "GameFramework/HUD.h"
 
 // Common UI Setup Plugin
-#include "Components/VerticalBox.h"
+
+#include "Interfaces/HUDInterface.h"
 #include "UI/MainMenu/MainMenuSelector.h"
 #include "UI/MainMenu/SettingsMenuSelector.h"
 #include "UI/Pages/Settings/OptionsPanel.h"
 #include "UI/Pages/ConfirmationDialogueWidget.h"
+#include "UI/Pages/CreditsWidget.h"
 
 UMainMenuWidget::UMainMenuWidget(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
@@ -28,6 +32,8 @@ void UMainMenuWidget::NativeConstruct()
 		// main menu buttons
 		WM_MainMenu->OnNewGamePressed.BindDynamic(this, &ThisClass::OnNewGamePressed); 
 		WM_MainMenu->OnSettingsPressed.BindDynamic(this, &ThisClass::OnSettingsPressed); 
+		WM_MainMenu->OnCreditsPressed.BindDynamic(this, &ThisClass::OnCreditsPressed); 
+		WM_Credits->OnCreditsFinished.BindDynamic(this, &ThisClass::CreditsFinished); 
 		WM_MainMenu->OnQuitPressed.BindDynamic(this, &ThisClass::OnQuitPressed);
 	}
 	
@@ -38,6 +44,23 @@ void UMainMenuWidget::NativeConstruct()
 void UMainMenuWidget::OnNewGamePressed()
 {
 	
+}
+
+void UMainMenuWidget::OnCreditsPressed()
+{
+	if (ShowCreditsAnim)
+	{
+		PlayAnimation(ShowCreditsAnim); 
+		WM_Credits->ActivateWidget(); 
+	}
+}
+
+void UMainMenuWidget::CreditsFinished()
+{
+	if (ShowCreditsAnim)
+	{
+		PlayAnimationReverse(ShowCreditsAnim);
+	}
 }
 
 void UMainMenuWidget::OnQuitPressed()

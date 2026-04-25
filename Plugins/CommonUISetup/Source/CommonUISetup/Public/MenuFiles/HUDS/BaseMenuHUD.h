@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "Interfaces/HUDInterface.h"
 #include "BaseMenuHUD.generated.h"
 
 class UCommonActivatableWidget;
@@ -14,7 +15,7 @@ class UCommonActivatableWidgetStack;
  * 
  */
 UCLASS(Abstract, meta = (HideFromSelection = true))
-class COMMONUISETUP_API ABaseMenuHUD : public AHUD
+class COMMONUISETUP_API ABaseMenuHUD : public AHUD,public IHUDInterface
 {
 	GENERATED_BODY()
 public: 
@@ -23,6 +24,7 @@ public:
 	
 	virtual void BeginPlay() override;
 
+	virtual UCommonActivatableWidget* PushWidget_Implementation(TSubclassOf<UCommonActivatableWidget> WidgetClass) override;
 	
 private: 
 	

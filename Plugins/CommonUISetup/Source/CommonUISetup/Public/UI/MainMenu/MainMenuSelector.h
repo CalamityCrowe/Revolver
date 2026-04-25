@@ -18,6 +18,7 @@ public:
 	
 	FOnButtonPressed OnNewGamePressed;
 	FOnButtonPressed OnSettingsPressed;
+	FOnButtonPressed OnCreditsPressed;
 	FOnButtonPressed OnQuitPressed;
 	
 	virtual void NativeConstruct() override;
@@ -31,9 +32,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Settings;
 	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UBaseMenuButton> WB_Credits;
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Quit;
 	
 	void OnNewGameButtonPressed() const;
 	void OnSettingsButtonPressed() const;
+	void OnCreditsButtonPressed() const; 
 	void OnQuitButtonPressed() const;
 };
