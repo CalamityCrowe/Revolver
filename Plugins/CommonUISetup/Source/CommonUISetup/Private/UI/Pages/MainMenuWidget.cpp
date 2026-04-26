@@ -51,7 +51,7 @@ void UMainMenuWidget::OnCreditsPressed()
 	if (ShowCreditsAnim)
 	{
 		PlayAnimation(ShowCreditsAnim); 
-		WM_Credits->ActivateWidget(); 
+		WM_Credits->RollCredits(); 
 	}
 }
 

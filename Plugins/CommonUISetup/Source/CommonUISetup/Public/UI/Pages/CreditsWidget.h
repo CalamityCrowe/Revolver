@@ -6,6 +6,7 @@
 #include "UI/BaseCommonActivatableWidget.h"
 #include "CreditsWidget.generated.h"
 
+class UBaseMenuButton;
 DECLARE_DYNAMIC_DELEGATE(FOnCreditsFinished); 
 
 /**
@@ -22,21 +23,27 @@ class COMMONUISETUP_API UCreditsWidget : public UBaseCommonActivatableWidget
 	GENERATED_UCLASS_BODY()
 public: 
 	virtual void NativePreConstruct() override; 
-	virtual void NativeOnActivated() override;
+	virtual void NativeConstruct() override; 
 	
 	FOnCreditsFinished OnCreditsFinished;
 	
+	void RollCredits(); 
 	
 protected: 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits", meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UOverlay> Overlay; 
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits", meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UScrollBox> SCB_Credits;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UBaseMenuButton> WB_BackButton; 
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits")
 	TObjectPtr<UDataTable> CreditsTable;
+	
+
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits")
 	TSubclassOf<UCreditCategory> CreditCategoryWidgetClass; 	
@@ -47,6 +54,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "CommonUI|Credits")
 	float ScrollSpeed; 
 	
+	
+	UFUNCTION()
+	void OnBackButtonPressed();
 	
 	void ResetCredits();
 private: 

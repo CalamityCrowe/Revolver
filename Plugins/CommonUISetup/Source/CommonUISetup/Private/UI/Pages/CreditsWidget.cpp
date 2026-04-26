@@ -6,6 +6,7 @@
 #include "Components/ScrollBox.h"
 #include "Components/Spacer.h"
 #include "MenuFiles/CreditsStructure.h"
+#include "UI/Components/BaseMenuButton.h"
 #include "UI/Components/Credits/CreditCategory.h"
 
 UCreditsWidget::UCreditsWidget(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer), SpacerSize(FVector2D(0, 1000))
@@ -18,13 +19,39 @@ void UCreditsWidget::NativePreConstruct()
 	InitializeCredits();
 }
 
-void UCreditsWidget::NativeOnActivated()
+void UCreditsWidget::NativeConstruct()
 {
-	//Super::NativeOnActivated();
-	Super::NativeOnActivated();
-	//InitializeCredits();
-	GetWorld()->GetTimerManager().SetTimer(ScrollTimerHandle, this, &UCreditsWidget::ScrollCredits, 0.05f, true);
+	Super::NativeConstruct();
+	
+	if (WB_BackButton)
+	{
+		WB_BackButton->OnClicked().AddUObject(this, &UCreditsWidget::OnBackButtonPressed);
+	}
+	
+}
 
+
+void UCreditsWidget::RollCredits()
+{
+	if (GetWorld()->GetTimerManager().IsTimerActive(ScrollTimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ScrollTimerHandle);
+	}
+	ResetCredits();
+	GetWorld()->GetTimerManager().SetTimer(ScrollTimerHandle, this, &UCreditsWidget::ScrollCredits, 0.05f, true);
+}
+
+void UCreditsWidget::OnBackButtonPressed()
+{
+	if (GetWorld()->GetTimerManager().IsTimerActive(ScrollTimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ScrollTimerHandle);
+	}
+	ResetCredits();
+	if (OnCreditsFinished.IsBound())
+	{
+		OnCreditsFinished.Execute();
+	}
 }
 
 void UCreditsWidget::ResetCredits()
@@ -36,7 +63,6 @@ void UCreditsWidget::InitializeCredits()
 {
 	if (CreditsTable && CreditCategoryWidgetClass)
 	{
-		ResetCredits();
 		AddSpacer(); 
 		
 		TArray<FName> RowNames = CreditsTable->GetRowNames();
@@ -76,16 +102,13 @@ void UCreditsWidget::ScrollCredits()
 	float CurrentOffset = SCB_Credits->GetScrollOffset();
 	float EndOffset = SCB_Credits->GetScrollOffsetOfEnd();
     
-	UE_LOG(LogTemp, Warning, TEXT("Scrolling: %s | Current: %f | End: %f"), bScrolling ? TEXT("true") : TEXT("false"), CurrentOffset, EndOffset);
     if (CurrentOffset < EndOffset)
     {
-	SCB_Credits->SetScrollOffset(CurrentOffset + ScrollSpeed);
-			    
+		SCB_Credits->SetScrollOffset(CurrentOffset + ScrollSpeed);
     }
 	else
 	{
 		GetWorld()->GetTimerManager().ClearTimer(ScrollTimerHandle);
 		OnCreditsFinished.Execute(); 
 	}
-
 }
