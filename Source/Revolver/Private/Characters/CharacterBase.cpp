@@ -128,28 +128,29 @@ void ACharacterBase::RemoveAbilities(TArray<FGameplayAbilitySpecHandle> AbilityH
 
 void ACharacterBase::Die()
 {
+	// we check if the ASC is valid, if so we then tell it caqncel all the abilities
 	if (ASC.IsValid())
 	{
 		ASC->CancelAllAbilities(); 
-		
-		ASC->AddLooseGameplayTag(DeadTag); 
+		ASC->AddLooseGameplayTag(DeadTag); // we add the tag to tell the ASC that this character is dead, this prevents any abilities from activating by mistake
 	}
-	if (DeathMontage)
+	if (DeathMontage) // we check if there is a valid death animation
 	{
-		if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(DeathMontage))
-		GetMesh()->PlayAnimation(DeathMontage,false);
+		if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(DeathMontage)) // and it is not currently playing
+		GetMesh()->PlayAnimation(DeathMontage,false); // we play the animation, this also has an anim notify to handle the finish dying logic if we need it
 	}
 	else
 	{
-		FinishDying(); 
+		FinishDying();  // otherwise, we run the logic 
 	}
 	
 }
 
 void ACharacterBase::FinishDying()
 {
-	Destroy();
+	Destroy(); // we destroy the actor otherwise. if were doing object pooling instead, we would set it not in use instead
 }
+
 
 float ACharacterBase::GetHealth() const
 {

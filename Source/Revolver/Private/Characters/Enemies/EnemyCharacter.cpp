@@ -54,11 +54,12 @@ void AEnemyCharacter::HealthUpdated(const FOnAttributeChangeData& Data)
 
 void AEnemyCharacter::Die()
 {
+	// when the enemy dies, we grab a reference to the controller and tell it to stop running the behaviour tree
 	if (AEnemyController* AIC = Cast<AEnemyController>(GetController()))
 	{
 		AIC->StopBehaviourTree(); 
 	}
-	Super::Die();
+	Super::Die(); // then we just do all the die logic in the base class
 }
 
 void AEnemyCharacter::FinishDying()
