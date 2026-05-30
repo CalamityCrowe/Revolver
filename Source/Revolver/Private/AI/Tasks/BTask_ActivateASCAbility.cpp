@@ -31,6 +31,7 @@ EBTNodeResult::Type UBTask_ActivateASCAbility::ExecuteTask(UBehaviorTreeComponen
 	return EBTNodeResult::Failed;
 }
 
+// in the case we need to abort the task for attacking for the enemy, then we unbind the delegate to prevent mulitple cases of it firing the same function
 EBTNodeResult::Type UBTask_ActivateASCAbility::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	if (EnemyRef)
@@ -40,6 +41,8 @@ EBTNodeResult::Type UBTask_ActivateASCAbility::AbortTask(UBehaviorTreeComponent&
 	return Super::AbortTask(OwnerComp, NodeMemory);
 }
 
+// what we want to happen when the onAttackFinished delegate is called else where. 
+// in this case we would want unbind the delegate and mark the task in the behaviour tree as finished
 void UBTask_ActivateASCAbility::OnAttackEnded()
 {
 	if (EnemyRef)
