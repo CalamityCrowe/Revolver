@@ -30,8 +30,17 @@ void UTargetLockOnComponent::ToggleLockOn()
 	}
 }
 
+void UTargetLockOnComponent::SwitchTarget(float AxisValue)
+{
+	// we exit out of the function straight away if we aren't locked onto a target to begin with
+	if (!bLockedOn)
+	return;
+	
+	
+}
 
-// Called when the game starts
+
+
 void UTargetLockOnComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -93,12 +102,15 @@ AActor* UTargetLockOnComponent::GetClosestTarget(const TArray<AActor*>& Targets)
 	{
 		FVector EndLocation = Actor->GetActorLocation();  // we grab the end location we want for the line trace
 		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, CamLoc, EndLocation, ECC_Visibility)) // we make sure that we have an actual line of sight against the enemy
+		if (GetWorld()->LineTraceSingleByChannel(Hit, CamLoc, EndLocation, ECC_Visibility)) // we make sure that we can hit something between the owner and target
 		{
-			if (float Dot = CloseToCentre(Actor); Dot > LocalCompare)
+			if (Hit.GetActor() == Actor) // we then check it was the actual actor we hit and not a wall
 			{
-				LocalCompare = Dot;
-				ClosestTarget = Actor;
+				if (float Dot = CloseToCentre(Actor); Dot > LocalCompare) // we check if the dot product is greater to the local compare. the closer to one it is, the cloaser to the centre of the screen it is
+				{
+					LocalCompare = Dot; 
+					ClosestTarget = Actor;
+				}
 			}
 		}
 	}
@@ -128,8 +140,8 @@ void UTargetLockOnComponent::AdjustCamera()
 	
 	OwningPlayer->GetController()->SetControlRotation(NewRotation); // lastly we just set the control rotation
 	
-	// we check if the current target is still in range, if not we stop the lock on
-	if (!IsStillInRange())
+	// we check if the current target is still in range or we have LOS still, if not we stop the lock on
+	if (!IsStillInRange() || !StillHasLOS())
 	{
 		StopLockOn(); 
 	}
@@ -158,6 +170,16 @@ bool UTargetLockOnComponent::IsStillInRange() const
 		return FVector::Distance(OwningPlayer->GetActorLocation(), CurrentTarget->GetActorLocation()) < LockOnRadius; 
 	}
 	return false;
+}
+
+bool UTargetLockOnComponent::StillHasLOS() const
+{
+	FHitResult Hit;
+	if (GetWorld()->LineTraceSingleByChannel(Hit, OwningPlayer->GetCamera()->GetComponentLocation(), CurrentTarget->GetActorLocation(), ECC_Visibility))
+	{
+		return Hit.GetActor() == CurrentTarget;
+	}
+	return false; 
 }
 
 void UTargetLockOnComponent::OnLockOnComplete(FTargetingRequestHandle TargetingHandle)
