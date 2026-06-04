@@ -1,0 +1,178 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Components/TargetLockOnComponent.h"
+
+#include "ShaderPrintParameters.h"
+#include "Camera/CameraComponent.h"
+#include "Characters/Player/RevolverPlayerCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "TargetingSystem/TargetingSubsystem.h"
+
+// Sets default values for this component's properties
+UTargetLockOnComponent::UTargetLockOnComponent()
+{
+
+	PrimaryComponentTick.bCanEverTick = false;
+
+}
+
+// this is the function that will be getting called by the owning actor in order to trigger the lock on of the target
+void UTargetLockOnComponent::ToggleLockOn()
+{
+	if (bLockedOn)
+	{
+		StopLockOn();
+	}
+	else
+	{
+		StartLockOn();
+	}
+}
+
+
+// Called when the game starts
+void UTargetLockOnComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	if (ARevolverPlayerCharacter* PlayerRef = Cast<ARevolverPlayerCharacter>(GetOwner()))
+	{
+		OwningPlayer = PlayerRef;
+	}
+}
+
+void UTargetLockOnComponent::StartLockOn()
+{
+	// we clear and invalidate the timer and target if for some reason they are valid at this point
+	GetWorld()->GetTimerManager().ClearTimer(LockOnTimer); 
+	CurrentTarget = nullptr;
+	
+	if (!TargetingPreset)
+	{
+		UE_LOG(LogTemp,Warning, TEXT("Targeting preset hasn't been set within the target lock on component")); 
+		return; 
+	}
+	
+	// we check if the targeting sub system is valid in this instance, as we don't want to have it attempting this if it cant
+	if (UTargetingSubsystem* TargetSubsystem = UTargetingSubsystem::Get(GetWorld()))
+	{
+		// we set up the source context to be the owner
+		FTargetingSourceContext SourceContext;
+		SourceContext.SourceActor = OwningPlayer; 
+		
+		// we create a request based on the target preset and the context. This is so we get the correct resuylts from the target task later
+		FTargetingRequestHandle Handle = UTargetingSubsystem::MakeTargetRequestHandle(TargetingPreset, SourceContext);  
+		
+		// we create a delegate here to bind the correct matching function, in this case the initial lock on system
+		FTargetingRequestDynamicDelegate LockOnComplete;
+		LockOnComplete.BindDynamic(this, &UTargetLockOnComponent::OnLockOnComplete); 
+		
+		TargetSubsystem->StartAsyncTargetingRequestWithHandle(Handle,FTargetingRequestDelegate(),LockOnComplete); 
+	}
+}
+
+// this will basically reset all the values for the lock oin and allow camera rotation again
+void UTargetLockOnComponent::StopLockOn()
+{
+	GetWorld()->GetTimerManager().ClearTimer(LockOnTimer);
+	CurrentTarget = nullptr;
+	bLockedOn = false;
+	OwningPlayer->GetController()->SetIgnoreLookInput(false);
+}
+
+
+AActor* UTargetLockOnComponent::GetClosestTarget(const TArray<AActor*>& Targets) const
+{
+	AActor* ClosestTarget = nullptr;
+	float LocalCompare = 0.0f;
+
+	const FVector CamLoc = OwningPlayer->GetCamera()->GetComponentLocation(); 
+	
+	// we loop through all the targetsfound via the targetting system
+	for (AActor* Actor : Targets)
+	{
+		FVector EndLocation = Actor->GetActorLocation();  // we grab the end location we want for the line trace
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, CamLoc, EndLocation, ECC_Visibility)) // we make sure that we have an actual line of sight against the enemy
+		{
+			if (float Dot = CloseToCentre(Actor); Dot > LocalCompare)
+			{
+				LocalCompare = Dot;
+				ClosestTarget = Actor;
+			}
+		}
+	}
+	return ClosestTarget;
+}
+
+float UTargetLockOnComponent::CloseToCentre(const AActor* Target) const
+{
+	// we first find the rotation we would be needing to look at the target from the player
+	FRotator LookRotation = UKismetMathLibrary::FindLookAtRotation(OwningPlayer->GetActorLocation(), Target->GetActorLocation());
+	// we then perfrom the dot product from the resulting forward vector from the camera and the look at rotation(.vector returns a forward vector)
+	return UKismetMathLibrary::Dot_VectorVector(OwningPlayer->GetCamera()->GetForwardVector(), LookRotation.Vector()); 
+}
+
+void UTargetLockOnComponent::AdjustCamera()
+{
+	if (CurrentTarget == nullptr) // we don't want to run this if the target is not valid
+	{
+		StopLockOn(); 
+		return; 
+	}
+	FRotator LockOnRotation = GetLockOnCameraRotation(CurrentTarget); 
+	FRotator ControlRotation = OwningPlayer->GetControlRotation(); 
+	FRotator NewRotation = UKismetMathLibrary::RInterpTo(ControlRotation, LockOnRotation, 0.01, InterpSpeed); 
+	
+	NewRotation.Roll = ControlRotation.Roll; // we correct the roll rotation to be that of the control rotation. we dont want this to randomly tilt at random
+	
+	OwningPlayer->GetController()->SetControlRotation(NewRotation); // lastly we just set the control rotation
+	
+	// we check if the current target is still in range, if not we stop the lock on
+	if (!IsStillInRange())
+	{
+		StopLockOn(); 
+	}
+}
+
+FRotator UTargetLockOnComponent::GetLockOnCameraRotation(const AActor* Target) const 
+{
+	if (!IsValid(Target))
+	{
+		return FRotator(); 
+	}
+	FVector CameraLocation = OwningPlayer->GetCamera()->GetComponentLocation(); // we first want to grab the cameras location
+	FVector TargetLocation = Target->GetActorLocation();
+	float DistanceToTarget = FVector::Dist(OwningPlayer->GetActorLocation(), TargetLocation)/LockOnScale; // we get the distance between the player and target, then divide it to get the correct look at location
+	
+	TargetLocation.Z = TargetLocation.Z - DistanceToTarget; // we change the Z axis of the target location to be the current Z offset by the new Z
+	
+	
+	return UKismetMathLibrary::FindLookAtRotation(CameraLocation, TargetLocation); // lastly we find the new look at location from the camera to the "Target location"
+}
+
+bool UTargetLockOnComponent::IsStillInRange() const
+{
+	if (IsValid(OwningPlayer) && IsValid(CurrentTarget))
+	{
+		return FVector::Distance(OwningPlayer->GetActorLocation(), CurrentTarget->GetActorLocation()) < LockOnRadius; 
+	}
+	return false;
+}
+
+void UTargetLockOnComponent::OnLockOnComplete(FTargetingRequestHandle TargetingHandle)
+{
+	UTargetingSubsystem* TargetingSubsystem = UTargetingSubsystem::Get(GetWorld());
+	if (!TargetingSubsystem)
+	{
+		return;	
+	}
+	// we grab all the actors from the targetting subsystem that have been filtered automatically
+	TArray<AActor*> TargetingActors;
+	TargetingSubsystem->GetTargetingResultsActors(TargetingHandle,TargetingActors);
+	CurrentTarget = GetClosestTarget(TargetingActors); // we call this function to find the one closest to the center of the camere
+	
+	GetWorld()->GetTimerManager().SetTimer(LockOnTimer,this,&UTargetLockOnComponent::AdjustCamera,0.01f,true); 
+	bLockedOn = true;
+	OwningPlayer->GetController()->SetIgnoreLookInput(true); 
+}

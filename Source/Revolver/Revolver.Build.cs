@@ -27,7 +27,8 @@ public class Revolver : ModuleRules
 			"UMG", 
 			"Niagara", 
 			"AIModule", 
-			"NavigationSystem"
+			"NavigationSystem", 
+			"TargetingSystem"
 		});
 
 		// Uncomment if you are using Slate UI
