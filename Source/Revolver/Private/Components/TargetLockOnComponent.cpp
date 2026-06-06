@@ -36,7 +36,20 @@ void UTargetLockOnComponent::SwitchTarget(float AxisValue)
 	if (!bLockedOn)
 	return;
 	
-	
+	InputAxis = AxisValue; // we grab the input axis here so we can use it in the the switch delegate later
+	// same idea as the lock on system, but instead we are doing it for the switch system
+	if (UTargetingSubsystem* TargetSubsystem = UTargetingSubsystem::Get(GetWorld()))
+	{
+		FTargetingSourceContext SourceContext;
+		SourceContext.SourceActor = OwningPlayer;
+		
+		FTargetingRequestHandle Handle = TargetSubsystem->MakeTargetRequestHandle(TargetingPreset, SourceContext);
+		
+		FTargetingRequestDynamicDelegate SwitchDelegate;
+		SwitchDelegate.BindDynamic(this, &UTargetLockOnComponent::OnSwitchComplete);
+		
+		TargetingSubsystem->StartAsyncTargetingRequestWithHandle(Handle,FTargetingRequestDelegate(),SwitchDelegate);
+	}
 }
 
 
@@ -44,10 +57,18 @@ void UTargetLockOnComponent::SwitchTarget(float AxisValue)
 void UTargetLockOnComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	// we grab a referece to the owning player to handle the correct rotations on them
 	if (ARevolverPlayerCharacter* PlayerRef = Cast<ARevolverPlayerCharacter>(GetOwner()))
 	{
 		OwningPlayer = PlayerRef;
 	}
+	
+	// we cache the targeting subsytem to reduce call backs to a getter
+	if (UTargetingSubsystem* Temp = UTargetingSubsystem::Get(GetWorld()))
+	{
+		TargetingSubsystem = Temp;
+	}
+	
 }
 
 void UTargetLockOnComponent::StartLockOn()
@@ -63,7 +84,7 @@ void UTargetLockOnComponent::StartLockOn()
 	}
 	
 	// we check if the targeting sub system is valid in this instance, as we don't want to have it attempting this if it cant
-	if (UTargetingSubsystem* TargetSubsystem = UTargetingSubsystem::Get(GetWorld()))
+	if (TargetingSubsystem)
 	{
 		// we set up the source context to be the owner
 		FTargetingSourceContext SourceContext;
@@ -76,7 +97,7 @@ void UTargetLockOnComponent::StartLockOn()
 		FTargetingRequestDynamicDelegate LockOnComplete;
 		LockOnComplete.BindDynamic(this, &UTargetLockOnComponent::OnLockOnComplete); 
 		
-		TargetSubsystem->StartAsyncTargetingRequestWithHandle(Handle,FTargetingRequestDelegate(),LockOnComplete); 
+		TargetingSubsystem->StartAsyncTargetingRequestWithHandle(Handle,FTargetingRequestDelegate(),LockOnComplete); 
 	}
 }
 
@@ -184,7 +205,7 @@ bool UTargetLockOnComponent::StillHasLOS() const
 
 void UTargetLockOnComponent::OnLockOnComplete(FTargetingRequestHandle TargetingHandle)
 {
-	UTargetingSubsystem* TargetingSubsystem = UTargetingSubsystem::Get(GetWorld());
+	// we check that the targetting system is still valid at this point
 	if (!TargetingSubsystem)
 	{
 		return;	
@@ -194,7 +215,56 @@ void UTargetLockOnComponent::OnLockOnComplete(FTargetingRequestHandle TargetingH
 	TargetingSubsystem->GetTargetingResultsActors(TargetingHandle,TargetingActors);
 	CurrentTarget = GetClosestTarget(TargetingActors); // we call this function to find the one closest to the center of the camere
 	
+	// lastly we set a timer to adjust the new look at rotation and toggle bools to handle look movement correctly
 	GetWorld()->GetTimerManager().SetTimer(LockOnTimer,this,&UTargetLockOnComponent::AdjustCamera,0.01f,true); 
 	bLockedOn = true;
 	OwningPlayer->GetController()->SetIgnoreLookInput(true); 
 }
+
+void UTargetLockOnComponent::OnSwitchComplete(FTargetingRequestHandle TargetingHandle)
+{
+	// we make sure the subsystem is still valid here
+	if (!TargetingSubsystem)
+		return;
+	
+	AActor* NewTarget = nullptr; // we make a temp value here to assign the next closest target  
+	
+	// we want to grab the locations and directiosn of objects that wont change here, as this will all be running on the same call so these wont change in the for loop
+	FVector CameraLocaction = OwningPlayer->GetCamera()->GetComponentLocation();
+	FVector CameraRight = OwningPlayer->GetCamera()->GetRightVector(); 
+	float LocalCompare = 0.0f; 
+	
+	TArray<AActor*> TargetingActors;
+	TargetingSubsystem->GetTargetingResultsActors(TargetingHandle,TargetingActors);
+	
+	// we loop through all the target actors to find the closest one to the centre of the camere
+	for (AActor* Actor : TargetingActors)
+	{
+		FVector TargetLocation = Actor->GetActorLocation();
+		FVector DirectionToEnemy = (TargetLocation - CameraLocaction).GetSafeNormal(); 
+		
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit,CameraLocaction,TargetLocation, ECC_Visibility ))
+		{
+			if (Hit.GetActor() == Actor && Actor != CurrentTarget)
+			{
+				// we check if it is greater than 0 to see if it is to the right ofd the camera, and left if it is < 0
+				if (const float DotProduct = CameraRight|DirectionToEnemy; (InputAxis > 0.0f && DotProduct > 0 ) || (InputAxis< 0.0f && DotProduct < 0))
+				{
+					if (float DistanceToCenter = CloseToCentre(Actor); DistanceToCenter > LocalCompare)
+					{
+						LocalCompare = DistanceToCenter;
+						NewTarget = Actor;
+					}
+				}
+			}
+		}
+	}
+	
+	// if we have a valid target, we switch the current target to it
+	if (IsValid(NewTarget))
+	{
+		CurrentTarget = NewTarget;
+	}
+}
+

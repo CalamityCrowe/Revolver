@@ -7,6 +7,7 @@
 #include "TargetLockOnComponent.generated.h"
 
 
+class UTargetingSubsystem;
 class ARevolverPlayerCharacter;
 class UTargetingPreset;
 
@@ -69,13 +70,17 @@ private:
 	
 	// we use these values to cache references in the components itself
 	bool bLockedOn;
+	UPROPERTY()
 	AActor* CurrentTarget; 
 	float InputAxis;
-	
+	UPROPERTY()
+	UTargetingSubsystem* TargetingSubsystem; 
 	
 	
 	UFUNCTION()
 	virtual void OnLockOnComplete(FTargetingRequestHandle TargetingHandle); 
 	
+	UFUNCTION()
+	virtual void OnSwitchComplete(FTargetingRequestHandle TargetingHandle); 
 	
 };
