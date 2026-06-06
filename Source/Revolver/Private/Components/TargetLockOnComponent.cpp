@@ -246,7 +246,7 @@ void UTargetLockOnComponent::OnSwitchComplete(FTargetingRequestHandle TargetingH
 		FHitResult Hit;
 		if (GetWorld()->LineTraceSingleByChannel(Hit,CameraLocaction,TargetLocation, ECC_Visibility ))
 		{
-			if (Hit.GetActor() == Actor && Actor != CurrentTarget)
+			if (Actor != CurrentTarget)
 			{
 				// we check if it is greater than 0 to see if it is to the right ofd the camera, and left if it is < 0
 				if (const float DotProduct = CameraRight|DirectionToEnemy; (InputAxis > 0.0f && DotProduct > 0 ) || (InputAxis< 0.0f && DotProduct < 0))

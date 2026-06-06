@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "RevolverPlayerCharacter.generated.h"
 
+class UTargetLockOnComponent;
 class UAbilityCameraManagerComponent;
 class UWeaponManagerComponent;
 class USpringArmComponent;
@@ -63,6 +64,11 @@ private:
 	UFUNCTION() 
 	void EquipRightHand(const FInputActionValue& Value); 
 	
+	UFUNCTION()
+	void TriggerLockOn(const FInputActionValue& Value);
+	UFUNCTION()
+	void SwitchTarget(const FInputActionValue& Value); 
+	
 private: 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
 	TObjectPtr<UCameraComponent> Camera;
@@ -71,6 +77,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
 	TObjectPtr<UAbilityCameraManagerComponent> AbilityCameraManagerComponent; 
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess))
+	TObjectPtr<UTargetLockOnComponent> TargetLockOnComponent; 
 	
 	FVector DefaultSocketOffset;
 	float DefaultArmLength;

@@ -26,6 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Target Lock-On")
 	void SwitchTarget(float AxisValue); // in the context of this code. Axis value is refering to the X axis of the right stick of the gamepad/ left to right movement of the mouse 
 	
+	bool IsLockedOn() const{return bLockedOn;}
 	
 	
 protected:

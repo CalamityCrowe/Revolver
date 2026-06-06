@@ -16,7 +16,7 @@ public:
 	FGameplayTag Input_Move; 
 	FGameplayTag Input_Aim;
 	FGameplayTag Input_EquipSword;
-	
+	FGameplayTag Input_LockOn; 
 	
 	// Ability Inputs
 	FGameplayTag Input_Dash; 

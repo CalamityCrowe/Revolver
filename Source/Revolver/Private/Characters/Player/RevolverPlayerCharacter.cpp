@@ -6,20 +6,25 @@
 // engine 
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 //plugin
-#include "Components/AbilityCameraManagerComponent.h"
-#include "Components/WeaponManagerComponent.h"
+
 #include "EditorFiles/EnhancedGameplayTags.h"
 #include "GAS/EnhancedAbilitySet.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 #include "GAS/Attributes/RevolverAttributeSet.h"
 #include "Input/GASEnhancedInputComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+
+// revolver
+#include "Components/AbilityCameraManagerComponent.h"
+#include "Components/TargetLockOnComponent.h"
+#include "Components/WeaponManagerComponent.h"
 #include "Player/RevolverPlayerController.h"
 #include "Player/RevolverPlayerState.h"
+
+
 
 ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 {
@@ -36,6 +41,7 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	
 	WeaponManagerComponent = CreateDefaultSubobject<UWeaponManagerComponent>(TEXT("AC_WeaponManager")); 
 	AbilityCameraManagerComponent = CreateDefaultSubobject<UAbilityCameraManagerComponent>(TEXT("Ability Camera Manager")); 
+	TargetLockOnComponent = CreateDefaultSubobject<UTargetLockOnComponent>(TEXT("Target Lock-on Component")); 
 }
 
 
@@ -74,8 +80,12 @@ void ARevolverPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	
 	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_Move, ETriggerEvent::Triggered,this,  &ThisClass::Move);
 	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_Aim, ETriggerEvent::Triggered, this, &ThisClass::Look); 
+
+	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_Aim, ETriggerEvent::Started, this, &ThisClass::SwitchTarget); 
+	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_LockOn, ETriggerEvent::Started, this, &ThisClass::TriggerLockOn); 
 	// for the likes of needing to send specific event data, I.E equipping weapons via input, then this is how we handle that 
 	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_EquipSword, ETriggerEvent::Started, this, &ThisClass::EquipRightHand); 
+	
 }
 
 void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
@@ -151,7 +161,8 @@ void ARevolverPlayerCharacter::Move(const FInputActionValue& Value)
 void ARevolverPlayerCharacter::Look(const FInputActionValue& Value)
 {
 	// we might need to block this with an if condition 
-	FVector2D Axis = Value.Get<FVector2D>();
+	const FVector2D Axis = Value.Get<FVector2D>();
+	
 	AddControllerYawInput(Axis.X);
 	AddControllerPitchInput(Axis.Y);
 }
@@ -161,6 +172,26 @@ void ARevolverPlayerCharacter::EquipRightHand(const FInputActionValue& Value)
 	FGameplayEventData PayLoad;
 	PayLoad.TargetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Weapon.Melee"))); 
 	ASC->HandleGameplayEvent(FGameplayTag::RequestGameplayTag(FName("Event.Abilities.EquipWeapon")),&PayLoad); 
+}
+
+void ARevolverPlayerCharacter::TriggerLockOn(const FInputActionValue& Value)
+{
+	if(TargetLockOnComponent)
+	{
+		GEngine->AddOnScreenDebugMessage(-1,1,FColor::Red,"TOGGLED LOCK ON"); 
+		TargetLockOnComponent->ToggleLockOn(); // this will basically flip-flop between the locked on states depending on if the character is locked on or not
+	}
+}
+
+void ARevolverPlayerCharacter::SwitchTarget(const FInputActionValue& Value)
+{
+	const FVector2D Axis = Value.Get<FVector2D>();
+	// we only really want to run this if the player is locked onto something at this point
+	if (TargetLockOnComponent->IsLockedOn())
+	{
+		TargetLockOnComponent->SwitchTarget(Axis.X); 
+	}
+	
 }
 
 

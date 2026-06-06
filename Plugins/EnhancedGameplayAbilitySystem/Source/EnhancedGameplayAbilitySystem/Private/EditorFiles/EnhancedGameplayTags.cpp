@@ -16,6 +16,7 @@ void FEnhancedGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(Input_Move, "NativeInput.Move", "Movement Inputs"); 
 	AddTag(Input_Aim, "NativeInput.Aim", "Aim Inputs");
 	AddTag(Input_EquipSword, "NativeInput.EquipSword", "Equip Sword");
+	AddTag(Input_LockOn, "NativeInput.LockOn", "Lock On");
 	
 	// Ability Inputs
 	AddTag(Input_Dash,"GameplayAbility.Movement.Dash","Interaction"); 
