@@ -162,7 +162,7 @@ void UTargetLockOnComponent::AdjustCamera()
 	OwningPlayer->GetController()->SetControlRotation(NewRotation); // lastly we just set the control rotation
 	
 	// we check if the current target is still in range or we have LOS still, if not we stop the lock on
-	if (!IsStillInRange() || !StillHasLOS())
+	if (!IsStillInRange())
 	{
 		StopLockOn(); 
 	}
