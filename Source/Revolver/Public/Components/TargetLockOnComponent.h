@@ -7,6 +7,7 @@
 #include "TargetLockOnComponent.generated.h"
 
 
+class UWidgetComponent;
 class UTargetingSubsystem;
 class ARevolverPlayerCharacter;
 class UTargetingPreset;
@@ -47,8 +48,8 @@ protected:
 	
 	bool IsStillInRange() const; 
 	bool StillHasLOS() const;
-	
-	
+	void AttachReticleToTarget();
+	void HideReticle();
 private: 
 	
 	UPROPERTY()
@@ -68,6 +69,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Targetting|Lock On", meta = (AllowPrivateAccess = true, ClampMin = 0.0f, UIMin= 0.0f))
 	float LockOnRadius; 
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Targetting|Lock On")
+	TSubclassOf<UUserWidget> ReticleWidgetClass;
+	UPROPERTY(EditDefaultsOnly,Category = "Targetting|Lock On", meta = (AllowPrivateAccess = true))
+	FName MeshLockOnPoint; 
+
 	
 	// we use these values to cache references in the components itself
 	bool bLockedOn;
@@ -76,12 +82,17 @@ private:
 	float InputAxis;
 	UPROPERTY()
 	UTargetingSubsystem* TargetingSubsystem; 
-	
+	UPROPERTY()
+	UWidgetComponent* ReticleWidgetComponent;
 	
 	UFUNCTION()
 	virtual void OnLockOnComplete(FTargetingRequestHandle TargetingHandle); 
 	
 	UFUNCTION()
 	virtual void OnSwitchComplete(FTargetingRequestHandle TargetingHandle); 
+	
+	
+	
+
 	
 };

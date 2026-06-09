@@ -3,9 +3,12 @@
 
 #include "Components/TargetLockOnComponent.h"
 
+#include "IMediaControls.h"
 #include "ShaderPrintParameters.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/Player/RevolverPlayerCharacter.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "TargetingSystem/TargetingSubsystem.h"
 
@@ -69,6 +72,17 @@ void UTargetLockOnComponent::BeginPlay()
 		TargetingSubsystem = Temp;
 	}
 	
+	if (ReticleWidgetClass)
+	{
+		ReticleWidgetComponent = NewObject<UWidgetComponent>(OwningPlayer);
+		ReticleWidgetComponent->SetWidgetClass(ReticleWidgetClass);
+		ReticleWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen); 
+		ReticleWidgetComponent->SetDrawAtDesiredSize(true); 
+		ReticleWidgetComponent->RegisterComponent(); 
+		
+		ReticleWidgetComponent->SetVisibility(false); 
+	}
+
 }
 
 void UTargetLockOnComponent::StartLockOn()
@@ -104,6 +118,7 @@ void UTargetLockOnComponent::StartLockOn()
 // this will basically reset all the values for the lock oin and allow camera rotation again
 void UTargetLockOnComponent::StopLockOn()
 {
+	HideReticle(); 
 	GetWorld()->GetTimerManager().ClearTimer(LockOnTimer);
 	CurrentTarget = nullptr;
 	bLockedOn = false;
@@ -162,7 +177,7 @@ void UTargetLockOnComponent::AdjustCamera()
 	OwningPlayer->GetController()->SetControlRotation(NewRotation); // lastly we just set the control rotation
 	
 	// we check if the current target is still in range or we have LOS still, if not we stop the lock on
-	if (!IsStillInRange())
+	if (!IsStillInRange() && StillHasLOS())
 	{
 		StopLockOn(); 
 	}
@@ -196,11 +211,41 @@ bool UTargetLockOnComponent::IsStillInRange() const
 bool UTargetLockOnComponent::StillHasLOS() const
 {
 	FHitResult Hit;
-	if (GetWorld()->LineTraceSingleByChannel(Hit, OwningPlayer->GetCamera()->GetComponentLocation(), CurrentTarget->GetActorLocation(), ECC_Visibility))
+	FCollisionQueryParams CollisionParameters; 
+	CollisionParameters.AddIgnoredActor(OwningPlayer);
+	CollisionParameters.AddIgnoredActor(CurrentTarget);
+	if (GetWorld()->LineTraceSingleByChannel(Hit, OwningPlayer->GetCamera()->GetComponentLocation(), CurrentTarget->GetActorLocation(), ECC_Visibility, CollisionParameters))
 	{
-		return Hit.GetActor() == CurrentTarget;
+		return false; // basically hity a wall 
 	}
-	return false; 
+	return true; 
+}
+
+// When ever the reticule gets moved to a new target, we attatch it to the mesh at the lock on point on the skeleton.  
+void UTargetLockOnComponent::AttachReticleToTarget()
+{
+	if (ReticleWidgetComponent)
+	{
+		FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget, true); 
+		Rules.ScaleRule = EAttachmentRule::KeepWorld; 
+		if (USkeletalMeshComponent* Mesh =  CurrentTarget->GetComponentByClass<USkeletalMeshComponent>())
+		{
+			ReticleWidgetComponent->AttachToComponent(Mesh,Rules, MeshLockOnPoint); 
+		}
+		else
+		ReticleWidgetComponent->AttachToComponent(CurrentTarget->GetRootComponent(),Rules);
+		ReticleWidgetComponent->SetVisibility(true);
+	}
+}
+
+// we will hide the reticle when ever it is not attached to an enemy
+void UTargetLockOnComponent::HideReticle()
+{
+	if (ReticleWidgetComponent)
+	{
+		ReticleWidgetComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); 
+		ReticleWidgetComponent->SetVisibility(false);
+	}
 }
 
 void UTargetLockOnComponent::OnLockOnComplete(FTargetingRequestHandle TargetingHandle)
@@ -214,6 +259,7 @@ void UTargetLockOnComponent::OnLockOnComplete(FTargetingRequestHandle TargetingH
 	TArray<AActor*> TargetingActors;
 	TargetingSubsystem->GetTargetingResultsActors(TargetingHandle,TargetingActors);
 	CurrentTarget = GetClosestTarget(TargetingActors); // we call this function to find the one closest to the center of the camere
+	AttachReticleToTarget();
 	
 	// lastly we set a timer to adjust the new look at rotation and toggle bools to handle look movement correctly
 	GetWorld()->GetTimerManager().SetTimer(LockOnTimer,this,&UTargetLockOnComponent::AdjustCamera,0.01f,true); 
@@ -246,7 +292,7 @@ void UTargetLockOnComponent::OnSwitchComplete(FTargetingRequestHandle TargetingH
 		FHitResult Hit;
 		if (GetWorld()->LineTraceSingleByChannel(Hit,CameraLocaction,TargetLocation, ECC_Visibility ))
 		{
-			if (Actor != CurrentTarget)
+			if (Actor != CurrentTarget && Hit.GetActor() == Actor)
 			{
 				// we check if it is greater than 0 to see if it is to the right ofd the camera, and left if it is < 0
 				if (const float DotProduct = CameraRight|DirectionToEnemy; (InputAxis > 0.0f && DotProduct > 0 ) || (InputAxis< 0.0f && DotProduct < 0))
@@ -261,10 +307,12 @@ void UTargetLockOnComponent::OnSwitchComplete(FTargetingRequestHandle TargetingH
 		}
 	}
 	
-	// if we have a valid target, we switch the current target to it
+	// if we have a valid target, we switch the current target to it and move the reticule over
 	if (IsValid(NewTarget))
 	{
+		HideReticle(); 
 		CurrentTarget = NewTarget;
+		AttachReticleToTarget();
 	}
 }
 
