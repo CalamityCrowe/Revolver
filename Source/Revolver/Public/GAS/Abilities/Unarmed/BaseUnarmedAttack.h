@@ -20,8 +20,10 @@ public:
 	
 protected: 
 	
+	/** This is the montage that we will be playing to handle this. This will have the  notify events assigned in frames to signal the game to start/stop hit attacks*/ 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Animations")
 	TObjectPtr<UAnimMontage> MontageToPlay;
+	
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities|Effects")
 	TSubclassOf<UGameplayEffect> EffectClass; 

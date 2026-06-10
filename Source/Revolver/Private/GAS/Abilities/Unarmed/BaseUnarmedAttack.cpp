@@ -16,6 +16,7 @@ UBaseUnarmedAttack::UBaseUnarmedAttack()
 {
 }
 
+// this will be where all the core logic will be setup to handle this ability
 void UBaseUnarmedAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
@@ -23,8 +24,7 @@ void UBaseUnarmedAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	UAbilityTask_PlayMontageAndWait* PlayMontageAndWait = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 		this, NAME_None,MontageToPlay,1);
 	
-	GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red, "AAAAAAAAAAAAAAA"); 
-	
+	// we setup all the delegates to handle the montages conditions for completing, cancelling etc
 	PlayMontageAndWait->OnCompleted.AddDynamic(this, &UBaseUnarmedAttack::OnMontageCompleted); 
 	PlayMontageAndWait->OnCancelled.AddDynamic(this, &UBaseUnarmedAttack::OnMontageCanceled);
 	PlayMontageAndWait->OnBlendOut.AddDynamic(this, &UBaseUnarmedAttack::OnMontageBlendOut);
@@ -40,6 +40,17 @@ void UBaseUnarmedAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	
 	HitScanStartEvent->EventReceived.AddDynamic(this, &UBaseUnarmedAttack::HitScanStarted); 
 	HitScanStartEvent->ReadyForActivation(); 
+	
+	UAbilityTask_WaitGameplayEvent* HitScanEndedEvent = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
+		this, 
+		HitScanEndTag, 
+		nullptr, 
+		false, 
+		true);
+	
+	HitScanEndedEvent->EventReceived.AddDynamic(this, &UBaseUnarmedAttack::HitScanEnded); 
+	HitScanEndedEvent->ReadyForActivation(); 
+	
 }
 
 void UBaseUnarmedAttack::OnMontageCompleted()
