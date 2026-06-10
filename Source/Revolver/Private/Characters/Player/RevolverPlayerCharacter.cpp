@@ -41,7 +41,7 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	
 	WeaponManagerComponent = CreateDefaultSubobject<UWeaponManagerComponent>(TEXT("AC_WeaponManager")); 
 	AbilityCameraManagerComponent = CreateDefaultSubobject<UAbilityCameraManagerComponent>(TEXT("Ability Camera Manager")); 
-	TargetLockOnComponent = CreateDefaultSubobject<UTargetLockOnComponent>(TEXT("Target Lock-on Component")); 
+	TargetLockOnComponent = CreateDefaultSubobject<UTargetLockOnComponent>(TEXT("AC_TargetLockOnComponent")); 
 }
 
 
