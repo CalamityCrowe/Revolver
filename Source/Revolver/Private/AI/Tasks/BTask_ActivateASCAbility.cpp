@@ -36,6 +36,10 @@ EBTNodeResult::Type UBTask_ActivateASCAbility::AbortTask(UBehaviorTreeComponent&
 {
 	if (EnemyRef)
 	{
+		if (FGameplayAbilitySpec* AbilitySpec = EnemyRef->GetAbilitySystemComponent()->FindAbilitySpecFromClass(AbilityToActivate))
+		{
+			EnemyRef->GetAbilitySystemComponent()->CancelAbilityHandle(AbilitySpec->Handle);
+		}
 		EnemyRef->OnAttackEnded.RemoveDynamic(this, &UBTask_ActivateASCAbility::OnAttackEnded); 
 	}
 	return Super::AbortTask(OwnerComp, NodeMemory);
