@@ -21,6 +21,7 @@
 #include "Components/AbilityCameraManagerComponent.h"
 #include "Components/TargetLockOnComponent.h"
 #include "Components/WeaponManagerComponent.h"
+#include "EditorFiles/RevolverGameplayTags.h"
 #include "Player/RevolverPlayerController.h"
 #include "Player/RevolverPlayerState.h"
 
@@ -43,8 +44,6 @@ ARevolverPlayerCharacter::ARevolverPlayerCharacter()
 	AbilityCameraManagerComponent = CreateDefaultSubobject<UAbilityCameraManagerComponent>(TEXT("Ability Camera Manager")); 
 	TargetLockOnComponent = CreateDefaultSubobject<UTargetLockOnComponent>(TEXT("AC_TargetLockOnComponent")); 
 }
-
-
 
 
 void ARevolverPlayerCharacter::BeginPlay()
@@ -74,7 +73,7 @@ void ARevolverPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	UGASEnhancedInputComponent* GASInputComponent = Cast<UGASEnhancedInputComponent>(PlayerInputComponent); 
 	check(GASInputComponent);
 	
-	const FEnhancedGameplayTags& GameplayTags = FEnhancedGameplayTags::Get(); 
+	const FRevolverGameplayTags& GameplayTags = FRevolverGameplayTags::Get(); 
 	TArray<uint32> BindHandles; 
 	GASInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::InputAbilityInputTagPressed, & ThisClass::InputAbilityInputTagReleased, BindHandles); 
 	
@@ -87,6 +86,7 @@ void ARevolverPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	GASInputComponent->BindNativeAction(InputConfig, GameplayTags.Input_EquipSword, ETriggerEvent::Started, this, &ThisClass::EquipRightHand); 
 	
 }
+
 
 void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
 {
@@ -114,6 +114,7 @@ void ARevolverPlayerCharacter::PossessedBy(AController* NewController)
 	
 	SendAbilitiesChangedEvent(); 
 }
+
 
 void ARevolverPlayerCharacter::SendAbilitiesChangedEvent()
 {
