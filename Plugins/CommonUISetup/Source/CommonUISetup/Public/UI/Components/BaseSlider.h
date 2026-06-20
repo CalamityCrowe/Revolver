@@ -26,6 +26,12 @@ class COMMONUISETUP_API UBaseSlider : public UCommonUserWidget
 public:
 	virtual void NativePreConstruct() override;
 	
+	virtual void InitializeSlider(FText OptionName, float InValue); 
+	
+	
+	
+	float GetSliderValue()const;
+	
 protected: 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonBorder> CB_SliderBorder; 
@@ -63,11 +69,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float InputMaxRange;
 	
+	UFUNCTION()
+	virtual void UpdateValue(float NewValue); 
 	
 private: 
 	
 	void SetupSliderMaterial(); 
 	
-	UFUNCTION()
-	void OnSliderChanged(float NewValue); 
+
 };

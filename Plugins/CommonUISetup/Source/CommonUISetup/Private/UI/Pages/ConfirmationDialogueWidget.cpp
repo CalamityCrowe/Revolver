@@ -12,12 +12,14 @@ UConfirmationDialogueWidget::UConfirmationDialogueWidget(const FObjectInitialize
 	
 }
 
+// we assign the message for the confirmation box along with what message it should have for this
 void UConfirmationDialogueWidget::ShowDialogueMessage(const FText& Message)
 {
 	CT_Message->SetText(Message);
 	AddToViewport(); 
 }
 
+// when the dialogue box is created we want to start by playing the fade in animation
 void UConfirmationDialogueWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -27,6 +29,7 @@ void UConfirmationDialogueWidget::NativePreConstruct()
 	}
 }
 
+// we bind the buttons for the confrim and cancel here
 void UConfirmationDialogueWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -35,6 +38,7 @@ void UConfirmationDialogueWidget::NativeConstruct()
 	WB_Cancel->OnClicked().AddUObject(this, &ThisClass::OnCancelClicked);
 }
 
+// we then fire whatever delegates are bound to it if they are and unbind them
 void UConfirmationDialogueWidget::OnConfirmClicked()
 {
 	if (ConfirmSelection.IsBound())
@@ -44,7 +48,7 @@ void UConfirmationDialogueWidget::OnConfirmClicked()
 		RemoveFromParent(); 
 	}
 }
-
+// same idea but we reverse the fade in animation and then remove it when the fade out is finished
 void UConfirmationDialogueWidget::OnCancelClicked()
 {
 	if (ConfirmSelection.IsBound())

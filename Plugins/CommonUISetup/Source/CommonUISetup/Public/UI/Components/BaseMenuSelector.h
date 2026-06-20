@@ -16,7 +16,9 @@ UCLASS(Abstract, HideDropdown)
 class COMMONUISETUP_API UBaseMenuSelector : public UCommonActivatableWidget
 {
 	GENERATED_UCLASS_BODY()
-protected: 
+	
+	
+public: 
 	UPROPERTY(meta = (BindWidget, AllowPrivateAccess), BlueprintReadWrite)
 	TObjectPtr<UVerticalBox> MenuSelector; 
 	
