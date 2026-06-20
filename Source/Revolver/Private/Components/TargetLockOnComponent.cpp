@@ -172,12 +172,12 @@ void UTargetLockOnComponent::AdjustCamera()
 	FRotator ControlRotation = OwningPlayer->GetControlRotation(); 
 	FRotator NewRotation = UKismetMathLibrary::RInterpTo(ControlRotation, LockOnRotation, 0.01, InterpSpeed); 
 	
-	NewRotation.Roll = ControlRotation.Roll; // we correct the roll rotation to be that of the control rotation. we dont want this to randomly tilt at random
+	NewRotation.Roll = ControlRotation.Roll; // we correct the roll rotation to be that of the control rotation. we don't want this to randomly tilt at random
 	
 	OwningPlayer->GetController()->SetControlRotation(NewRotation); // lastly we just set the control rotation
 	
-	// we check if the current target is still in range or we have LOS still, if not we stop the lock on
-	if (!IsStillInRange() && StillHasLOS())
+	// we check if the current target is still in range, or we have LOS still, if not we stop the lock on
+	if (!IsStillInRange() || !StillHasLOS())
 	{
 		StopLockOn(); 
 	}
@@ -194,7 +194,6 @@ FRotator UTargetLockOnComponent::GetLockOnCameraRotation(const AActor* Target) c
 	float DistanceToTarget = FVector::Dist(OwningPlayer->GetActorLocation(), TargetLocation)/LockOnScale; // we get the distance between the player and target, then divide it to get the correct look at location
 	
 	TargetLocation.Z = TargetLocation.Z - DistanceToTarget; // we change the Z axis of the target location to be the current Z offset by the new Z
-	
 	
 	return UKismetMathLibrary::FindLookAtRotation(CameraLocation, TargetLocation); // lastly we find the new look at location from the camera to the "Target location"
 }
@@ -224,7 +223,7 @@ bool UTargetLockOnComponent::StillHasLOS() const
 // When ever the reticule gets moved to a new target, we attatch it to the mesh at the lock on point on the skeleton.  
 void UTargetLockOnComponent::AttachReticleToTarget()
 {
-	if (ReticleWidgetComponent)
+	if (ReticleWidgetComponent && CurrentTarget)
 	{
 		FAttachmentTransformRules Rules(EAttachmentRule::SnapToTarget, true); 
 		Rules.ScaleRule = EAttachmentRule::KeepWorld; 
