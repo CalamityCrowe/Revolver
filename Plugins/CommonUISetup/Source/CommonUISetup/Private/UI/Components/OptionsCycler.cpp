@@ -7,17 +7,17 @@
 #include "UI/Components/BaseMenuButton.h"
 #include "UI/Components/BaseOptionsRotator.h"
 
-UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+UOptionsCycler::UOptionsCycler(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer), bMarkedAsCustom(false)
 {
 	OptionLabelText = FText::FromString("Option");
+	DefaultSelectedIndex = 3; // we set it as 3 as the default will be high (3) in the options
 }
-
-
 
 void UOptionsCycler::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	
+	// binding the buttons for selecting the next and previous functions
 	WB_NextButton->OnClicked().AddUObject(this,&UOptionsCycler::OnNextButtonClicked); 
 	WB_PreviousButton->OnClicked().AddUObject(this,&UOptionsCycler::OnPreviousButtonClicked);
 }
@@ -25,13 +25,38 @@ void UOptionsCycler::NativePreConstruct()
 void UOptionsCycler::InitializeOption(const FText& CurrentOptionText, const TArray<FText>& CurrentOptionArray,
 	const int CurrentDefaultIndex)
 {
+	// assigning the values for the Widget rotator to use before setting up the display correctly
 	OptionLabelText = CurrentOptionText;
 	OptionsArray = CurrentOptionArray;
 	DefaultSelectedIndex = CurrentDefaultIndex;
 	SetupWidgetDisplay();
 }
+
+void UOptionsCycler::UpdateSelection(int NewIndex)
+{
+	WR_OptionRotator->SetSelectedItem(NewIndex);
+	bMarkedAsCustom = false;
+}
+
+// set the Overall options widget to custom if any of the others have been marked as custom
+void UOptionsCycler::MarkAsCustom()
+{
+	WR_OptionRotator->MarkAsCustom();
+	bMarkedAsCustom = true;
+}
+
+int32 UOptionsCycler::GetCurrentSetting() const
+{
+	if (WR_OptionRotator)
+	{
+		return bMarkedAsCustom == true ?  -1 : WR_OptionRotator->GetSelectedIndex(); // we return -1 for an invalid index
+	}
+	return DefaultSelectedIndex;
+}
+
 void UOptionsCycler::SetupWidgetDisplay()
 {
+	// sets the tag for what option is getting changed and all the possible settings it can have
 	CT_OptionName->SetText(OptionLabelText); 
 	if (WR_OptionRotator)
 	{
@@ -39,12 +64,17 @@ void UOptionsCycler::SetupWidgetDisplay()
 		WR_OptionRotator->SetSelectedItem(DefaultSelectedIndex); 
 	}
 }
+// shifts the rotator back one slot before broadcasting the delegate. 
 void UOptionsCycler::OnPreviousButtonClicked()
 {
 	WR_OptionRotator->ShiftTextLeft(); 
+	OnOptionsChanged.Broadcast(WR_OptionRotator->GetSelectedIndex()); 
+	bMarkedAsCustom = false;
 }
-
+// same as above but to the next
 void UOptionsCycler::OnNextButtonClicked()
 {
 	WR_OptionRotator->ShiftTextRight(); 
+	OnOptionsChanged.Broadcast(WR_OptionRotator->GetSelectedIndex()); 
+	bMarkedAsCustom = false;
 }

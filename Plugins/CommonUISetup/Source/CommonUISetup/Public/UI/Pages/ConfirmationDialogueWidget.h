@@ -24,8 +24,6 @@ class COMMONUISETUP_API UConfirmationDialogueWidget : public UCommonUserWidget
 public: 
 	UConfirmationDialogueWidget();
 	
-	
-	
 	void ShowDialogueMessage(const FText& Message);
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;

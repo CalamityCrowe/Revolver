@@ -24,6 +24,15 @@ public:
 	
 	void InitializeOption(const FText& CurrentOptionText, const TArray<FText>& CurrentOptionArray, int CurrentDefaultIndex);
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnOptionsChanged OnOptionsChanged;
+	
+	void UpdateSelection(int NewIndex); 
+	
+	void MarkAsCustom(); 
+	
+	int32 GetCurrentSetting() const; 
+	
 protected: 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonBorder> CB_OptionBorder; 
@@ -47,6 +56,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	int32 DefaultSelectedIndex;
+	
+	bool bMarkedAsCustom;
 	
 private: 
 	void SetupWidgetDisplay();

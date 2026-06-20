@@ -3,12 +3,51 @@
 
 #include "Player/RevolverPlayerController.h"
 
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "GAS/EnhancedAbilitySystemComponent.h"
 #include "Player/RevolverPlayerState.h"
 #include "UI/HUD/RevolverPlayerHUD.h"
 
+// CommonUISetup
+#include "MenuFiles/HUDS/BasePauseHUD.h"
+
+
 ARevolverPlayerController::ARevolverPlayerController()
 {
+}
+
+void ARevolverPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	if (ABasePauseHUD* PauseHUD = Cast<ABasePauseHUD>(GetHUD()))
+	{
+		PauseHUDRef = PauseHUD;
+	}
+}
+
+void ARevolverPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+	
+	if (!IA_Pause || !PauseMappingContext)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pause mapping config or input not configured")); 
+	}
+	
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		{
+			Subsystem->AddMappingContext(PauseMappingContext,0 ); 
+		}
+	}
+	
+	if (UEnhancedInputComponent* EIC = Cast<UEnhancedInputComponent>(InputComponent))
+	{
+		EIC->BindAction(IA_Pause, ETriggerEvent::Started, this, &ARevolverPlayerController::PausedInput); 
+	}
+	
 }
 
 ARevolverPlayerState* ARevolverPlayerController::GetRevolverPlayerState() const
@@ -52,6 +91,39 @@ void ARevolverPlayerController::RemoveHUD()
 	if (PlayerHUDRef)
 	{
 		PlayerHUDRef->RemoveFromParent();
+	}
+}
+
+void ARevolverPlayerController::PausedInput(const FInputActionValue& Value)
+{
+	if (bIsPaused)
+	{
+		ResumeGame_Implementation(); 		
+	}
+	else
+	{
+		PauseGame_Implementation(); 
+	}
+}
+
+// we implement the logic of pausing the game here so we can call it through the inteface instead of casting
+void ARevolverPlayerController::PauseGame_Implementation()
+{
+	IPauseGameInterface::PauseGame_Implementation();
+	if (PauseHUDRef)
+	{
+		PauseHUDRef->ShowPauseMenu(); 
+		bIsPaused = true;
+	}
+}
+
+void ARevolverPlayerController::ResumeGame_Implementation()
+{
+	IPauseGameInterface::ResumeGame_Implementation();
+	if (PauseHUDRef)
+	{
+		PauseHUDRef->RemovePauseMenu(); 
+		bIsPaused = false;
 	}
 }
 

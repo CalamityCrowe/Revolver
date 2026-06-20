@@ -14,36 +14,26 @@ UMainMenuSelector::UMainMenuSelector(const FObjectInitializer& ObjectInitializer
 void UMainMenuSelector::NativeConstruct()
 {
 	Super::NativeConstruct();
+	WB_NewGame->OnClicked().AddUObject(this, &UMainMenuSelector::OnNewGameButtonPressed);
 	WB_Settings->OnClicked().AddUObject(this, &UMainMenuSelector::OnSettingsButtonPressed); 
+	WB_Credits->OnClicked().AddUObject(this, &UMainMenuSelector::OnCreditsButtonPressed);
 	WB_Quit->OnClicked().AddUObject(this, &UMainMenuSelector::OnQuitButtonPressed);
+    
+	SetFocus();
 }
 
 UWidget* UMainMenuSelector::NativeGetDesiredFocusTarget() const
 {
-	
-//
+	if (UBaseMenuButton* Button = Cast<UBaseMenuButton>(MenuSelector->GetChildAt(0)))
+	{
+		return Button;
+	}
 	return Super::NativeGetDesiredFocusTarget();
-	
-	
 }
 
-FReply UMainMenuSelector::NativeOnFocusReceived(const FGeometry& InGeometry, const FFocusEvent& InFocusEvent)
+FReply UMainMenuSelector::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	const UCommonInputSubsystem* InputSubsystem = GetInputSubsystem(); 
-	if (InputSubsystem && InputSubsystem->GetCurrentInputType() == ECommonInputType::Gamepad)
-	{
-		if (TSharedPtr<SWidget> PrimarySlateWidget = MenuSelector->GetCachedWidget())
-		{
-			if (UBaseMenuButton* button = Cast<UBaseMenuButton> (MenuSelector->GetChildAt(0)))
-			{
-				button->SetFocus(); 
-				button->SetIsSelected(true);
-				return FReply::Handled();
-			}
-		}
-	}
-	
-	return Super::NativeOnFocusReceived(InGeometry, InFocusEvent);
+	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 }
 
 void UMainMenuSelector::OnNewGameButtonPressed() const
@@ -59,6 +49,14 @@ void UMainMenuSelector::OnSettingsButtonPressed() const
 	if (OnSettingsPressed.IsBound())
 	{
 		OnSettingsPressed.Execute();
+	}
+}
+
+void UMainMenuSelector::OnCreditsButtonPressed() const
+{
+	if (OnCreditsPressed.IsBound())
+	{
+		OnCreditsPressed.Execute();
 	}
 }
 

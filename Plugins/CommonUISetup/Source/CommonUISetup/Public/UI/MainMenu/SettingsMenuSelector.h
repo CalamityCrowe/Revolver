@@ -20,7 +20,7 @@ public:
 	
 	FOnButtonPressed OnAudioPressed;
 	FOnButtonPressed OnVideoPressed;
-	FOnButtonPressed OnControlsPressed;
+	FOnButtonPressed OnDisplayPressed;
 	FOnButtonPressed OnBackPressed;
 	
 	virtual void NativeConstruct() override;
@@ -33,13 +33,13 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Video;
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UBaseMenuButton> WB_Controls;
+	TObjectPtr<UBaseMenuButton> WB_Display;
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UBaseMenuButton> WB_Back;
 	
 	
 	void OnAudioButtonPressed(); 
 	void OnVideoButtonPressed();
-	void OnControlsButtonPressed();
+	void OnDisplayButtonPressed();
 	void OnBackButtonPressed();
 };
